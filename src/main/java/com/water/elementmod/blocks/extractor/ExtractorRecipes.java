@@ -28,6 +28,7 @@ public class ExtractorRecipes
 		addExtractorRecipe(new ItemStack(EmItems.FIRESMPL), new ItemStack(EmItems.FIRESMPL), new ItemStack(Items.QUARTZ), 5.0F);
 		addExtractorRecipe(new ItemStack(EmItems.NATURESMPL), new ItemStack(EmItems.NATURESMPL), new ItemStack(Items.QUARTZ), 5.0F);
 		addExtractorRecipe(new ItemStack(EmItems.WATERDRP), new ItemStack(EmItems.WATERDRP), new ItemStack(Items.QUARTZ), 5.0F);
+		addExtractorRecipe(new ItemStack(Items.DIAMOND), new ItemStack(Items.DIAMOND), new ItemStack(Blocks.DIAMOND_BLOCK), 5.0F);
 	}
 
 	
