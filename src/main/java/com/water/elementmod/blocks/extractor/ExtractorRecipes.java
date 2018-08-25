@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 public class ExtractorRecipes 
 {
 	private static final ExtractorRecipes INSTANCE = new ExtractorRecipes();
-	private final Table<ItemStack, ItemStack, ItemStack> smeltingList = HashBasedTable.<ItemStack, ItemStack, ItemStack>create();
+	private final Map<ItemStack, ItemStack> smeltingList = Maps.<ItemStack, ItemStack>newHashMap();
 	private final Map<ItemStack, Float> experienceList = Maps.<ItemStack, Float>newHashMap();
 	
 	public static ExtractorRecipes getInstance()
@@ -25,33 +25,24 @@ public class ExtractorRecipes
 	
 	private ExtractorRecipes() 
 	{
-		addExtractorRecipe(new ItemStack(EmItems.FIRESMPL), new ItemStack(EmItems.FIRESMPL), new ItemStack(Items.QUARTZ), 5.0F);
-		addExtractorRecipe(new ItemStack(EmItems.NATURESMPL), new ItemStack(EmItems.NATURESMPL), new ItemStack(Items.QUARTZ), 5.0F);
-		addExtractorRecipe(new ItemStack(EmItems.WATERDRP), new ItemStack(EmItems.WATERDRP), new ItemStack(Items.QUARTZ), 5.0F);
-		addExtractorRecipe(new ItemStack(Items.DIAMOND), new ItemStack(Items.DIAMOND), new ItemStack(Blocks.DIAMOND_BLOCK), 5.0F);
+		addExtractorRecipe(new ItemStack(EmItems.FIRESMPL), new ItemStack(Items.QUARTZ), 5.0F);
 	}
 
 	
-	public void addExtractorRecipe(ItemStack input1, ItemStack input2, ItemStack result, float experience) 
+	public void addExtractorRecipe(ItemStack input, ItemStack result, float experience) 
 	{
-		if(getExtractorResult(input1, input2) != ItemStack.EMPTY) return;
-		this.smeltingList.put(input1, input2, result);
+		if(getExtractorResult(input) != ItemStack.EMPTY) return;
+		this.smeltingList.put(input, result);
 		this.experienceList.put(result, Float.valueOf(experience));
 	}
 	
-	public ItemStack getExtractorResult(ItemStack input1, ItemStack input2) 
+	public ItemStack getExtractorResult(ItemStack input)
 	{
-		for(Entry<ItemStack, Map<ItemStack, ItemStack>> entry : this.smeltingList.columnMap().entrySet()) 
+		for (Entry<ItemStack, ItemStack> entry : this.smeltingList.entrySet())
 		{
-			if(this.compareItemStacks(input1, (ItemStack)entry.getKey())) 
+			if (this.compareItemStacks(input, entry.getKey()))
 			{
-				for(Entry<ItemStack, ItemStack> ent : entry.getValue().entrySet()) 
-				{
-					if(this.compareItemStacks(input2, (ItemStack)ent.getKey())) 
-					{
-						return (ItemStack)ent.getValue();
-					}
-				}
+				return entry.getValue();
 			}
 		}
 		return ItemStack.EMPTY;
@@ -62,7 +53,7 @@ public class ExtractorRecipes
 		return stack2.getItem() == stack1.getItem() && (stack2.getMetadata() == 32767 || stack2.getMetadata() == stack1.getMetadata());
 	}
 	
-	public Table<ItemStack, ItemStack, ItemStack> getDualSmeltingList() 
+	public Map<ItemStack, ItemStack> getSmeltingList() 
 	{
 		return this.smeltingList;
 	}

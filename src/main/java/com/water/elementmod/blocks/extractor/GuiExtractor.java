@@ -39,11 +39,11 @@ public class GuiExtractor extends GuiContainer
 		if(TileEntityExtractor.isBurning(tileentity))
 		{
 			int k = this.getBurnLeftScaled(11);
-			this.drawTexturedModalRect(this.guiLeft + 132, this.guiTop + 62 + 10 - k, 176, 29 - k, 16, k + 1);
+			this.drawTexturedModalRect(this.guiLeft + 132, this.guiTop + 62 + 10 - k, 176, 28 - k, 16, k + 1);
 		}
 		
-		int l = this.getCookPorgressScaled(38);
-		this.drawTexturedModalRect(this.guiLeft + 31, this.guiTop + 33, 176, 0, l, 18);
+		int l = this.getCookPorgressScaled(24);
+		this.drawTexturedModalRect(this.guiLeft + 47, this.guiTop + 34, 176, 0, l, 15);
 	}
 	
 	private int getBurnLeftScaled(int pixels)

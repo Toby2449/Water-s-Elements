@@ -21,10 +21,9 @@ public class ContainerExtractor extends Container
 	{
 		this.tileentity = tileentity;
 		
-		this.addSlotToContainer(new Slot(tileentity, 0, 24, 14)); // input 1
-		this.addSlotToContainer(new Slot(tileentity, 1, 24, 54)); // input 2
-		this.addSlotToContainer(new SlotExtractorFuel(tileentity, 2, 132, 10)); // fuel
-		this.addSlotToContainer(new SlotExtractorOutput(player.player, tileentity, 3, 77, 34)); // output
+		this.addSlotToContainer(new Slot(tileentity, 0, 26, 34)); // input 1
+		this.addSlotToContainer(new SlotExtractorFuel(tileentity, 1, 132, 10)); // fuel
+		this.addSlotToContainer(new SlotExtractorOutput(player.player, tileentity, 2, 80, 34)); // output
 		
 		for(int y = 0; y < 3; y++)
 		{
@@ -92,44 +91,36 @@ public class ContainerExtractor extends Container
 			ItemStack stack1 = slot.getStack();
 			stack = stack1.copy();
 			
-			if(index == 3) 
+			if(index == 2) 
 			{
-				if(!this.mergeItemStack(stack1, 4, 40, true)) return ItemStack.EMPTY;
+				if(!this.mergeItemStack(stack1, 3, 39, true)) return ItemStack.EMPTY;
 				slot.onSlotChange(stack1, stack);
 			}
-			else if(index != 2 && index != 1 && index != 0) 
+			else if(index != 1 && index != 0) 
 			{		
-				Slot slot1 = (Slot)this.inventorySlots.get(index + 1);
+				Slot slot1 = (Slot)this.inventorySlots.get(index);
 				
-				if(!ExtractorRecipes.getInstance().getExtractorResult(stack1, slot1.getStack()).isEmpty())
+				if(ExtractorRecipes.getInstance().getExtractorResult(stack1) != ItemStack.EMPTY)
 				{
-					if(!this.mergeItemStack(stack1, 0, 2, false)) 
+					if(!this.mergeItemStack(stack1, 0, 1, false)) 
 					{
 						return ItemStack.EMPTY;
 					}
 					else if(TileEntityExtractor.isItemFuel(stack1))
 					{
-						if(!this.mergeItemStack(stack1, 2, 3, false)) return ItemStack.EMPTY;
+						if(!this.mergeItemStack(stack1, 1, 2, false)) return ItemStack.EMPTY;
 					}
-					else if(TileEntityExtractor.isItemFuel(stack1))
+					else if(index >= 3 && index < 31)
 					{
-						if(!this.mergeItemStack(stack1, 2, 3, false)) return ItemStack.EMPTY;
+						if(!this.mergeItemStack(stack1, 30, 39, false)) return ItemStack.EMPTY;
 					}
-					else if(TileEntityExtractor.isItemFuel(stack1))
-					{
-						if(!this.mergeItemStack(stack1, 2, 3, false)) return ItemStack.EMPTY;
-					}
-					else if(index >= 4 && index < 31)
-					{
-						if(!this.mergeItemStack(stack1, 31, 40, false)) return ItemStack.EMPTY;
-					}
-					else if(index >= 31 && index < 40 && !this.mergeItemStack(stack1, 4, 31, false))
+					else if(index >= 30 && index < 39 && !this.mergeItemStack(stack1, 3, 30, false))
 					{
 						return ItemStack.EMPTY;
 					}
 				}
 			} 
-			else if(!this.mergeItemStack(stack1, 4, 40, false)) 
+			else if(!this.mergeItemStack(stack1, 3, 39, false)) 
 			{
 				return ItemStack.EMPTY;
 			}

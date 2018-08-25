@@ -1,5 +1,7 @@
 package com.water.elementmod.blocks.extractor;
 
+import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,6 +40,7 @@ public class TileEntityExtractor extends TileEntity  implements ITickable, IInve
 	private int currentBurnTime;
 	private int cookTime;
 	private int totalCookTime = 200;
+	Random randnum;
 
 	@Override
 	public String getName()
@@ -166,9 +169,9 @@ public class TileEntityExtractor extends TileEntity  implements ITickable, IInve
 		
 		if(!this.world.isRemote)
 		{
-			ItemStack stack = (ItemStack)this.inventory.get(2);
+			ItemStack stack = (ItemStack)this.inventory.get(1);
 		
-			if(this.isBurning() || !stack.isEmpty() && !((((ItemStack)this.inventory.get(0)).isEmpty()) || ((ItemStack)this.inventory.get(1)).isEmpty()))
+			if(this.isBurning() || !stack.isEmpty() && !((((ItemStack)this.inventory.get(0)).isEmpty())))
 			{
 				if(!this.isBurning() && this.canSmelt())
 				{
@@ -186,7 +189,7 @@ public class TileEntityExtractor extends TileEntity  implements ITickable, IInve
 							if(stack.isEmpty())
 							{
 								ItemStack item1 = item.getContainerItem(stack);
-								this.inventory.set(2, item1);
+								this.inventory.set(1, item1);
 							}
 						}
 					}
@@ -220,19 +223,19 @@ public class TileEntityExtractor extends TileEntity  implements ITickable, IInve
 	
 	public int getCookTime(ItemStack input1, ItemStack input2)
 	{
-		return 200;
+		return 50;
 	}
 	
 	private boolean canSmelt() 
 	{
-		if(((ItemStack)this.inventory.get(0)).isEmpty() || ((ItemStack)this.inventory.get(1)).isEmpty()) return false;
+		if(((ItemStack)this.inventory.get(0)).isEmpty()) return false;
 		else 
 		{
-			ItemStack result = ExtractorRecipes.getInstance().getExtractorResult((ItemStack)this.inventory.get(0), (ItemStack)this.inventory.get(1));	
+			ItemStack result = ExtractorRecipes.getInstance().getExtractorResult((ItemStack)this.inventory.get(0));	
 			if(result.isEmpty()) return false;
 			else
 			{
-				ItemStack output = (ItemStack)this.inventory.get(3);
+				ItemStack output = (ItemStack)this.inventory.get(2);
 				if(output.isEmpty()) return true;
 				if(!output.isItemEqual(result)) return false;
 				int res = output.getCount() + result.getCount();
@@ -243,19 +246,21 @@ public class TileEntityExtractor extends TileEntity  implements ITickable, IInve
 	
 	public void smeltItem()
 	{
-		
 		if(this.canSmelt())
 		{
 			ItemStack input1 = (ItemStack)this.inventory.get(0);
-			ItemStack input2 = (ItemStack)this.inventory.get(1);
-			ItemStack result = ExtractorRecipes.getInstance().getExtractorResult(input1, input2);
-			ItemStack output = (ItemStack)this.inventory.get(3);
+			ItemStack result = ExtractorRecipes.getInstance().getExtractorResult(input1);
+			ItemStack output = (ItemStack)this.inventory.get(2);
+			Random rand = new Random();
+			int if_going_to_be_empty = rand.nextInt(4);
 			
-			if(output.isEmpty()) this.inventory.set(3, result.copy());
-			else if(output.getItem() == result.getItem()) output.grow(result.getCount());
+			if (if_going_to_be_empty < 1)
+			{
+				if(output.isEmpty()) this.inventory.set(2, result.copy());
+				else if(output.getItem() == result.getItem()) output.grow(result.getCount());
+			}
 			
 			input1.shrink(1);
-			input2.shrink(1);
 		}
 		
 	}
@@ -268,7 +273,7 @@ public class TileEntityExtractor extends TileEntity  implements ITickable, IInve
 			Item item = fuel.getItem();
 
 			
-			if (item == Items.BLAZE_POWDER) return 100;
+			if (item == Items.BLAZE_POWDER) return 200;
 
 			return GameRegistry.getFuelValue(fuel);
 		}
@@ -293,8 +298,8 @@ public class TileEntityExtractor extends TileEntity  implements ITickable, IInve
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack)
 	{
-		if(index == 3) return false;
-		else if(index != 2) return false;
+		if(index == 2) return false;
+		else if(index != 1) return false;
 		else
 		{
 			return isItemFuel(stack);
