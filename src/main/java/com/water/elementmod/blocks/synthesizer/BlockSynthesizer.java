@@ -35,7 +35,7 @@ public class BlockSynthesizer extends BlockBase implements ITileEntityProvider
 {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
-
+	
 	public BlockSynthesizer(String name, Material material, SoundType soundtype, Float hardness, Float resistance,
 			String type, Integer level, Float lightlevel, Integer opacity) 
 	{
@@ -156,10 +156,14 @@ public class BlockSynthesizer extends BlockBase implements ITileEntityProvider
 	@Override
     public IBlockState getStateFromMeta(int meta)
     {
-		EnumFacing facing = EnumFacing.getFront(meta);
-        if(facing.getAxis() == EnumFacing.Axis.Y) facing = EnumFacing.NORTH;
-        
-        boolean blockIsActive = (meta & 8) > 2;
+		boolean blockIsActive = false;
+        if(meta >= 6)
+        {
+            blockIsActive = true;
+            meta = meta - 6;
+        }
+        EnumFacing facing = EnumFacing.getFront(meta);
+        if(facing.getAxis() == EnumFacing.Axis.Y) {facing = EnumFacing.NORTH;}
         
         return this.getDefaultState().withProperty(FACING, facing).withProperty(ACTIVE, blockIsActive);
     }
@@ -167,11 +171,8 @@ public class BlockSynthesizer extends BlockBase implements ITileEntityProvider
     @Override
     public int getMetaFromState(IBlockState state)
     {
-    	int blockIsActive = (state.getValue(ACTIVE) ? 1 : 0) << 3;
-        int facingDirection = ((EnumFacing)state.getValue(FACING)).getIndex();
-
-        //return ((EnumFacing)state.getValue(FACING)).getIndex();
-        return facingDirection | blockIsActive;
+    	int r = state.getValue(ACTIVE) ? 1 : 0;
+        return ((EnumFacing)state.getValue(FACING)).getIndex() + 6*r;
     }
 
 }

@@ -46,13 +46,13 @@ public class BlockExtractor extends BlockBase implements ITileEntityProvider
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
-		return Item.getItemFromBlock(EmBlocks.SYNTHESIZER);
+		return Item.getItemFromBlock(EmBlocks.EXTRACTOR);
 	}
 	
 	@Override
 	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
 	{
-		return new ItemStack(EmBlocks.SYNTHESIZER);
+		return new ItemStack(EmBlocks.EXTRACTOR);
 		
 	}
 	
@@ -62,7 +62,7 @@ public class BlockExtractor extends BlockBase implements ITileEntityProvider
 	{
 		if(!worldIn.isRemote)
 		{
-			playerIn.openGui(Main.instance, References.SYNTHESIZER, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			playerIn.openGui(Main.instance, References.EXTRACTOR, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		
 		return true;
@@ -92,8 +92,8 @@ public class BlockExtractor extends BlockBase implements ITileEntityProvider
 		IBlockState state = worldIn.getBlockState(pos);
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 		
-		if(active) worldIn.setBlockState(pos, EmBlocks.SYNTHESIZER.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVE, true), 3);
-		else worldIn.setBlockState(pos, EmBlocks.SYNTHESIZER.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVE, false), 3);
+		if(active) worldIn.setBlockState(pos, EmBlocks.EXTRACTOR.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVE, true), 3);
+		else worldIn.setBlockState(pos, EmBlocks.EXTRACTOR.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVE, false), 3);
 		
 		if(tileentity != null)
 		{
@@ -156,10 +156,14 @@ public class BlockExtractor extends BlockBase implements ITileEntityProvider
 	@Override
     public IBlockState getStateFromMeta(int meta)
     {
-		EnumFacing facing = EnumFacing.getFront(meta);
-        if(facing.getAxis() == EnumFacing.Axis.Y) facing = EnumFacing.NORTH;
-        
-        boolean blockIsActive = (meta & 8) > 2;
+		boolean blockIsActive = false;
+        if(meta >= 6)
+        {
+            blockIsActive = true;
+            meta = meta - 6;
+        }
+        EnumFacing facing = EnumFacing.getFront(meta);
+        if(facing.getAxis() == EnumFacing.Axis.Y) {facing = EnumFacing.NORTH;}
         
         return this.getDefaultState().withProperty(FACING, facing).withProperty(ACTIVE, blockIsActive);
     }
@@ -167,11 +171,8 @@ public class BlockExtractor extends BlockBase implements ITileEntityProvider
     @Override
     public int getMetaFromState(IBlockState state)
     {
-    	int blockIsActive = (state.getValue(ACTIVE) ? 1 : 0) << 3;
-        int facingDirection = ((EnumFacing)state.getValue(FACING)).getIndex();
-
-        //return ((EnumFacing)state.getValue(FACING)).getIndex();
-        return facingDirection | blockIsActive;
+    	int r = state.getValue(ACTIVE) ? 1 : 0;
+        return ((EnumFacing)state.getValue(FACING)).getIndex() + 6*r;
     }
 
 }
