@@ -1,0 +1,8 @@
+item.fire_sample.name=§6Active Fire Sample§r
+item.water_drop.name=§9Drop of Water§r
+item.nature_sample.name=§2Living Organism§r
+itemGroup.emeverything=Elements
+tile.synthesizer.name=Synthesizer
+container.synthesizer=Synthesizer
+tile.extractor.name=Extractor
+container.extractor=Extractor

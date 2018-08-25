@@ -1,0 +1,16 @@
+[
+{
+  "modid": "em",
+  "name": "Element Mod",
+  "description": "Gives you element enchantments for your weapons and armor. Also adds elemental mobs.",
+  "version": "0.0u1",
+  "mcversion": "1.12.2",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["WateR"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

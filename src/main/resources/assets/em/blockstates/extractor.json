@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "active=false,facing=north": { "model": "em:extractor" },
+		"active=false,facing=east": { "model": "em:extractor", "y": 90 },
+		"active=false,facing=south": { "model": "em:extractor", "y": 180 },
+		"active=false,facing=west": { "model": "em:extractor", "y": 270 },
+		"active=true,facing=north": { "model": "em:lit_extractor" },
+		"active=true,facing=east": { "model": "em:lit_extractor", "y": 90 },
+		"active=true,facing=south": { "model": "em:lit_extractor", "y": 180 },
+		"active=true,facing=west": { "model": "em:lit_extractor", "y": 270 }
+    }
+}

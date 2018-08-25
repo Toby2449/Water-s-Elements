@@ -1,0 +1,12 @@
+{
+   "parent": "block/orientable",
+   "textures": {
+       "particle": "em:blocks/furnace_front_on",
+	   "up": "em:blocks/fire_synthesizer",
+	   "down": "em:blocks/fire_synthesizer",
+	   "north": "em:blocks/furnace_front_on",
+	   "south": "em:blocks/furnace_side",
+	   "west": "em:blocks/furnace_side",
+	   "east": "em:blocks/furnace_side"
+   }
+}
