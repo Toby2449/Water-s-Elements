@@ -1,12 +1,12 @@
 {
    "parent": "block/orientable",
    "textures": {
-       "particle": "em:blocks/furnace_front_on",
-	   "up": "em:blocks/fire_synthesizer",
-	   "down": "em:blocks/fire_synthesizer",
-	   "north": "em:blocks/furnace_front_on",
-	   "south": "em:blocks/furnace_side",
-	   "west": "em:blocks/furnace_side",
-	   "east": "em:blocks/furnace_side"
+       "particle": "em:blocks/extractor_front_on",
+	   "up": "em:blocks/extractor_top",
+	   "down": "em:blocks/extractor_bottom",
+	   "north": "em:blocks/extractor_front_on",
+	   "south": "em:blocks/extractor_side",
+	   "west": "em:blocks/extractor_side",
+	   "east": "em:blocks/extractor_side"
    }
 }
