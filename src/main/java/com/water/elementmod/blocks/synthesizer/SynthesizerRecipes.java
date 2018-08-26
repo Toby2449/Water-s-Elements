@@ -16,7 +16,6 @@ public class SynthesizerRecipes
 {
 	private static final SynthesizerRecipes INSTANCE = new SynthesizerRecipes();
 	private final Table<ItemStack, ItemStack, ItemStack> smeltingList = HashBasedTable.<ItemStack, ItemStack, ItemStack>create();
-	private final Map<ItemStack, Float> experienceList = Maps.<ItemStack, Float>newHashMap();
 	
 	public static SynthesizerRecipes getInstance()
 	{
@@ -25,17 +24,16 @@ public class SynthesizerRecipes
 	
 	private SynthesizerRecipes() 
 	{
-		addSynthesizerRecipe(new ItemStack(EmItems.FIRESMPL), new ItemStack(EmItems.FIRESMPL), new ItemStack(Items.QUARTZ), 5.0F);
-		addSynthesizerRecipe(new ItemStack(EmItems.NATURESMPL), new ItemStack(EmItems.NATURESMPL), new ItemStack(Items.QUARTZ), 5.0F);
-		addSynthesizerRecipe(new ItemStack(EmItems.WATERDRP), new ItemStack(EmItems.WATERDRP), new ItemStack(Items.QUARTZ), 5.0F);
+		addSynthesizerRecipe(new ItemStack(EmItems.FIRESMPL), new ItemStack(EmItems.FIRESMPL), new ItemStack(Items.QUARTZ));
+		addSynthesizerRecipe(new ItemStack(EmItems.NATURESMPL), new ItemStack(EmItems.NATURESMPL), new ItemStack(Items.QUARTZ));
+		addSynthesizerRecipe(new ItemStack(EmItems.WATERDRP), new ItemStack(EmItems.WATERDRP), new ItemStack(Items.QUARTZ));
 	}
 
 	
-	public void addSynthesizerRecipe(ItemStack input1, ItemStack input2, ItemStack result, float experience) 
+	public void addSynthesizerRecipe(ItemStack input1, ItemStack input2, ItemStack result) 
 	{
 		if(getSynthesizerResult(input1, input2) != ItemStack.EMPTY) return;
 		this.smeltingList.put(input1, input2, result);
-		this.experienceList.put(result, Float.valueOf(experience));
 	}
 	
 	public ItemStack getSynthesizerResult(ItemStack input1, ItemStack input2) 
@@ -64,17 +62,5 @@ public class SynthesizerRecipes
 	public Table<ItemStack, ItemStack, ItemStack> getDualSmeltingList() 
 	{
 		return this.smeltingList;
-	}
-	
-	public float getSynthesizerExperience(ItemStack stack)
-	{
-		for (Entry<ItemStack, Float> entry : this.experienceList.entrySet()) 
-		{
-			if(this.compareItemStacks(stack, (ItemStack)entry.getKey())) 
-			{
-				return ((Float)entry.getValue()).floatValue();
-			}
-		}
-		return 0.0F;
 	}
 }

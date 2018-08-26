@@ -2,6 +2,8 @@ package com.water.elementmod.blocks.extractor;
 
 import java.util.Random;
 
+import com.water.elementmod.util.Utils;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -253,12 +255,20 @@ public class TileEntityExtractor extends TileEntity  implements ITickable, IInve
 			ItemStack output = (ItemStack)this.inventory.get(2);
 			Integer percentage = ExtractorRecipes.getInstance().getExtractorPercentage(input);
 			Random rand = new Random();
-			int if_going_to_be_empty = rand.nextInt(100);
+			int failure_percentage = rand.nextInt(100);
 			
-			if (if_going_to_be_empty > percentage - 1) // Subtract 1 because the range is 0 - 99 and we want it to be a (percent)
+			if (percentage != 100)
 			{
+				if (failure_percentage <= percentage)
+				{
+					if(output.isEmpty()) this.inventory.set(2, result.copy());
+					else if(output.getItem() == result.getItem()) output.grow(result.getCount());
+				}
+			} else {
+				
 				if(output.isEmpty()) this.inventory.set(2, result.copy());
 				else if(output.getItem() == result.getItem()) output.grow(result.getCount());
+				
 			}
 			
 			input.shrink(1);
