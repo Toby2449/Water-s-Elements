@@ -9,7 +9,7 @@
   "updateUrl": "",
   "authorList": ["WateR"],
   "credits": "",
-  "logoFile": "",
+  "logoFile": "assets/logo.png",
   "screenshots": [],
   "dependencies": []
 }
