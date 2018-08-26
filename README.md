@@ -2,7 +2,7 @@
 
 ## Reporting bugs/issues
 
-Requirements for reporting an issue/bug (One of the following)
+Requirements for reporting an issue/bug (Choose one or more of the following)
 
 * A crash log
 * How to reproduce the issue
