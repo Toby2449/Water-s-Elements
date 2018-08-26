@@ -248,19 +248,20 @@ public class TileEntityExtractor extends TileEntity  implements ITickable, IInve
 	{
 		if(this.canSmelt())
 		{
-			ItemStack input1 = (ItemStack)this.inventory.get(0);
-			ItemStack result = ExtractorRecipes.getInstance().getExtractorResult(input1);
+			ItemStack input = (ItemStack)this.inventory.get(0);
+			ItemStack result = ExtractorRecipes.getInstance().getExtractorResult(input);
 			ItemStack output = (ItemStack)this.inventory.get(2);
+			Integer percentage = ExtractorRecipes.getInstance().getExtractorPercentage(input);
 			Random rand = new Random();
-			int if_going_to_be_empty = rand.nextInt(4);
+			int if_going_to_be_empty = rand.nextInt(100);
 			
-			if (if_going_to_be_empty < 1)
+			if (if_going_to_be_empty > percentage - 1) // Subtract 1 because the range is 0 - 99 and we want it to be a (percent)
 			{
 				if(output.isEmpty()) this.inventory.set(2, result.copy());
 				else if(output.getItem() == result.getItem()) output.grow(result.getCount());
 			}
 			
-			input1.shrink(1);
+			input.shrink(1);
 		}
 		
 	}

@@ -16,6 +16,7 @@ public class ExtractorRecipes
 {
 	private static final ExtractorRecipes INSTANCE = new ExtractorRecipes();
 	private final Map<ItemStack, ItemStack> smeltingList = Maps.<ItemStack, ItemStack>newHashMap();
+	private final Map<ItemStack, Integer> smeltPercentage = Maps.<ItemStack, Integer>newHashMap();
 	private final Map<ItemStack, Float> experienceList = Maps.<ItemStack, Float>newHashMap();
 	
 	public static ExtractorRecipes getInstance()
@@ -25,14 +26,15 @@ public class ExtractorRecipes
 	
 	private ExtractorRecipes() 
 	{
-		addExtractorRecipe(new ItemStack(EmItems.FIRESMPL), new ItemStack(Items.QUARTZ), 5.0F);
+		addExtractorRecipe(new ItemStack(EmItems.FIRESMPL), new ItemStack(Items.QUARTZ), 5.0F, 75);
 	}
 
 	
-	public void addExtractorRecipe(ItemStack input, ItemStack result, float experience) 
+	public void addExtractorRecipe(ItemStack input, ItemStack result, float experience, int percent) 
 	{
 		if(getExtractorResult(input) != ItemStack.EMPTY) return;
 		this.smeltingList.put(input, result);
+		this.smeltPercentage.put(input, percent);
 		this.experienceList.put(result, Float.valueOf(experience));
 	}
 	
@@ -68,5 +70,17 @@ public class ExtractorRecipes
 			}
 		}
 		return 0.0F;
+	}
+	
+	public int getExtractorPercentage(ItemStack stack)
+	{
+		for (Entry<ItemStack, Integer> entry : this.smeltPercentage.entrySet()) 
+		{
+			if(this.compareItemStacks(stack, (ItemStack)entry.getKey())) 
+			{
+				return ((Integer)entry.getValue()).intValue();
+			}
+		}
+		return 100;
 	}
 }
