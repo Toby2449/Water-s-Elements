@@ -3,6 +3,7 @@ package com.water.elementmod.world.gen;
 import java.util.Random;
 
 import com.water.elementmod.init.EmBlocks;
+import com.water.elementmod.world.gen.predicates.VoidOrePredicate;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.state.pattern.BlockMatcher;
@@ -12,35 +13,47 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.WorldGenMinable;
+import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
 
 public class WorldGenOres implements IWorldGenerator
 {
 	
-	@Override
-	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)
+	private WorldGenerator void_bedrock;
+	
+	public WorldGenOres()
 	{
-		if(world.provider.getDimension() == 0)
+		void_bedrock = new WorldGenMinable(EmBlocks.ORE_VOID_BEDROCK.getDefaultState(), 8, new VoidOrePredicate());
+	}
+	
+	private void runGenerator(WorldGenerator generator, World world, Random rand, int x, int z, int minY, int maxY, int chance)
+	{
+		if (minY < 0 || maxY > 256 || minY > maxY) throw new IllegalArgumentException("World generation 'Y' axis fail");
+		
+		int heightDiff = maxY - minY + 1;
+		for (int i = 0; i < chance; i++)
 		{
-			generateOverworld(random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
+			int axisX = x * 16 + rand.nextInt(16);
+			int axisY = minY + rand.nextInt(heightDiff);
+			int axisZ = z * 16 + rand.nextInt(16);
+			generator.generate(world, rand, new BlockPos(axisX, axisY, axisZ));
 		}
 	}
 	
-	private void generateOverworld(Random rand, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)
+	@Override
+	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)
 	{
-		runGenerator(EmBlocks.ORE_VOID_BEDROCK.getDefaultState(), world, rand, chunkX, chunkZ, 0, 1, 16, 1);
-	}
-	
-	private void runGenerator(IBlockState ore, World world, Random rand, int x, int z, int minY, int maxY, int size, int chance)
-	{
-		int deltaY = maxY - minY;
-		
-		for (int i = 0; i < chance; i++)
+		switch(world.provider.getDimension())
 		{
-			BlockPos pos = new BlockPos(x * 16 + rand.nextInt(16), minY + rand.nextInt(deltaY), z * 16 + rand.nextInt(16));
+		case -1: //Nether
+			break;
 			
-			WorldGenMinable gen = new WorldGenMinable(ore, size, BlockMatcher.forBlock(Blocks.BEDROCK));
-			gen.generate(world, rand, pos);
+		case 0: //Overworld
+			this.runGenerator(void_bedrock, world, random, chunkX, chunkZ, 0, 6, 20);
+			break;
+			
+		case 1: //The End
+			break;
 		}
 	}
 
