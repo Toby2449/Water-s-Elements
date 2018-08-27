@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.water.elementmod.items.ItemBase;
+import com.water.elementmod.items.ItemBaseShiny;
 
 import net.minecraft.item.Item;
 
@@ -12,12 +13,13 @@ public class EmItems
 	
 	public static final List<Item> ITEMS = new ArrayList<Item>();
 	
-	public static final Item FIRESMPL = new ItemBase("fire_sample", 64); // 1.5/0.5x damage to nature
-	public static final Item WATERDRP = new ItemBase("water_drop", 64); // 1.5/0.5x damage to fire
-	public static final Item NATURESMPL = new ItemBase("nature_sample", 64); // 1.5/0.5x damage to water
+	public static final Item VOIDESS = new ItemBaseShiny("item_void_essence", 64);
 	
-	// Coming later maybe
-	//public static final Item ENERGYSMPL = new ItemBase("energy_sample");
-	//public static final Item WINDSMPL = new ItemBase("wind_sample");
-	//public static final Item LIGHTINGSMPL = new ItemBase("lightning_sample");
+	public static final Item FIRESMPL = new ItemBase("item_fire_sample", 64); // 1.5/0.5x damage to nature
+	public static final Item WATERDRP = new ItemBase("item_water_drop", 64); // 1.5/0.5x damage to fire
+	public static final Item NATURESMPL = new ItemBase("item_nature_sample", 64); // 1.5/0.5x damage to water
+	
+	
+	public static final Item EMBERS = new ItemBase("item_scolding_embers", 64);
+
 }

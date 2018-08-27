@@ -8,11 +8,13 @@ import com.water.elementmod.util.Utils;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemBase extends Item implements IHasModel
+public class ItemBaseShiny extends Item implements IHasModel
 {
 
-	public ItemBase(String name, Integer StackSize)
+	public ItemBaseShiny(String name, Integer StackSize)
 	{
 		setUnlocalizedName(name);
 		setRegistryName(name);
@@ -20,6 +22,12 @@ public class ItemBase extends Item implements IHasModel
 		setCreativeTab(Main.tab_everything);
 				
 		EmItems.ITEMS.add(this);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public boolean hasEffect(ItemStack par1ItemStack)
+	{
+		return true;
 	}
 	
 	@Override

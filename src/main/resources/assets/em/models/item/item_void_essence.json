@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "em:items/fire_sample"
+        "layer0": "em:items/void_essence"
     }
 }

@@ -1,8 +1,14 @@
-item.fire_sample.name=§6Active Fire Sample§r
-item.water_drop.name=§9Drop of Water§r
-item.nature_sample.name=§2Living Organism§r
+item.item_fire_sample.name=§6Active Fire Sample§r
+item.item_water_drop.name=§9Drop of Water§r
+item.item_nature_sample.name=§2Living Organism§r
+item.item_scolding_embers.name=§6Scolding Embers§r
+item.item_void_essence.name=§5§lVoid Essence§r
+
 itemGroup.emeverything=WateR's Elements
+
 tile.synthesizer.name=Synthesizer
-container.synthesizer=Synthesizer
 tile.extractor.name=Extractor
+tile.hardened_iron.name=Hardened Iron
+
+container.synthesizer=Synthesizer
 container.extractor=Extractor

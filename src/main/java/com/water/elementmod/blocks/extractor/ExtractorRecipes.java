@@ -26,7 +26,7 @@ public class ExtractorRecipes
 	private ExtractorRecipes() 
 	{
 		// input, output, success percentage
-		addExtractorRecipe(new ItemStack(EmItems.FIRESMPL), new ItemStack(Items.QUARTZ), 90);
+		addExtractorRecipe(new ItemStack(EmItems.FIRESMPL), new ItemStack(EmItems.EMBERS), 70);
 	}
 
 	

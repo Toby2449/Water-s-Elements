@@ -16,7 +16,9 @@ public class EmBlocks
 	
 	public static final List<Block> BLOCKS = new ArrayList<Block>();
 	
-	public static final Block SYNTHESIZER = new BlockSynthesizer("synthesizer", Material.ROCK, SoundType.STONE, 5.0f, 15.0f, "pickaxe", 1, 0.0f, 1);
-	public static final Block EXTRACTOR = new BlockExtractor("extractor", Material.ROCK, SoundType.STONE, 5.0f, 15.0f, "pickaxe", 1, 0.0f, 1);
+	public static final Block HARDENEDIRON = new BlockBase("hardened_iron", Material.IRON, SoundType.METAL, 11.0f, 24.0f, "pickaxe", 2, 0.0f, 15);
+	
+	public static final Block SYNTHESIZER = new BlockSynthesizer("synthesizer", Material.ROCK, SoundType.STONE, 11.0f, 24.0f, "pickaxe", 1, 0.0f, 15);
+	public static final Block EXTRACTOR = new BlockExtractor("extractor", Material.ROCK, SoundType.STONE, 11.0f, 24.0f, "pickaxe", 1, 0.0f, 15);
 	
 }

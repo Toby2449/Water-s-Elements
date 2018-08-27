@@ -2,6 +2,7 @@ package com.water.elementmod.blocks.extractor;
 
 import java.util.Random;
 
+import com.water.elementmod.init.EmItems;
 import com.water.elementmod.util.Utils;
 
 import net.minecraft.block.Block;
@@ -284,7 +285,7 @@ public class TileEntityExtractor extends TileEntity  implements ITickable, IInve
 			Item item = fuel.getItem();
 
 			
-			if (item == Items.BLAZE_POWDER) return 200;
+			if (item == EmItems.VOIDESS) return 200;
 
 			return GameRegistry.getFuelValue(fuel);
 		}
