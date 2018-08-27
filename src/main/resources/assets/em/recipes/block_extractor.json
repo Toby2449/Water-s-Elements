@@ -3,16 +3,21 @@
     
     "pattern":
     [
-        "III",
-        "I#I",
-        "III"
+        "IRI",
+        "RVR",
+        "IRI"
     ],
     
     "key":
     {
-        "#":
+        "V":
         {
-            "item": "minecraft:obsidian"
+            "item": "em:item_void_essence"
+        },
+        
+        "R":
+        {
+            "item": "minecraft:redstone"
         },
         
         "I":
@@ -23,7 +28,7 @@
     
     "result":
     {
-        "item": "em:hardened_iron",
+        "item": "em:extractor",
         "count": 1
     }
 }

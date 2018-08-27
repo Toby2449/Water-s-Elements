@@ -1,9 +1,10 @@
 package com.water.elementmod.util.handlers;
 
-import com.water.elementmod.Main;
 import com.water.elementmod.init.EmBlocks;
 import com.water.elementmod.init.EmItems;
 import com.water.elementmod.util.IHasModel;
+import com.water.elementmod.util.Utils;
+import com.water.elementmod.world.gen.WorldGenOres;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -11,7 +12,7 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @EventBusSubscriber
 public class RegistryHandler 
@@ -49,5 +50,11 @@ public class RegistryHandler
 				((IHasModel)block).registerModels();
 			}
 		}
+	}
+	
+	public static void otherRegistries()
+	{
+		GameRegistry.registerWorldGenerator(new WorldGenOres(), 3);
+		Utils.getLogger().info("World gens intialized");
 	}
 }

@@ -1,0 +1,6 @@
+{
+    "variants":
+    {
+        "normal": { "model": "em:ore_void_bedrock" }
+    }
+}

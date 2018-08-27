@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "#"
+    ],
+    
+    "key":
+    {
+        "#":
+        {
+            "item": "em:item_void_singularity"
+        }
+    },
+    
+    "result":
+    {
+        "item": "em:item_void_essence",
+        "count": 9
+    }
+}

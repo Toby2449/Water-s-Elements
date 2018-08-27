@@ -12,13 +12,13 @@
     {
         "#":
         {
-            "item": "em:item_scolding_embers"
+            "item": "em:item_void_essence"
         }
     },
     
     "result":
     {
-        "item": "minecraft:iron_block",
+        "item": "em:item_void_singularity",
         "count": 1
     }
 }

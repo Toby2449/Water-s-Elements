@@ -1,0 +1,39 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "IRI",
+        "ECE",
+        "IRI"
+    ],
+    
+    "key":
+    {
+        "C":
+        {
+            "item": "em:item_void_crystal"
+        },
+        
+        "E":
+        {
+            "item": "em:item_void_essence"
+        },
+        
+        "R":
+        {
+            "item": "minecraft:redstone"
+        },
+        
+        "I":
+        {
+            "item": "minecraft:iron_ingot"
+        }
+    },
+    
+    "result":
+    {
+        "item": "em:synthesizer",
+        "count": 1
+    }
+}

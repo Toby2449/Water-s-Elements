@@ -13,7 +13,9 @@ public class EmItems
 	
 	public static final List<Item> ITEMS = new ArrayList<Item>();
 	
-	public static final Item VOIDESS = new ItemBaseShiny("item_void_essence", 64);
+	public static final Item VOIDESS = new ItemBaseShiny("item_void_essence", 16);
+	public static final Item VOIDSING = new ItemBaseShiny("item_void_singularity", 1);
+	public static final Item VOIDCRY = new ItemBaseShiny("item_void_crystal", 16);
 	
 	public static final Item FIRESMPL = new ItemBase("item_fire_sample", 64); // 1.5/0.5x damage to nature
 	public static final Item WATERDRP = new ItemBase("item_water_drop", 64); // 1.5/0.5x damage to fire

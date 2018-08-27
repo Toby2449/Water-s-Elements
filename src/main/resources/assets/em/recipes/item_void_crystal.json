@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "###",
+        "#D#",
+        "###"
+    ],
+    
+    "key":
+    {
+        "#":
+        {
+            "item": "em:item_void_essence"
+        },
+        
+        "D":
+        {
+            "item": "minecraft:diamond"
+        }
+    },
+    
+    "result":
+    {
+        "item": "em:item_void_crystal",
+        "count": 1
+    }
+}

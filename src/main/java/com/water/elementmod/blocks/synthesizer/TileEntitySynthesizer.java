@@ -31,7 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class TileEntitySynthesizer extends TileEntity  implements ITickable, IInventory
+public class TileEntitySynthesizer extends TileEntity implements ITickable, IInventory
 {
 	private NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(6, ItemStack.EMPTY);
 	private String customName;
