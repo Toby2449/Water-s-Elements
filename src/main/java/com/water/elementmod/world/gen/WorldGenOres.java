@@ -23,7 +23,7 @@ public class WorldGenOres implements IWorldGenerator
 	
 	public WorldGenOres()
 	{
-		void_bedrock = new WorldGenMinable(EmBlocks.ORE_VOID_BEDROCK.getDefaultState(), 8, new VoidOrePredicate());
+		void_bedrock = new WorldGenMinable(EmBlocks.ORE_VOID_BEDROCK.getDefaultState(), 4, new VoidOrePredicate());
 	}
 	
 	private void runGenerator(WorldGenerator generator, World world, Random rand, int x, int z, int minY, int maxY, int chance)
@@ -49,7 +49,7 @@ public class WorldGenOres implements IWorldGenerator
 			break;
 			
 		case 0: //Overworld
-			this.runGenerator(void_bedrock, world, random, chunkX, chunkZ, 0, 6, 20);
+			this.runGenerator(void_bedrock, world, random, chunkX, chunkZ, 1, 5, 12);
 			break;
 			
 		case 1: //The End

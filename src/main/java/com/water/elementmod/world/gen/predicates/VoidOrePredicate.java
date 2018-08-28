@@ -9,7 +9,7 @@ public class VoidOrePredicate implements Predicate<IBlockState> {
 
 	@Override
 	public boolean apply(IBlockState input) {
-		return input != null && input.getBlock() == Blocks.BEDROCK;
+		return input != null && input.getBlock() == Blocks.STONE;
 	}
 
 }
