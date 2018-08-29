@@ -14,3 +14,12 @@ tile.ore_void_bedrock.name=§5Void Encrusted Bedrock§r
 
 container.synthesizer=Synthesizer
 container.extractor=Extractor
+
+tooltip.Enchant=Element: 
+
+tooltip.FireEnchant=§6§oEnchanted with §lFire§r
+tooltip.WaterEnchant=§9§oEnchanted with §lFire§r
+tooltip.NatureEnchant§2§oEnchanted with §lFire§r
+
+tooltip.EnchantFireLevel=§6§oLevel
+tooltip.ResetFormatting=§r

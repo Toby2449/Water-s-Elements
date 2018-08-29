@@ -42,7 +42,7 @@ public class TileEntityExtractor extends TileEntity implements ITickable, IInven
 	private int burnTime;
 	private int currentBurnTime;
 	private int cookTime;
-	private int totalCookTime = 200;
+	private int totalCookTime = 50;
 	Random randnum;
 
 	@Override
@@ -285,7 +285,7 @@ public class TileEntityExtractor extends TileEntity implements ITickable, IInven
 			Item item = fuel.getItem();
 
 			
-			if (item == EmItems.VOIDESS) return 200;
+			if (item == EmItems.VOIDESS) return 400;
 
 			return GameRegistry.getFuelValue(fuel);
 		}

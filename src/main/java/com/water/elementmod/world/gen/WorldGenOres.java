@@ -49,7 +49,7 @@ public class WorldGenOres implements IWorldGenerator
 			break;
 			
 		case 0: //Overworld
-			this.runGenerator(void_bedrock, world, random, chunkX, chunkZ, 1, 5, 12);
+			this.runGenerator(void_bedrock, world, random, chunkX, chunkZ, 1, 5, 11);
 			break;
 			
 		case 1: //The End

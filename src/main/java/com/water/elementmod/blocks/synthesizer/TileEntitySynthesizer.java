@@ -270,7 +270,7 @@ public class TileEntitySynthesizer extends TileEntity implements ITickable, IInv
 			Item item = fuel.getItem();
 
 			
-			if (item == EmItems.VOIDESS) return 200;
+			if (item == EmItems.VOIDESS) return 1000;
 
 			return GameRegistry.getFuelValue(fuel);
 		}
