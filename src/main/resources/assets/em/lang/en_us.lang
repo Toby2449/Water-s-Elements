@@ -18,8 +18,20 @@ container.extractor=Extractor
 tooltip.Enchant=Element: 
 
 tooltip.FireEnchant=§6§oEnchanted with §lFire§r
-tooltip.WaterEnchant=§9§oEnchanted with §lFire§r
-tooltip.NatureEnchant§2§oEnchanted with §lFire§r
+tooltip.WaterEnchant=§9§oEnchanted with §lWater§r
+tooltip.NatureEnchant§2§oEnchanted with §lNature§r
+
+tooltip.2xDamageNature=§6§o2x Damage to §r§2§l§oNature§r§6§o types§r
 
 tooltip.EnchantFireLevel=§6§oLevel
 tooltip.ResetFormatting=§r
+tooltip.PressAlt=§7§oHold §lALT§r §7§ofor stats...
+tooltip.FireFormatting=§6§o
+tooltip.MoreAttackDamage=Attack Damage
+tooltip.FireDuration=§6§oFire Duration: 
+
+item.fire_sword1.name=Diamond Sword
+item.fire_sword2.name=Diamond Sword
+item.fire_sword3.name=Diamond Sword
+item.fire_sword4.name=Diamond Sword
+item.fire_sword5.name=Diamond Sword
