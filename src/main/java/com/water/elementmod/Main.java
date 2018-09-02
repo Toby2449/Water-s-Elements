@@ -4,6 +4,7 @@ import com.water.elementmod.creativetabs.Tab_Everything;
 import com.water.elementmod.proxy.CommonProxy;
 import com.water.elementmod.util.References;
 import com.water.elementmod.util.Utils;
+import com.water.elementmod.util.handlers.EmSoundHandler;
 import com.water.elementmod.util.handlers.GuiHandler;
 import com.water.elementmod.util.handlers.RegistryHandler;
 
@@ -40,6 +41,7 @@ public class Main
 	public static void Init(FMLInitializationEvent event)
 	{
 		NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, new GuiHandler());
+		EmSoundHandler.init();
 		Utils.getLogger().info("Initialize");
 	}
 	

@@ -7,6 +7,7 @@ import com.water.elementmod.blocks.synthesizer.BlockSynthesizer;
 import com.water.elementmod.blocks.synthesizer.SynthesizerRecipes;
 import com.water.elementmod.init.EmItems;
 import com.water.elementmod.util.Utils;
+import com.water.elementmod.util.handlers.EmSoundHandler;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -16,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
@@ -29,6 +31,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -299,6 +302,11 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 			result.setItemDamage(inputDamage);
 			EnchantmentHelper.setEnchantments(map, result);
 			if(output.isEmpty()) this.inventory.set(3, result.copy());
+			
+			if(input2.getItem() == EmItems.FIRESMPL) this.world.playSound((EntityPlayer)null, this.getPos(), EmSoundHandler.FIRE_BURN, SoundCategory.BLOCKS, 0.9F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+			if(input2.getItem() == EmItems.WATERDRP) this.world.playSound((EntityPlayer)null, this.getPos(), EmSoundHandler.WATER_FLOW, SoundCategory.BLOCKS, 0.9F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+			if(input2.getItem() == EmItems.NATURESMPL) this.world.playSound((EntityPlayer)null, this.getPos(), EmSoundHandler.NATURE_LEAVES, SoundCategory.BLOCKS, 0.9F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+			this.world.playSound((EntityPlayer)null, this.getPos(), SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, this.world.rand.nextFloat() * 0.1F + 0.9F);
 			
 			input1.shrink(1);
 			input2.shrink(1);

@@ -1,0 +1,17 @@
+{
+    "block.infuser.fire": {
+        "category": "block",
+        "subtitle": "block.infuser.fire",
+        "sounds": [ { "name": "em:block/infuser/fire", "stream": true } ]
+    },
+    "block.infuser.water": {
+        "category": "block",
+        "subtitle": "block.infuser.water",
+        "sounds": [ { "name": "em:block/infuser/water", "stream": true } ]
+    },
+    "block.infuser.nature": {
+        "category": "block",
+        "subtitle": "block.infuser.nature",
+        "sounds": [ { "name": "em:block/infuser/nature", "stream": true } ]
+    }
+}
