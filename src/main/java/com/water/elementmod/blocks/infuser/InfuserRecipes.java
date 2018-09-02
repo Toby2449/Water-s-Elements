@@ -26,6 +26,10 @@ public class InfuserRecipes
 	private InfuserRecipes() 
 	{
 		addInfuserItemRecipe(Items.DIAMOND_SWORD, new ItemStack(EmItems.FIRESMPL), EmItems.FIRE_SWORD1);
+		addInfuserItemRecipe(EmItems.FIRE_SWORD1, new ItemStack(EmItems.FIRESMPL), EmItems.FIRE_SWORD2);
+		addInfuserItemRecipe(EmItems.FIRE_SWORD2, new ItemStack(EmItems.FIRESMPL), EmItems.FIRE_SWORD3);
+		addInfuserItemRecipe(EmItems.FIRE_SWORD3, new ItemStack(EmItems.FIRESMPL), EmItems.FIRE_SWORD4);
+		addInfuserItemRecipe(EmItems.FIRE_SWORD4, new ItemStack(EmItems.FIRESMPL), EmItems.FIRE_SWORD5);
 	}
 	
 	public void addInfuserItemRecipe(Item input, ItemStack stack, Item result)

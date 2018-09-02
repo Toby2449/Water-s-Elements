@@ -49,6 +49,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 	private int currentBurnTime;
 	private int cookTime;
 	private int totalCookTime = 800;
+	private int compatible;
 	Random randnum;
 
 	@Override
@@ -135,6 +136,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 		this.cookTime = compound.getInteger("CookTime");
 		this.totalCookTime = compound.getInteger("CookTimeTotal");
 		this.currentBurnTime = getItemBurnTime((ItemStack)this.inventory.get(2));
+		this.compatible = compound.getInteger("compatible");
 		
 		if(compound.hasKey("CustomName", 8)) this.setCustomName(compound.getString("CustomName"));
 	}
@@ -146,6 +148,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 		compound.setInteger("BurnTime", (short)this.burnTime);
 		compound.setInteger("CookTime", (short)this.cookTime);
 		compound.setInteger("CookTimeTotal", (short)this.totalCookTime);
+		compound.setInteger("compatible", (short)this.compatible);
 		ItemStackHelper.saveAllItems(compound, this.inventory);
 		
 		if(this.hasCustomName()) compound.setString("CustomName", this.customName);
@@ -164,6 +167,14 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 	}
 	
 	@SideOnly(Side.CLIENT)
+	public static boolean isCompatible(IInventory inventory) 
+	{
+		if(inventory.getField(4) == 0) return false;
+		if(inventory.getField(4) == 1) return true;
+		return false; // just incase
+	}
+	
+	@SideOnly(Side.CLIENT)
 	public static boolean isBurning(IInventory inventory) 
 	{
 		return inventory.getField(0) > 0;
@@ -178,6 +189,17 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 		
 		if(!this.world.isRemote)
 		{
+			ItemStack check = (ItemStack)this.inventory.get(0);
+			Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(check);
+			if(map.get(Enchantments.FIRE_ASPECT) != null)
+			{
+				this.setField(4, 0);
+			} 
+			else
+			{
+				this.setField(4, 1);
+			}
+			
 			ItemStack stack = (ItemStack)this.inventory.get(2);
 		
 			if(this.isBurning() || !stack.isEmpty() && !((((ItemStack)this.inventory.get(0)).isEmpty()) || ((ItemStack)this.inventory.get(1)).isEmpty()))
@@ -243,10 +265,12 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 			Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments((ItemStack)this.inventory.get(0));
 			if(map.get(Enchantments.FIRE_ASPECT) != null)
 			{
+				this.setField(4, 0);
 				return false;
 			} 
 			else 
 			{
+				this.setField(4, 1);
 				ItemStack result = InfuserRecipes.getInstance().getInfuserResult((ItemStack)this.inventory.get(0), (ItemStack)this.inventory.get(1));	
 				if(result.isEmpty()) return false;
 				else
@@ -340,6 +364,8 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 			return this.cookTime;
 		case 3:
 			return this.totalCookTime;
+		case 4:
+			return this.compatible;
 		default:
 			return 0;
 		}
@@ -360,13 +386,16 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 			break;
 		case 3:
 			this.totalCookTime = value;
+		case 4:
+			this.compatible = value;
+			break;
 		}
 	}
 
 	@Override
 	public int getFieldCount() 
 	{
-		return 4;
+		return 5;
 	}
 
 	@Override

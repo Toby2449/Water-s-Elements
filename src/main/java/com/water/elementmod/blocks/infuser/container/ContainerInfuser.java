@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ContainerInfuser extends Container
 {
 	private final TileEntityInfuser tileentity;
-	private int cookTime, totalCookTime, burnTime, currentBurnTime;
+	private int cookTime, totalCookTime, burnTime, currentBurnTime, compatible;
 	
 	public ContainerInfuser(InventoryPlayer player, TileEntityInfuser tileentity)
 	{
@@ -62,8 +62,10 @@ public class ContainerInfuser extends Container
 			if(this.burnTime != this.tileentity.getField(0)) listener.sendWindowProperty(this, 0, this.tileentity.getField(0));
 			if(this.currentBurnTime != this.tileentity.getField(1)) listener.sendWindowProperty(this, 1, this.tileentity.getField(1));
 			if(this.totalCookTime != this.tileentity.getField(3)) listener.sendWindowProperty(this, 3, this.tileentity.getField(3));
+			if(this.compatible != this.tileentity.getField(4)) listener.sendWindowProperty(this, 4, this.tileentity.getField(4));
 		}
 		
+		this.compatible = this.tileentity.getField(4);
 		this.cookTime = this.tileentity.getField(2);
 		this.burnTime = this.tileentity.getField(0);
 		this.currentBurnTime = this.tileentity.getField(1);

@@ -42,6 +42,11 @@ public class GuiInfuser extends GuiContainer
 			this.drawTexturedModalRect(this.guiLeft + 139, this.guiTop + 50 + 10 - k, 176, 11 - k, 16, k + 1);
 		}
 		
+		if(!TileEntityInfuser.isCompatible(tileentity))
+		{
+			this.drawTexturedModalRect(this.guiLeft + 75, this.guiTop + 33, 0, 184, 22, 15);
+		}
+		
 		int l = this.getCookPorgressScaled(88);
 		this.drawTexturedModalRect(this.guiLeft + 10, this.guiTop + 31, 0, 166, l, 18);
 	}
