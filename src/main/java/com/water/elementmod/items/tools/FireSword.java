@@ -8,17 +8,16 @@ import javax.annotation.Nullable;
 import com.water.elementmod.Main;
 import com.water.elementmod.init.EmItems;
 import com.water.elementmod.util.IHasModel;
+import com.water.elementmod.util.Utils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.util.ActionResult;
@@ -26,7 +25,6 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -41,6 +39,7 @@ public class FireSword extends ItemSword implements IHasModel
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setCreativeTab(Main.tab_everything);
+		canApplyAtEnchantingTable(new ItemStack(this), Enchantments.FIRE_ASPECT);
 		
 		this.level = level;
 		this.material = material;
@@ -75,6 +74,24 @@ public class FireSword extends ItemSword implements IHasModel
 	
 	public int getAddedDamage() {
 		return (int)this.material.getAttackDamage() - (int)ToolMaterial.DIAMOND.getAttackDamage();
+	}
+	
+	@Override
+	public boolean canApplyAtEnchantingTable(ItemStack stack, net.minecraft.enchantment.Enchantment enchantment)
+    {
+		if(!enchantment.equals(Enchantments.FIRE_ASPECT))
+		{
+        	return enchantment.type.canEnchantItem(stack.getItem());
+		}
+		return false;
+    }
+	
+	@Override
+	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+		if(EnchantmentHelper.getEnchantments(book).containsKey(Enchantments.FIRE_ASPECT)){
+			return false;
+		}
+		return true;
 	}
 	
 	public int getFireDuration(Boolean isRandom, Boolean isMax)

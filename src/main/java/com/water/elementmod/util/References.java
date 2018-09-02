@@ -10,5 +10,6 @@ public class References {
 	public static final String COMMON_PROXY_CLASS = "com.water.elementmod.proxy.CommonProxy";
 	public static final int SYNTHESIZER = 0;
 	public static final int EXTRACTOR = 1;
+	public static final int INFUSER = 2;
 	
 }
