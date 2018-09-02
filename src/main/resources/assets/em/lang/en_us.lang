@@ -10,10 +10,12 @@ itemGroup.emeverything=WateR's Elements
 
 tile.synthesizer.name=Synthesizer
 tile.extractor.name=Extractor
+tile.infuser.name=Infuser
 tile.ore_void_bedrock.name=§5Void Encrusted Bedrock§r
 
 container.synthesizer=Synthesizer
 container.extractor=Extractor
+container.infuser=Infuser
 
 tooltip.Enchant=Element: 
 

@@ -1,14 +1,20 @@
 package com.water.elementmod.blocks.infuser;
 
+import java.util.Map;
 import java.util.Random;
 
+import com.water.elementmod.blocks.synthesizer.BlockSynthesizer;
+import com.water.elementmod.blocks.synthesizer.SynthesizerRecipes;
 import com.water.elementmod.init.EmItems;
 import com.water.elementmod.util.Utils;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -42,7 +48,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 	private int burnTime;
 	private int currentBurnTime;
 	private int cookTime;
-	private int totalCookTime = 50;
+	private int totalCookTime = 800;
 	Random randnum;
 
 	@Override
@@ -172,9 +178,9 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 		
 		if(!this.world.isRemote)
 		{
-			ItemStack stack = (ItemStack)this.inventory.get(1);
+			ItemStack stack = (ItemStack)this.inventory.get(2);
 		
-			if(this.isBurning() || !stack.isEmpty() && !((((ItemStack)this.inventory.get(0)).isEmpty())))
+			if(this.isBurning() || !stack.isEmpty() && !((((ItemStack)this.inventory.get(0)).isEmpty()) || ((ItemStack)this.inventory.get(1)).isEmpty()))
 			{
 				if(!this.isBurning() && this.canSmelt())
 				{
@@ -192,7 +198,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 							if(stack.isEmpty())
 							{
 								ItemStack item1 = item.getContainerItem(stack);
-								this.inventory.set(1, item1);
+								this.inventory.set(2, item1);
 							}
 						}
 					}
@@ -226,23 +232,31 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 	
 	public int getCookTime(ItemStack input1, ItemStack input2)
 	{
-		return 50;
+		return 800;
 	}
 	
 	private boolean canSmelt() 
 	{
-		if(((ItemStack)this.inventory.get(0)).isEmpty()) return false;
+		if(((ItemStack)this.inventory.get(0)).isEmpty() || ((ItemStack)this.inventory.get(1)).isEmpty()) return false;
 		else 
 		{
-			ItemStack result = InfuserRecipes.getInstance().getInfuserResult((ItemStack)this.inventory.get(0));	
-			if(result.isEmpty()) return false;
-			else
+			Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments((ItemStack)this.inventory.get(0));
+			if(map.get(Enchantments.FIRE_ASPECT) != null)
 			{
-				ItemStack output = (ItemStack)this.inventory.get(2);
-				if(output.isEmpty()) return true;
-				if(!output.isItemEqual(result)) return false;
-				int res = output.getCount() + result.getCount();
-				return res <= getInventoryStackLimit() && res <= output.getMaxStackSize();
+				return false;
+			} 
+			else 
+			{
+				ItemStack result = InfuserRecipes.getInstance().getInfuserResult((ItemStack)this.inventory.get(0), (ItemStack)this.inventory.get(1));	
+				if(result.isEmpty()) return false;
+				else
+				{
+					ItemStack output = (ItemStack)this.inventory.get(3);
+					if(output.isEmpty()) return true;
+					if(!output.isItemEqual(result)) return false;
+					int res = output.getCount() + result.getCount();
+					return res <= getInventoryStackLimit() && res <= output.getMaxStackSize();
+				}
 			}
 		}
 	}
@@ -251,28 +265,19 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 	{
 		if(this.canSmelt())
 		{
-			ItemStack input = (ItemStack)this.inventory.get(0);
-			ItemStack result = InfuserRecipes.getInstance().getInfuserResult(input);
-			ItemStack output = (ItemStack)this.inventory.get(2);
-			Integer percentage = InfuserRecipes.getInstance().getInfuserPercentage(input);
-			Random rand = new Random();
-			int failure_percentage = rand.nextInt(100);
+			ItemStack input1 = (ItemStack)this.inventory.get(0);
+			Integer inputDamage = this.inventory.get(0).getItemDamage();
+			ItemStack input2 = (ItemStack)this.inventory.get(1);
+			ItemStack result = InfuserRecipes.getInstance().getInfuserResult(input1, input2);
+			ItemStack output = (ItemStack)this.inventory.get(3);
+			Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(input1);
 			
-			if (percentage != 100)
-			{
-				if (failure_percentage <= percentage)
-				{
-					if(output.isEmpty()) this.inventory.set(2, result.copy());
-					else if(output.getItem() == result.getItem()) output.grow(result.getCount());
-				}
-			} else {
-				
-				if(output.isEmpty()) this.inventory.set(2, result.copy());
-				else if(output.getItem() == result.getItem()) output.grow(result.getCount());
-				
-			}
+			result.setItemDamage(inputDamage);
+			EnchantmentHelper.setEnchantments(map, result);
+			if(output.isEmpty()) this.inventory.set(3, result.copy());
 			
-			input.shrink(1);
+			input1.shrink(1);
+			input2.shrink(1);
 		}
 		
 	}
@@ -285,7 +290,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 			Item item = fuel.getItem();
 
 			
-			if (item == EmItems.VOIDESS) return 400;
+			if (item == EmItems.VOIDSING) return 800;
 
 			return GameRegistry.getFuelValue(fuel);
 		}

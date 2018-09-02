@@ -2,6 +2,8 @@ package com.water.elementmod.blocks.infuser.container;
 
 import com.water.elementmod.blocks.infuser.InfuserRecipes;
 import com.water.elementmod.blocks.infuser.TileEntityInfuser;
+import com.water.elementmod.blocks.synthesizer.SynthesizerRecipes;
+import com.water.elementmod.blocks.synthesizer.TileEntitySynthesizer;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -21,9 +23,10 @@ public class ContainerInfuser extends Container
 	{
 		this.tileentity = tileentity;
 		
-		this.addSlotToContainer(new Slot(tileentity, 0, 26, 34)); // input 1
-		this.addSlotToContainer(new SlotInfuserFuel(tileentity, 1, 132, 10)); // fuel
-		this.addSlotToContainer(new SlotInfuserOutput(player.player, tileentity, 2, 80, 34)); // output
+		this.addSlotToContainer(new Slot(tileentity, 0, 12, 32)); // input 1
+		this.addSlotToContainer(new Slot(tileentity, 1, 55, 32)); // input 2
+		this.addSlotToContainer(new SlotInfuserFuel(tileentity, 2, 139, 10)); // fuel
+		this.addSlotToContainer(new SlotInfuserOutput(player.player, tileentity, 3, 101, 32)); // output
 		
 		for(int y = 0; y < 3; y++)
 		{
@@ -91,36 +94,44 @@ public class ContainerInfuser extends Container
 			ItemStack stack1 = slot.getStack();
 			stack = stack1.copy();
 			
-			if(index == 2) 
+			if(index == 3) 
 			{
-				if(!this.mergeItemStack(stack1, 3, 39, true)) return ItemStack.EMPTY;
+				if(!this.mergeItemStack(stack1, 4, 40, true)) return ItemStack.EMPTY;
 				slot.onSlotChange(stack1, stack);
 			}
-			else if(index != 1 && index != 0) 
+			else if(index != 2 && index != 1 && index != 0) 
 			{		
-				Slot slot1 = (Slot)this.inventorySlots.get(index);
+				Slot slot1 = (Slot)this.inventorySlots.get(index + 1);
 				
-				if(InfuserRecipes.getInstance().getInfuserResult(stack1) != ItemStack.EMPTY)
+				if(!SynthesizerRecipes.getInstance().getSynthesizerResult(stack1, slot1.getStack()).isEmpty())
 				{
-					if(!this.mergeItemStack(stack1, 0, 1, false)) 
+					if(!this.mergeItemStack(stack1, 0, 2, false)) 
 					{
 						return ItemStack.EMPTY;
 					}
-					else if(TileEntityInfuser.isItemFuel(stack1))
+					else if(TileEntitySynthesizer.isItemFuel(stack1))
 					{
-						if(!this.mergeItemStack(stack1, 1, 2, false)) return ItemStack.EMPTY;
+						if(!this.mergeItemStack(stack1, 2, 3, false)) return ItemStack.EMPTY;
 					}
-					else if(index >= 3 && index < 31)
+					else if(TileEntitySynthesizer.isItemFuel(stack1))
 					{
-						if(!this.mergeItemStack(stack1, 30, 39, false)) return ItemStack.EMPTY;
+						if(!this.mergeItemStack(stack1, 2, 3, false)) return ItemStack.EMPTY;
 					}
-					else if(index >= 30 && index < 39 && !this.mergeItemStack(stack1, 3, 30, false))
+					else if(TileEntitySynthesizer.isItemFuel(stack1))
+					{
+						if(!this.mergeItemStack(stack1, 2, 3, false)) return ItemStack.EMPTY;
+					}
+					else if(index >= 4 && index < 31)
+					{
+						if(!this.mergeItemStack(stack1, 31, 40, false)) return ItemStack.EMPTY;
+					}
+					else if(index >= 31 && index < 40 && !this.mergeItemStack(stack1, 4, 31, false))
 					{
 						return ItemStack.EMPTY;
 					}
 				}
 			} 
-			else if(!this.mergeItemStack(stack1, 3, 39, false)) 
+			else if(!this.mergeItemStack(stack1, 4, 40, false)) 
 			{
 				return ItemStack.EMPTY;
 			}

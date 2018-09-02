@@ -1,0 +1,12 @@
+{
+   "parent": "block/orientable",
+   "textures": {
+       "particle": "em:blocks/infuser_front_on",
+	   "up": "em:blocks/infuser_top",
+	   "down": "em:blocks/infuser_bottom",
+	   "north": "em:blocks/infuser_front_on",
+	   "south": "em:blocks/infuser_side",
+	   "west": "em:blocks/infuser_side",
+	   "east": "em:blocks/infuser_side"
+   }
+}

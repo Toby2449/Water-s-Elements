@@ -39,11 +39,11 @@ public class GuiInfuser extends GuiContainer
 		if(TileEntityInfuser.isBurning(tileentity))
 		{
 			int k = this.getBurnLeftScaled(11);
-			this.drawTexturedModalRect(this.guiLeft + 132, this.guiTop + 62 + 10 - k, 176, 28 - k, 16, k + 1);
+			this.drawTexturedModalRect(this.guiLeft + 139, this.guiTop + 50 + 10 - k, 176, 11 - k, 16, k + 1);
 		}
 		
-		int l = this.getCookPorgressScaled(24);
-		this.drawTexturedModalRect(this.guiLeft + 47, this.guiTop + 34, 176, 0, l, 15);
+		int l = this.getCookPorgressScaled(88);
+		this.drawTexturedModalRect(this.guiLeft + 10, this.guiTop + 31, 0, 166, l, 18);
 	}
 	
 	private int getBurnLeftScaled(int pixels)
