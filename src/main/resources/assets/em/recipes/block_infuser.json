@@ -1,0 +1,39 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "IRI",
+        "ESE",
+        "IRI"
+    ],
+    
+    "key":
+    {
+        "S":
+        {
+            "item": "em:nether_star"
+        },
+        
+        "E":
+        {
+            "item": "em:item_void_singularity"
+        },
+        
+        "R":
+        {
+            "item": "minecraft:redstone"
+        },
+        
+        "I":
+        {
+            "item": "minecraft:iron_ingot"
+        }
+    },
+    
+    "result":
+    {
+        "item": "em:infuser",
+        "count": 1
+    }
+}

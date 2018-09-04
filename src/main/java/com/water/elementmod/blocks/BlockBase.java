@@ -20,7 +20,7 @@ public class BlockBase extends Block implements IHasModel
 		super(material);
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(Main.tab_everything);
+		setCreativeTab(Main.tab_main);
 		setSoundType(soundtype);
 		setHardness(hardness);
 		setResistance(resistance); //Blast resistance

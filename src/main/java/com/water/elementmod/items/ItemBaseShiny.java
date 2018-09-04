@@ -19,7 +19,7 @@ public class ItemBaseShiny extends Item implements IHasModel
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		maxStackSize = StackSize;
-		setCreativeTab(Main.tab_everything);
+		setCreativeTab(Main.tab_main);
 				
 		EmItems.ITEMS.add(this);
 	}

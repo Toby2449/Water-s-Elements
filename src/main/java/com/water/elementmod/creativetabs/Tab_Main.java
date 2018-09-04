@@ -3,15 +3,15 @@ package com.water.elementmod.creativetabs;
 import com.water.elementmod.init.EmItems;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
-public class Tab_Everything extends CreativeTabs 
+public class Tab_Main extends CreativeTabs 
 {
 
-	public Tab_Everything() 
+	public Tab_Main() 
 	{
-		super("emeverything");
+		super("emmain");
 	}
 
 	@Override
@@ -19,5 +19,4 @@ public class Tab_Everything extends CreativeTabs
 	{
 		return new ItemStack(EmItems.FIRESMPL);
 	}
-
 }

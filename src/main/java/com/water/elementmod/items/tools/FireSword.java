@@ -38,7 +38,7 @@ public class FireSword extends ItemSword implements IHasModel
 		super(material);
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(Main.tab_everything);
+		setCreativeTab(Main.tab_weapons);
 		canApplyAtEnchantingTable(new ItemStack(this), Enchantments.FIRE_ASPECT);
 		
 		this.level = level;
@@ -60,6 +60,16 @@ public class FireSword extends ItemSword implements IHasModel
 			return "IV";
 		case 5:
 			return  "V";
+		case 6:
+			return  "VI";
+		case 7:
+			return  "VII";
+		case 8:
+			return  "VIII";
+		case 9:
+			return  "IX";
+		case 10:
+			return  "X";
 		}
 		
 		return "??";
@@ -115,8 +125,23 @@ public class FireSword extends ItemSword implements IHasModel
 				if(!isRandom) return 5;
 				return 5 + rand.nextInt(Range + 1);
 			case 5:
+				if(!isRandom) return 5;
+				return 5 + rand.nextInt(Range + 1);
+			case 6:
 				if(!isRandom) return 6;
-				return 6 + rand.nextInt(Range + 1); // Have to add +1 because it goes from 0-1 (which is 2 numbers)
+				return 6 + rand.nextInt(Range + 1);
+			case 7:
+				if(!isRandom) return 7;
+				return 7 + rand.nextInt(Range + 1);
+			case 8:
+				if(!isRandom) return 8;
+				return 8 + rand.nextInt(Range + 1);
+			case 9:
+				if(!isRandom) return 9;
+				return 9 + rand.nextInt(Range + 1);
+			case 10:
+				if(!isRandom) return 10;
+				return 10 + rand.nextInt(Range + 1); // Have to add +1 because it goes from 0-1 (which is 2 numbers)
 			}
 		}
 		return Range;
@@ -154,12 +179,12 @@ public class FireSword extends ItemSword implements IHasModel
 	{
 		World world = Minecraft.getMinecraft().world;
 		if(world == null) return false;
-		for(int countparticles = 0; countparticles <= 7 * this.level; ++countparticles)
+		for(int countparticles = 0; countparticles <= 7 * this.level / 2; ++countparticles)
 		{
 			Random rand = new Random();
 			world.spawnParticle(EnumParticleTypes.FLAME, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
 		}
-		for(int countparticles = 0; countparticles <= 10 * this.level; ++countparticles)
+		for(int countparticles = 0; countparticles <= 20 * this.level / 2; ++countparticles)
 		{
 			Random rand = new Random();
 			world.spawnParticle(EnumParticleTypes.LAVA, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
@@ -170,8 +195,6 @@ public class FireSword extends ItemSword implements IHasModel
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer target, EnumHand handIn)
     {
-		Random rand = new Random();
-		target.getEntityWorld().spawnParticle(EnumParticleTypes.FLAME, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
 		
 		return new ActionResult<ItemStack>(EnumActionResult.PASS, target.getHeldItem(handIn));
 	}

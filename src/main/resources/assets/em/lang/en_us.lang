@@ -6,7 +6,8 @@ item.item_void_essence.name=§5§oVoid Essence§r
 item.item_void_singularity.name=§5§lVoid Singularity§r
 item.item_void_crystal.name=§5§lVoid Crystal§r
 
-itemGroup.emeverything=WateR's Elements
+itemGroup.emmain=WateR's Elements Main
+itemGroup.emweapons=WateR's Elements Weapons
 
 tile.synthesizer.name=Synthesizer
 tile.extractor.name=Extractor
@@ -25,7 +26,7 @@ tooltip.NatureEnchant§2§oEnchanted with §lNature§r
 
 tooltip.2xDamageNature=§6§o2x Damage to §r§2§l§oNature§r§6§o types§r
 
-tooltip.EnchantFireLevel=§6§oLevel
+tooltip.EnchantFireLevel=§6§oLevel§r§6§l
 tooltip.ResetFormatting=§r
 tooltip.PressAlt=§7§oHold §lALT§r §7§ofor stats...
 tooltip.FireFormatting=§6§o
@@ -37,3 +38,8 @@ item.fire_sword2.name=Diamond Sword
 item.fire_sword3.name=Diamond Sword
 item.fire_sword4.name=Diamond Sword
 item.fire_sword5.name=Diamond Sword
+item.fire_sword6.name=Diamond Sword
+item.fire_sword7.name=Diamond Sword
+item.fire_sword8.name=Diamond Sword
+item.fire_sword9.name=Diamond Sword
+item.fire_sword10.name=Diamond Sword

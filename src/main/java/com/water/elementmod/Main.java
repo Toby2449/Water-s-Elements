@@ -1,6 +1,7 @@
 package com.water.elementmod;
 
-import com.water.elementmod.creativetabs.Tab_Everything;
+import com.water.elementmod.creativetabs.Tab_Main;
+import com.water.elementmod.creativetabs.Tab_Weapons;
 import com.water.elementmod.proxy.CommonProxy;
 import com.water.elementmod.util.References;
 import com.water.elementmod.util.Utils;
@@ -22,7 +23,8 @@ public class Main
 {
 	
 	//Creative Tab
-	public static final CreativeTabs tab_everything = new Tab_Everything();
+	public static final CreativeTabs tab_main = new Tab_Main();
+	public static final CreativeTabs tab_weapons = new Tab_Weapons();
 	
 	@Mod.Instance(References.MOD_ID)
 	public static Main instance;
