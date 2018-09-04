@@ -7,7 +7,6 @@ import com.water.elementmod.blocks.BlockBase;
 import com.water.elementmod.init.EmBlocks;
 import com.water.elementmod.util.References;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
@@ -26,21 +25,45 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockInfuser extends BlockBase implements ITileEntityProvider
 {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
+	public static final AxisAlignedBB INFUSER_AABB = new AxisAlignedBB(0.1875D, 0.0D, 0.1875D, 0.8125D, 0.9375, 0.8125D);
 
 	public BlockInfuser(String name, Material material, SoundType soundtype, Float hardness, Float resistance,
 			String type, Integer level, Float lightlevel, Integer opacity) 
 	{
 		super(name, material, soundtype, hardness, resistance, type, level, lightlevel, opacity);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
+	}
+	
+	@Override
+	public boolean isOpaqueCube(IBlockState state)
+	{
+		return false;
+	}
+	
+	@Override
+	public boolean isFullCube(IBlockState state)
+	{
+		return false;
+	}
+	
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+	{
+		return INFUSER_AABB;
 	}
 	
 	@Override
@@ -173,6 +196,63 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
     {
     	int r = state.getValue(ACTIVE) ? 1 : 0;
         return ((EnumFacing)state.getValue(FACING)).getIndex() + 6*r;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
+    {
+		this.spawnParticles(worldIn, pos, rand);
+    }
+	
+	private void spawnParticles(World worldIn, BlockPos pos, Random rand)
+    {
+        Random random = worldIn.rand;
+        double d0 = 0.0625D;
+
+        for (int i = 0; i < 6; ++i)
+        {
+            double d1 = (double)((float)pos.getX() + random.nextFloat());
+            double d2 = (double)((float)pos.getY() + random.nextFloat());
+            double d3 = (double)((float)pos.getZ() + random.nextFloat());
+
+            if (i == 0 && !worldIn.getBlockState(pos.up()).isOpaqueCube())
+            {
+                d2 = (double)pos.getY() + 0.0625D + 1.0D;
+            }
+
+            if (i == 1 && !worldIn.getBlockState(pos.down()).isOpaqueCube())
+            {
+                d2 = (double)pos.getY() - 0.0625D;
+            }
+
+            if (i == 2 && !worldIn.getBlockState(pos.south()).isOpaqueCube())
+            {
+                d3 = (double)pos.getZ() + 0.0625D + 1.0D;
+            }
+
+            if (i == 3 && !worldIn.getBlockState(pos.north()).isOpaqueCube())
+            {
+                d3 = (double)pos.getZ() - 0.0625D;
+            }
+
+            if (i == 4 && !worldIn.getBlockState(pos.east()).isOpaqueCube())
+            {
+                d1 = (double)pos.getX() + 0.0625D + 1.0D;
+            }
+
+            if (i == 5 && !worldIn.getBlockState(pos.west()).isOpaqueCube())
+            {
+                d1 = (double)pos.getX() - 0.0625D;
+            }
+
+            if (d1 < (double)pos.getX() || d1 > (double)(pos.getX() + 1) || d2 < 0.0D || d2 > (double)(pos.getY() + 1) || d3 < (double)pos.getZ() || d3 > (double)(pos.getZ() + 1))
+            {
+            	for (int i1 = 0; i1 < 3; ++i1)
+                {
+            		worldIn.spawnParticle(EnumParticleTypes.PORTAL, d1, d2, d3, (rand.nextDouble() - 0.5D) * 2.0D, -rand.nextDouble(), (rand.nextDouble() - 0.5D) * 2.0D);
+                }
+            }
+        }
     }
 
 }
