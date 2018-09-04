@@ -247,7 +247,7 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 
             if (d1 < (double)pos.getX() || d1 > (double)(pos.getX() + 1) || d2 < 0.0D || d2 > (double)(pos.getY() + 1) || d3 < (double)pos.getZ() || d3 > (double)(pos.getZ() + 1))
             {
-            	for (int i1 = 0; i1 < 3; ++i1)
+            	for (int i1 = 0; i1 < 1; ++i1)
                 {
             		worldIn.spawnParticle(EnumParticleTypes.PORTAL, d1, d2, d3, (rand.nextDouble() - 0.5D) * 2.0D, -rand.nextDouble(), (rand.nextDouble() - 0.5D) * 2.0D);
                 }

@@ -1,12 +1,12 @@
 {
     "variants": {
-        "active=false,facing=north": { "model": "em:infuser" },
-		"active=false,facing=east": { "model": "em:infuser", "y": 90 },
-		"active=false,facing=south": { "model": "em:infuser", "y": 180 },
-		"active=false,facing=west": { "model": "em:infuser", "y": 270 },
-		"active=true,facing=north": { "model": "em:lit_infuser" },
-		"active=true,facing=east": { "model": "em:lit_infuser", "y": 90 },
-		"active=true,facing=south": { "model": "em:lit_infuser", "y": 180 },
-		"active=true,facing=west": { "model": "em:lit_infuser", "y": 270 }
+        "active=false,facing=north": { "model": "em:infuser", "y": 90 },
+		"active=false,facing=east": { "model": "em:infuser" },
+		"active=false,facing=south": { "model": "em:infuser", "y": 90 },
+		"active=false,facing=west": { "model": "em:infuser" },
+		"active=true,facing=north": { "model": "em:lit_infuser", "y": 270 },
+		"active=true,facing=east": { "model": "em:lit_infuser" },
+		"active=true,facing=south": { "model": "em:lit_infuser", "y": 270 },
+		"active=true,facing=west": { "model": "em:lit_infuser" }
     }
 }

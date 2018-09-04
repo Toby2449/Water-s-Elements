@@ -3,9 +3,9 @@
     
     "pattern":
     [
-        "IRI",
-        "ESE",
-        "IRI"
+        "CSC",
+        "IEI",
+        "OOO"
     ],
     
     "key":
@@ -20,9 +20,14 @@
             "item": "em:item_void_singularity"
         },
         
-        "R":
+        "C":
         {
-            "item": "minecraft:redstone"
+            "item": "em:item_void_crystal"
+        },
+        
+        "O":
+        {
+            "item": "minecraft:obsidian"
         },
         
         "I":
