@@ -18,6 +18,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -28,6 +29,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -39,6 +41,8 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
+	public static int Element;
+	
 	public static final AxisAlignedBB INFUSER_AABB = new AxisAlignedBB(0.1875D, 0.0D, 0.1875D, 0.8125D, 0.9375, 0.8125D);
 
 	public BlockInfuser(String name, Material material, SoundType soundtype, Float hardness, Float resistance,
@@ -46,6 +50,11 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 	{
 		super(name, material, soundtype, hardness, resistance, type, level, lightlevel, opacity);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
+	}
+	
+	public static void setElement(Integer arg)
+	{
+		Element = arg;
 	}
 	
 	@Override
@@ -199,9 +208,104 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
     }
     
     @SideOnly(Side.CLIENT)
+    @SuppressWarnings("incomplete-switch")
     public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
     {
 		this.spawnParticles(worldIn, pos, rand);
+		if (stateIn.getValue(ACTIVE))
+        {
+            EnumFacing enumfacing = (EnumFacing)stateIn.getValue(FACING);
+            double d0 = (double)pos.getX() + 5.0D / 16.0D + rand.nextDouble() * 5.0D / 16.0D;
+            double d1 = (double)pos.getY() + 1.0D;
+            double d2 = (double)pos.getZ() + rand.nextDouble();
+            
+            double f3 = (double)pos.getX() + rand.nextDouble();
+            double f4 = (double)pos.getZ() + 5.0D / 16.0D + rand.nextDouble() * 5.0D / 16.0D;
+            
+            switch (enumfacing)
+            {
+                case WEST:
+                	if(Element == 0)
+                	{
+	                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+	                    worldIn.spawnParticle(EnumParticleTypes.FLAME, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+	                    worldIn.spawnParticle(EnumParticleTypes.LAVA, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+                	}
+                	if(Element == 1)
+                	{
+                		for (int i1 = 0; i1 < 3; ++i1)
+	                    {
+	                		worldIn.spawnParticle(EnumParticleTypes.WATER_DROP, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+	                		worldIn.spawnParticle(EnumParticleTypes.WATER_WAKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+	                    }
+	                    for (int i1 = 0; i1 < 10; ++i1)
+	                    {
+		                    worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+	                    }
+                	}
+                    break;
+                case EAST:
+                	if(Element == 0)
+                	{
+	                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+	                    worldIn.spawnParticle(EnumParticleTypes.FLAME, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+	                    worldIn.spawnParticle(EnumParticleTypes.LAVA, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+                	}
+                	if(Element == 1)
+                	{
+                		for (int i1 = 0; i1 < 3; ++i1)
+	                    {
+	                		worldIn.spawnParticle(EnumParticleTypes.WATER_DROP, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+	                		worldIn.spawnParticle(EnumParticleTypes.WATER_WAKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+	                    }
+	                    for (int i1 = 0; i1 < 10; ++i1)
+	                    {
+		                    worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+	                    }
+                	}
+                    break;
+                case NORTH:
+                	if(Element == 0)
+                	{
+	                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+	                    worldIn.spawnParticle(EnumParticleTypes.FLAME, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+	                    worldIn.spawnParticle(EnumParticleTypes.LAVA, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+                	}
+                	if(Element == 1)
+                	{
+                		for (int i1 = 0; i1 < 3; ++i1)
+	                    {
+	                		worldIn.spawnParticle(EnumParticleTypes.WATER_DROP, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+	                		worldIn.spawnParticle(EnumParticleTypes.WATER_WAKE, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+	                    }
+	                    for (int i1 = 0; i1 < 10; ++i1)
+	                    {
+		                    worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+	                    }
+                	}
+                    break;
+                case SOUTH:
+                	if(Element == 0)
+                	{
+	                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+	                    worldIn.spawnParticle(EnumParticleTypes.FLAME, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+	                    worldIn.spawnParticle(EnumParticleTypes.LAVA, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+                	}
+                	if(Element == 1)
+                	{
+                		for (int i1 = 0; i1 < 3; ++i1)
+	                    {
+	                		worldIn.spawnParticle(EnumParticleTypes.WATER_DROP, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+	                		worldIn.spawnParticle(EnumParticleTypes.WATER_WAKE, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+	                    }
+	                    for (int i1 = 0; i1 < 10; ++i1)
+	                    {
+		                    worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+	                    }
+                	}
+                	break;
+            }
+        }
     }
 	
 	private void spawnParticles(World worldIn, BlockPos pos, Random rand)

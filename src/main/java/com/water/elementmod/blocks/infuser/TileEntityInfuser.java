@@ -169,6 +169,11 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 		return this.burnTime > 0;
 	}
 	
+	public boolean isCooking() 
+	{
+		return this.cookTime > 0;
+	}
+	
 	@SideOnly(Side.CLIENT)
 	public static boolean isCompatible(IInventory inventory) 
 	{
@@ -251,7 +256,10 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 		if(flag != this.isBurning())
 		{
 			flag1 = true;
-			BlockInfuser.setState(this.isBurning(), this.world, this.pos);
+			if(this.inventory.get(1).getItem() == EmItems.FIRESMPL) BlockInfuser.setElement(1);
+			if(this.inventory.get(1).getItem() == EmItems.WATERDRP) BlockInfuser.setElement(0);
+			if(this.inventory.get(1).getItem() == EmItems.NATURESMPL) BlockInfuser.setElement(2);
+			BlockInfuser.setState(this.isCooking(), this.world, this.pos);
 		}
 	}
 	
