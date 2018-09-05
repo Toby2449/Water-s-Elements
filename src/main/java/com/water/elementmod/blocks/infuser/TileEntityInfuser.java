@@ -256,8 +256,8 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 		if(flag != this.isBurning())
 		{
 			flag1 = true;
-			if(this.inventory.get(1).getItem() == EmItems.FIRESMPL) BlockInfuser.setElement(1);
-			if(this.inventory.get(1).getItem() == EmItems.WATERDRP) BlockInfuser.setElement(0);
+			if(this.inventory.get(1).getItem() == EmItems.FIRESMPL) BlockInfuser.setElement(0);
+			if(this.inventory.get(1).getItem() == EmItems.WATERDRP) BlockInfuser.setElement(1);
 			if(this.inventory.get(1).getItem() == EmItems.NATURESMPL) BlockInfuser.setElement(2);
 			BlockInfuser.setState(this.isCooking(), this.world, this.pos);
 		}

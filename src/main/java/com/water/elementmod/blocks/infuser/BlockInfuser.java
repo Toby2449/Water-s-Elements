@@ -1,6 +1,9 @@
 package com.water.elementmod.blocks.infuser;
 
+import java.util.List;
 import java.util.Random;
+
+import javax.annotation.Nullable;
 
 import com.water.elementmod.Main;
 import com.water.elementmod.blocks.BlockBase;
@@ -14,8 +17,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -23,6 +28,7 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -44,6 +50,7 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 	public static int Element;
 	
 	public static final AxisAlignedBB INFUSER_AABB = new AxisAlignedBB(0.1875D, 0.0D, 0.1875D, 0.8125D, 0.9375, 0.8125D);
+	public static final AxisAlignedBB INFUSER_BASE_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D);
 
 	public BlockInfuser(String name, Material material, SoundType soundtype, Float hardness, Float resistance,
 			String type, Integer level, Float lightlevel, Integer opacity) 
@@ -64,15 +71,28 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 	}
 	
 	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state)
+    {
+        return EnumBlockRenderType.MODEL;
+    }
+	
+	@Override
 	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}
 	
 	@Override
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean isActualState)
+    {
+        addCollisionBoxToList(pos, entityBox, collidingBoxes, INFUSER_AABB);
+        addCollisionBoxToList(pos, entityBox, collidingBoxes, INFUSER_BASE_AABB);
+    }
+	
+	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
-		return INFUSER_AABB;
+		return INFUSER_BASE_AABB;
 	}
 	
 	@Override
@@ -161,12 +181,6 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 	}
 	
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) 
-	{
-		return EnumBlockRenderType.MODEL;
-	}
-	
-	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot)
 	{
 		return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
@@ -227,8 +241,12 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
                 case WEST:
                 	if(Element == 0)
                 	{
-	                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, 0.0D, 0.0D, 0.0D);
-	                    worldIn.spawnParticle(EnumParticleTypes.FLAME, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+                		for (int i1 = 0; i1 < 8; ++i1)
+	                    {
+                			worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+                			worldIn.spawnParticle(EnumParticleTypes.FLAME, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+	                    }
+                		
 	                    worldIn.spawnParticle(EnumParticleTypes.LAVA, d0, d1, d2, 0.0D, 0.0D, 0.0D);
                 	}
                 	if(Element == 1)
@@ -241,14 +259,31 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 	                    for (int i1 = 0; i1 < 10; ++i1)
 	                    {
 		                    worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+	                    }
+                	}
+                	
+                	if(Element == 2)
+                	{
+                		for (int i1 = 0; i1 < 7; ++i1)
+	                    {
+                			worldIn.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+	                    }
+                		
+                		for (int i1 = 0; i1 < 5; ++i1)
+	                    {
+                			worldIn.spawnParticle(EnumParticleTypes.SPELL_MOB_AMBIENT, d0, d1, d2, 0.0D, 0.0D, 0.0D);
 	                    }
                 	}
                     break;
                 case EAST:
                 	if(Element == 0)
                 	{
-	                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, 0.0D, 0.0D, 0.0D);
-	                    worldIn.spawnParticle(EnumParticleTypes.FLAME, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+                		for (int i1 = 0; i1 < 8; ++i1)
+	                    {
+                			worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+                			worldIn.spawnParticle(EnumParticleTypes.FLAME, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+	                    }
+                		
 	                    worldIn.spawnParticle(EnumParticleTypes.LAVA, d0, d1, d2, 0.0D, 0.0D, 0.0D);
                 	}
                 	if(Element == 1)
@@ -263,12 +298,29 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 		                    worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, d0, d1, d2, 0.0D, 0.0D, 0.0D);
 	                    }
                 	}
+                	
+                	if(Element == 2)
+                	{
+                		for (int i1 = 0; i1 < 7; ++i1)
+	                    {
+                			worldIn.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+	                    }
+                		
+                		for (int i1 = 0; i1 < 5; ++i1)
+	                    {
+                			worldIn.spawnParticle(EnumParticleTypes.SPELL_MOB_AMBIENT, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+	                    }
+                	}
                     break;
                 case NORTH:
                 	if(Element == 0)
                 	{
-	                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, f3, d1, f4, 0.0D, 0.0D, 0.0D);
-	                    worldIn.spawnParticle(EnumParticleTypes.FLAME, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+                		for (int i1 = 0; i1 < 8; ++i1)
+	                    {
+                			worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+                			worldIn.spawnParticle(EnumParticleTypes.FLAME, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+	                    }
+                		
 	                    worldIn.spawnParticle(EnumParticleTypes.LAVA, f3, d1, f4, 0.0D, 0.0D, 0.0D);
                 	}
                 	if(Element == 1)
@@ -281,14 +333,31 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 	                    for (int i1 = 0; i1 < 10; ++i1)
 	                    {
 		                    worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+	                    }
+                	}
+                	
+                	if(Element == 2)
+                	{
+                		for (int i1 = 0; i1 < 7; ++i1)
+	                    {
+                			worldIn.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+	                    }
+                		
+                		for (int i1 = 0; i1 < 5; ++i1)
+	                    {
+                			worldIn.spawnParticle(EnumParticleTypes.SPELL_MOB_AMBIENT, f3, d1, f4, 0.0D, 0.0D, 0.0D);
 	                    }
                 	}
                     break;
                 case SOUTH:
                 	if(Element == 0)
                 	{
-	                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, f3, d1, f4, 0.0D, 0.0D, 0.0D);
-	                    worldIn.spawnParticle(EnumParticleTypes.FLAME, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+                		for (int i1 = 0; i1 < 8; ++i1)
+	                    {
+                			worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+                			worldIn.spawnParticle(EnumParticleTypes.FLAME, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+	                    }
+                		
 	                    worldIn.spawnParticle(EnumParticleTypes.LAVA, f3, d1, f4, 0.0D, 0.0D, 0.0D);
                 	}
                 	if(Element == 1)
@@ -301,6 +370,19 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 	                    for (int i1 = 0; i1 < 10; ++i1)
 	                    {
 		                    worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+	                    }
+                	}
+                	
+                	if(Element == 2)
+                	{
+                		for (int i1 = 0; i1 < 7; ++i1)
+	                    {
+                			worldIn.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, f3, d1, f4, 0.0D, 0.0D, 0.0D);
+	                    }
+                		
+                		for (int i1 = 0; i1 < 5; ++i1)
+	                    {
+                			worldIn.spawnParticle(EnumParticleTypes.SPELL_MOB_AMBIENT, f3, d1, f4, 0.0D, 0.0D, 0.0D);
 	                    }
                 	}
                 	break;
@@ -357,6 +439,28 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
                 }
             }
         }
+    }
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+    public BlockRenderLayer getBlockLayer()
+    {
+        return BlockRenderLayer.CUTOUT;
+    }
+	
+	/**
+     * Get the geometry of the queried face at the given position and state. This is used to decide whether things like
+     * buttons are allowed to be placed on the face, or how glass panes connect to the face, among other things.
+     * <p>
+     * Common values are {@code SOLID}, which is the default, and {@code UNDEFINED}, which represents something that
+     * does not fit the other descriptions and will generally cause other things not to connect to the face.
+     * 
+     * @return an approximation of the form of the given face
+     */
+	@Override
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
+    {
+        return BlockFaceShape.UNDEFINED;
     }
 
 }
