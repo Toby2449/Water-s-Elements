@@ -1,5 +1,6 @@
 package com.water.elementmod.items.tools;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -36,8 +37,8 @@ public class WaterSword extends ItemSword implements IHasModel
 {
 	private int level;
 	private ToolMaterial material;
-	private int drownding;
-	private EntityLivingBase drowndingEntity;
+	private List drowndingTime = new ArrayList();
+	private List drowndingEntities = new ArrayList();
 	
 	public WaterSword(String name, Integer level, ToolMaterial material) 
 	{
@@ -156,15 +157,15 @@ public class WaterSword extends ItemSword implements IHasModel
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn)
 	{
-		list.add(I18n.format("tooltip.FireEnchant"));
-	    list.add(I18n.format("tooltip.EnchantFireLevel") + " " + intToNumeral() + I18n.format("tooltip.ResetFormatting"));
+		list.add(I18n.format("tooltip.WaterEnchant"));
+	    list.add(I18n.format("tooltip.EnchantWaterLevel") + " " + intToNumeral() + I18n.format("tooltip.ResetFormatting"));
 	    
 	    if(GuiScreen.isAltKeyDown()){
 	    	//list.remove(I18n.format("tooltip.PressAlt") + I18n.format("tooltip.ResetFormatting"));
 	    	list.add("");
-	    	list.add(I18n.format("tooltip.2xDamageNature"));
-	    	list.add(I18n.format("tooltip.FireFormatting") + "+" + this.getAddedDamage() + " " + I18n.format("tooltip.MoreAttackDamage") + I18n.format("tooltip.ResetFormatting"));
-	    	list.add(I18n.format("tooltip.FireDuration") + this.getDrowndDuration(false, false) + "-" + (this.getDrowndDuration(false, false) + this.getDrowndDuration(false, true) ) + "s" + I18n.format("tooltip.ResetFormatting"));
+	    	list.add(I18n.format("tooltip.2xDamageFire"));
+	    	list.add(I18n.format("tooltip.WaterFormatting") + "+" + this.getAddedDamage() + " " + I18n.format("tooltip.MoreAttackDamage") + I18n.format("tooltip.ResetFormatting"));
+	    	list.add(I18n.format("tooltip.WaterDuration") + this.getDrowndDuration(false, false) + "-" + (this.getDrowndDuration(false, false) + this.getDrowndDuration(false, true) ) + "s" + I18n.format("tooltip.ResetFormatting"));
 	    } else {
 	    	list.add(I18n.format("tooltip.PressAlt") + I18n.format("tooltip.ResetFormatting"));
 	    }
@@ -184,24 +185,45 @@ public class WaterSword extends ItemSword implements IHasModel
 	
 	private void setDrownding(EntityLivingBase target, Integer time) 
 	{
-		this.drownding = time * 40;
-		this.drowndingEntity = target;
-		System.out.print(this.drownding + " " + this.drowndingEntity);
+		this.drowndingTime.add(time * 20);
+		this.drowndingEntities.add(target);
 		
 	}
 	
 	@Override
 	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) 
 	{
-		if(this.drownding > 0) 
+		if(!par2World.isRemote)
 		{
-			if (this.drownding % 40 == 0)
-		    {
-				System.out.print("hi2");
-				drowndingEntity.attackEntityFrom(DamageSource.DROWN, 1.0F);
-		    }
-		
-		    --this.drownding;
+			int i = 0;
+			while(i < this.drowndingEntities.size())
+			{
+				int drownding = i;
+				int drowndingTimeInstance = (Integer)this.drowndingEntities.get(i);
+				EntityLivingBase currentEnt = (EntityLivingBase) this.drowndingEntities.get(i);
+				if(currentEnt != null)
+				{
+					if(!currentEnt.isDead)
+					{
+						if((Integer)this.drowndingTime.get(i) > 0) 
+						{
+							if ((Integer)this.drowndingTime.get(i) % 20 == 0)
+						    {
+								WaterParticleEffect(currentEnt);
+								currentEnt.attackEntityFrom(DamageSource.DROWN, 1.0F);
+						    }
+						
+						    this.drowndingTime.set(i, drowndingTimeInstance - 1);
+						}
+						else
+						{
+							this.drowndingEntities.remove(i);
+						}
+					}
+				}
+				
+				i++;
+			}
 		}
 		
 	}
@@ -210,15 +232,16 @@ public class WaterSword extends ItemSword implements IHasModel
 	{
 		World world = Minecraft.getMinecraft().world;
 		if(world == null) return false;
-		for(int countparticles = 0; countparticles <= 7 * this.level / 2; ++countparticles)
+		for(int countparticles = 0; countparticles <= 14 * this.level / 2; ++countparticles)
 		{
 			Random rand = new Random();
-			world.spawnParticle(EnumParticleTypes.FLAME, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
+			world.spawnParticle(EnumParticleTypes.WATER_SPLASH, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
+			world.spawnParticle(EnumParticleTypes.WATER_DROP, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
 		}
-		for(int countparticles = 0; countparticles <= 20 * this.level / 2; ++countparticles)
+		for(int countparticles = 0; countparticles <= 40 * this.level / 2; ++countparticles)
 		{
 			Random rand = new Random();
-			world.spawnParticle(EnumParticleTypes.LAVA, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
+			world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
 		}
 		return true;
 	}
