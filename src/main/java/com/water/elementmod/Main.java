@@ -2,6 +2,7 @@ package com.water.elementmod;
 
 import com.water.elementmod.creativetabs.Tab_Main;
 import com.water.elementmod.creativetabs.Tab_Weapons;
+import com.water.elementmod.items.tools.NatureSword;
 import com.water.elementmod.items.tools.WaterSword;
 import com.water.elementmod.proxy.CommonProxy;
 import com.water.elementmod.util.References;
@@ -12,7 +13,6 @@ import com.water.elementmod.util.handlers.RegistryHandler;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -47,6 +47,7 @@ public class Main
 	{
 		NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, new GuiHandler());
 		MinecraftForge.EVENT_BUS.register(WaterSword.class);
+		MinecraftForge.EVENT_BUS.register(NatureSword.class);
 		EmSoundHandler.init();
 		Utils.getLogger().info("Initialize");
 	}

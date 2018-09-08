@@ -22,10 +22,11 @@ tooltip.Enchant=Element:
 
 tooltip.FireEnchant=§6§oEnchanted with §lFire§r
 tooltip.WaterEnchant=§9§oEnchanted with §lWater§r
-tooltip.NatureEnchant§2§oEnchanted with §lNature§r
+tooltip.NatureEnchant=§2§oEnchanted with §lNature§r
 
 tooltip.2xDamageNature=§6§o2x Damage to §r§2§l§oNature§r§6§o types§r
 tooltip.2xDamageFire=§9§o2x Damage to §r§6§l§oFire§r§9§o types§r
+tooltip.2xDamageWater=§2§o2x Damage to §r§9§l§oWater§r§2§o types§r
 
 tooltip.EnchantFireLevel=§6§oLevel§r§6§l
 tooltip.ResetFormatting=§r
@@ -36,7 +37,11 @@ tooltip.FireDuration=§6§oFire Duration:
 
 tooltip.EnchantWaterLevel=§9§oLevel§r§9§l
 tooltip.WaterFormatting=§9§o
-tooltip.WaterDuration=§9§oFire Duration: 
+tooltip.WaterDuration=§9§oDrownding Duration: 
+
+tooltip.EnchantNatureLevel=§2§oLevel§r§2§l
+tooltip.NatureFormatting=§2§o
+tooltip.NatureDuration=§2§oPoison Duration: 
 
 item.fire_sword1.name=Diamond Sword
 item.fire_sword2.name=Diamond Sword
@@ -59,3 +64,14 @@ item.water_sword7.name=Diamond Sword
 item.water_sword8.name=Diamond Sword
 item.water_sword9.name=Diamond Sword
 item.water_sword10.name=Diamond Sword
+
+item.nature_sword1.name=Diamond Sword
+item.nature_sword2.name=Diamond Sword
+item.nature_sword3.name=Diamond Sword
+item.nature_sword4.name=Diamond Sword
+item.nature_sword5.name=Diamond Sword
+item.nature_sword6.name=Diamond Sword
+item.nature_sword7.name=Diamond Sword
+item.nature_sword8.name=Diamond Sword
+item.nature_sword9.name=Diamond Sword
+item.nature_sword10.name=Diamond Sword
