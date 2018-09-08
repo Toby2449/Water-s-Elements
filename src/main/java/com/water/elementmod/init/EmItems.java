@@ -6,6 +6,7 @@ import java.util.List;
 import com.water.elementmod.items.ItemBase;
 import com.water.elementmod.items.ItemBaseShiny;
 import com.water.elementmod.items.tools.FireSword;
+import com.water.elementmod.items.tools.WaterSword;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
@@ -39,6 +40,17 @@ public class EmItems
 	public static final ItemSword FIRE_SWORD8 = new FireSword("fire_sword8", 8, MATERIAL_FIRE8);
 	public static final ItemSword FIRE_SWORD9 = new FireSword("fire_sword9", 9, MATERIAL_FIRE9);
 	public static final ItemSword FIRE_SWORD10 = new FireSword("fire_sword10", 10, MATERIAL_FIRE10);
+	
+	public static final ItemSword WATER_SWORD1 = new WaterSword("water_sword1", 1, MATERIAL_FIRE1);
+	public static final ItemSword WATER_SWORD2 = new WaterSword("water_sword2", 2, MATERIAL_FIRE2);
+	public static final ItemSword WATER_SWORD3 = new WaterSword("water_sword3", 3, MATERIAL_FIRE3);
+	public static final ItemSword WATER_SWORD4 = new WaterSword("water_sword4", 4, MATERIAL_FIRE4);
+	public static final ItemSword WATER_SWORD5 = new WaterSword("water_sword5", 5, MATERIAL_FIRE5);
+	public static final ItemSword WATER_SWORD6 = new WaterSword("water_sword6", 6, MATERIAL_FIRE6);
+	public static final ItemSword WATER_SWORD7 = new WaterSword("water_sword7", 7, MATERIAL_FIRE7);
+	public static final ItemSword WATER_SWORD8 = new WaterSword("water_sword8", 8, MATERIAL_FIRE8);
+	public static final ItemSword WATER_SWORD9 = new WaterSword("water_sword9", 9, MATERIAL_FIRE9);
+	public static final ItemSword WATER_SWORD10 = new WaterSword("water_sword10", 10, MATERIAL_FIRE10);
 	
 	public static final Item VOIDESS = new ItemBaseShiny("item_void_essence", 16);
 	public static final Item VOIDSING = new ItemBaseShiny("item_void_singularity", 1);
