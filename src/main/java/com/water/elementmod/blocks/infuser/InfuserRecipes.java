@@ -30,6 +30,18 @@ public class InfuserRecipes
 		addInfuserItemRecipe(EmItems.FIRE_SWORD2, new ItemStack(EmItems.FIRESMPL), EmItems.FIRE_SWORD3);
 		addInfuserItemRecipe(EmItems.FIRE_SWORD3, new ItemStack(EmItems.FIRESMPL), EmItems.FIRE_SWORD4);
 		addInfuserItemRecipe(EmItems.FIRE_SWORD4, new ItemStack(EmItems.FIRESMPL), EmItems.FIRE_SWORD5);
+		
+		addInfuserItemRecipe(Items.DIAMOND_SWORD, new ItemStack(EmItems.WATERDRP), EmItems.WATER_SWORD1);
+		addInfuserItemRecipe(EmItems.WATER_SWORD1, new ItemStack(EmItems.WATERDRP), EmItems.WATER_SWORD2);
+		addInfuserItemRecipe(EmItems.WATER_SWORD2, new ItemStack(EmItems.WATERDRP), EmItems.WATER_SWORD3);
+		addInfuserItemRecipe(EmItems.WATER_SWORD3, new ItemStack(EmItems.WATERDRP), EmItems.WATER_SWORD4);
+		addInfuserItemRecipe(EmItems.WATER_SWORD4, new ItemStack(EmItems.WATERDRP), EmItems.WATER_SWORD5);
+		
+		addInfuserItemRecipe(Items.DIAMOND_SWORD, new ItemStack(EmItems.NATURESMPL), EmItems.NATURE_SWORD1);
+		addInfuserItemRecipe(EmItems.NATURE_SWORD1, new ItemStack(EmItems.NATURESMPL), EmItems.NATURE_SWORD2);
+		addInfuserItemRecipe(EmItems.NATURE_SWORD2, new ItemStack(EmItems.NATURESMPL), EmItems.NATURE_SWORD3);
+		addInfuserItemRecipe(EmItems.NATURE_SWORD3, new ItemStack(EmItems.NATURESMPL), EmItems.NATURE_SWORD4);
+		addInfuserItemRecipe(EmItems.NATURE_SWORD4, new ItemStack(EmItems.NATURESMPL), EmItems.NATURE_SWORD5);
 	}
 	
 	public void addInfuserItemRecipe(Item input, ItemStack stack, Item result)

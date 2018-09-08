@@ -313,7 +313,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 			
 			if(input2.getItem() == EmItems.FIRESMPL) this.world.playSound((EntityPlayer)null, this.getPos(), SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 1.0F, this.world.rand.nextFloat() * 0.7F + 0.3F);
 			if(input2.getItem() == EmItems.WATERDRP) this.world.playSound((EntityPlayer)null, this.getPos(), SoundEvents.BLOCK_WATER_AMBIENT, SoundCategory.BLOCKS, 1.0F, this.world.rand.nextFloat() + 0.5F);
-			if(input2.getItem() == EmItems.NATURESMPL) this.world.playSound((EntityPlayer)null, this.getPos(), EmSoundHandler.NATURE_LEAVES, SoundCategory.BLOCKS, 1.0F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+			if(input2.getItem() == EmItems.NATURESMPL) this.world.playSound((EntityPlayer)null, this.getPos(), EmSoundHandler.NATURE_LEAVES, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
 			this.world.playSound((EntityPlayer)null, this.getPos(), SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, this.world.rand.nextFloat() * 0.1F + 0.9F);
 			
 			input1.shrink(1);
