@@ -17,6 +17,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -47,7 +48,7 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
-	public static int Element;
+	public static final PropertyInteger ELEMENT = PropertyInteger.create("element", 0, 2);
 	
 	public static final AxisAlignedBB INFUSER_AABB = new AxisAlignedBB(0.1875D, 0.0D, 0.1875D, 0.8125D, 0.9375, 0.8125D);
 	public static final AxisAlignedBB INFUSER_BASE_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D);
@@ -56,12 +57,7 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 			String type, Integer level, Float lightlevel, Integer opacity) 
 	{
 		super(name, material, soundtype, hardness, resistance, type, level, lightlevel, opacity);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
-	}
-	
-	public static void setElement(Integer arg)
-	{
-		Element = arg;
+		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false).withProperty(ELEMENT, 0));
 	}
 	
 	@Override
@@ -139,13 +135,13 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 		}
 	}
 	
-	public static void setState(boolean active, World worldIn, BlockPos pos)
+	public static void setState(boolean active, Integer element, World worldIn, BlockPos pos)
 	{
 		IBlockState state = worldIn.getBlockState(pos);
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 		
-		if(active) worldIn.setBlockState(pos, EmBlocks.INFUSER.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVE, true), 3);
-		else worldIn.setBlockState(pos, EmBlocks.INFUSER.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVE, false), 3);
+		if(active) worldIn.setBlockState(pos, EmBlocks.INFUSER.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVE, true).withProperty(ELEMENT, element), 3);
+		else worldIn.setBlockState(pos, EmBlocks.INFUSER.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVE, false).withProperty(ELEMENT, element), 3);
 		
 		if(tileentity != null)
 		{
@@ -196,29 +192,41 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {ACTIVE,FACING});
+		return new BlockStateContainer(this, new IProperty[] {ACTIVE,FACING,ELEMENT});
 	}
 	
 	@Override
     public IBlockState getStateFromMeta(int meta)
     {
 		boolean blockIsActive = false;
+		int element = 0;
+		
         if(meta >= 6)
         {
             blockIsActive = true;
-            meta = meta - 6;
+            meta -= 6;
         }
+        
+        if(meta > 3)
+        {
+        	element = meta;
+        }
+        
         EnumFacing facing = EnumFacing.getFront(meta);
         if(facing.getAxis() == EnumFacing.Axis.Y) {facing = EnumFacing.NORTH;}
-        
-        return this.getDefaultState().withProperty(FACING, facing).withProperty(ACTIVE, blockIsActive);
+        return this.getDefaultState().withProperty(FACING, facing).withProperty(ACTIVE, blockIsActive).withProperty(ELEMENT, element);
     }
     
     @Override
     public int getMetaFromState(IBlockState state)
     {
+    	//System.out.println(state);
     	int r = state.getValue(ACTIVE) ? 1 : 0;
-        return ((EnumFacing)state.getValue(FACING)).getIndex() + 6*r;
+    	int e = state.getValue(ELEMENT).intValue();
+    	
+    	int facing = ((EnumFacing)state.getValue(FACING)).getIndex();
+    	
+        return ((EnumFacing)state.getValue(FACING)).getIndex() + 6*r + e;
     }
     
     @SideOnly(Side.CLIENT)
@@ -239,7 +247,7 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
             switch (enumfacing)
             {
                 case WEST:
-                	if(Element == 0)
+                	if(stateIn.getValue(ELEMENT) == 0)
                 	{
                 		for (int i1 = 0; i1 < 8; ++i1)
 	                    {
@@ -249,7 +257,7 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
                 		
 	                    worldIn.spawnParticle(EnumParticleTypes.LAVA, d0, d1, d2, 0.0D, 0.0D, 0.0D);
                 	}
-                	if(Element == 1)
+                	if(stateIn.getValue(ELEMENT) == 1)
                 	{
                 		for (int i1 = 0; i1 < 3; ++i1)
 	                    {
@@ -262,7 +270,7 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 	                    }
                 	}
                 	
-                	if(Element == 2)
+                	if(stateIn.getValue(ELEMENT) == 2)
                 	{
                 		for (int i1 = 0; i1 < 7; ++i1)
 	                    {
@@ -276,7 +284,7 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
                 	}
                     break;
                 case EAST:
-                	if(Element == 0)
+                	if(stateIn.getValue(ELEMENT) == 0)
                 	{
                 		for (int i1 = 0; i1 < 8; ++i1)
 	                    {
@@ -286,7 +294,7 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
                 		
 	                    worldIn.spawnParticle(EnumParticleTypes.LAVA, d0, d1, d2, 0.0D, 0.0D, 0.0D);
                 	}
-                	if(Element == 1)
+                	if(stateIn.getValue(ELEMENT) == 1)
                 	{
                 		for (int i1 = 0; i1 < 3; ++i1)
 	                    {
@@ -299,7 +307,7 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 	                    }
                 	}
                 	
-                	if(Element == 2)
+                	if(stateIn.getValue(ELEMENT) == 2)
                 	{
                 		for (int i1 = 0; i1 < 7; ++i1)
 	                    {
@@ -313,7 +321,7 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
                 	}
                     break;
                 case NORTH:
-                	if(Element == 0)
+                	if(stateIn.getValue(ELEMENT) == 0)
                 	{
                 		for (int i1 = 0; i1 < 8; ++i1)
 	                    {
@@ -323,7 +331,7 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
                 		
 	                    worldIn.spawnParticle(EnumParticleTypes.LAVA, f3, d1, f4, 0.0D, 0.0D, 0.0D);
                 	}
-                	if(Element == 1)
+                	if(stateIn.getValue(ELEMENT) == 1)
                 	{
                 		for (int i1 = 0; i1 < 3; ++i1)
 	                    {
@@ -336,7 +344,7 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 	                    }
                 	}
                 	
-                	if(Element == 2)
+                	if(stateIn.getValue(ELEMENT) == 2)
                 	{
                 		for (int i1 = 0; i1 < 7; ++i1)
 	                    {
@@ -350,7 +358,7 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
                 	}
                     break;
                 case SOUTH:
-                	if(Element == 0)
+                	if(stateIn.getValue(ELEMENT) == 0)
                 	{
                 		for (int i1 = 0; i1 < 8; ++i1)
 	                    {
@@ -360,7 +368,7 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
                 		
 	                    worldIn.spawnParticle(EnumParticleTypes.LAVA, f3, d1, f4, 0.0D, 0.0D, 0.0D);
                 	}
-                	if(Element == 1)
+                	if(stateIn.getValue(ELEMENT) == 1)
                 	{
                 		for (int i1 = 0; i1 < 3; ++i1)
 	                    {
@@ -373,7 +381,7 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 	                    }
                 	}
                 	
-                	if(Element == 2)
+                	if(stateIn.getValue(ELEMENT) == 2)
                 	{
                 		for (int i1 = 0; i1 < 7; ++i1)
 	                    {
