@@ -192,6 +192,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 	{	
 		boolean flag = this.isBurning();
 		boolean flag1 = false;
+		boolean flag2 = this.isCooking();
 		
 		if(this.isBurning()) --this.burnTime;
 		
@@ -253,7 +254,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 		{
 			this.cookTime = MathHelper.clamp(this.cookTime - 2, 0, this.totalCookTime);
 		}
-		if(flag != this.isBurning())
+		if(flag2 != this.isCooking())
 		{
 			flag1 = true;
 			if(this.inventory.get(1).getItem() == EmItems.FIRESMPL) 

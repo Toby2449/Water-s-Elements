@@ -203,39 +203,18 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
     {
 		boolean blockIsActive = false;
 		int element = 0;
-		int x = 0;
 		
-        for(int i = 0; i <= meta; i++)
-        {
-        	if(i % 3 == 0)
-        	{
-        		x += 1;
-        		element += 1;
-        	}
-        }
-        
-        if(x == 4)
-        {
-        	element -= 1;
-        	meta += 3;
-        }
-        else if (x >= 5)
-        {
-        	element = 3;
-        }
-        
-        meta -= element*3;
-        
-        if(element != 0)
-        {
-        	blockIsActive = true;
-        }
-        
-        element -= 1;
-        
-        EnumFacing facing = EnumFacing.getFront(meta);
-        if(facing.getAxis() == EnumFacing.Axis.Y) {facing = EnumFacing.NORTH;}
-        return this.getDefaultState().withProperty(FACING, facing).withProperty(ACTIVE, blockIsActive).withProperty(ELEMENT, element);
+		element = Integer.valueOf(meta >> 2);
+		
+		if(element != 0)
+		{
+			blockIsActive = true;
+			element -= 1;
+		}
+		
+        //System.out.println(EnumFacing.getHorizontal(meta));
+        System.out.println(element);
+        return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(ACTIVE, blockIsActive).withProperty(ELEMENT, element);
     }
 	
     /**
@@ -245,15 +224,14 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
     public int getMetaFromState(IBlockState state)
     {
     	//System.out.println(state);
-    	int e = 0;
+    	int i = 0;
+    	i = i | ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
     	if(state.getValue(ACTIVE))
     	{
-    		e = state.getValue(ELEMENT) + 1;
+    		i = i | ((Integer)state.getValue(ELEMENT)).intValue() + 1 << 2;
     	}
-    	
-    	int facing = ((EnumFacing)state.getValue(FACING)).getIndex();
-    	
-        return ((EnumFacing)state.getValue(FACING)).getIndex() + 3*e;
+        //System.out.println(state.getValue(ELEMENT).intValue());
+    	return i;
     }
     
     @SideOnly(Side.CLIENT)
