@@ -195,38 +195,65 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 		return new BlockStateContainer(this, new IProperty[] {ACTIVE,FACING,ELEMENT});
 	}
 	
+	/**
+	Gets the saved state and converts it back into a state(s).
+	**/
 	@Override
     public IBlockState getStateFromMeta(int meta)
     {
 		boolean blockIsActive = false;
 		int element = 0;
+		int x = 0;
 		
-        if(meta >= 6)
+        for(int i = 0; i <= meta; i++)
         {
-            blockIsActive = true;
-            meta -= 6;
+        	if(i % 3 == 0)
+        	{
+        		x += 1;
+        		element += 1;
+        	}
         }
         
-        if(meta > 3)
+        if(x == 4)
         {
-        	element = meta;
+        	element -= 1;
+        	meta += 3;
         }
+        else if (x >= 5)
+        {
+        	element = 3;
+        }
+        
+        meta -= element*3;
+        
+        if(element != 0)
+        {
+        	blockIsActive = true;
+        }
+        
+        element -= 1;
         
         EnumFacing facing = EnumFacing.getFront(meta);
         if(facing.getAxis() == EnumFacing.Axis.Y) {facing = EnumFacing.NORTH;}
         return this.getDefaultState().withProperty(FACING, facing).withProperty(ACTIVE, blockIsActive).withProperty(ELEMENT, element);
     }
-    
+	
+    /**
+	Saves the state(s) as an integer. (I have no idea why they did it this way)
+	**/
     @Override
     public int getMetaFromState(IBlockState state)
     {
     	//System.out.println(state);
-    	int r = state.getValue(ACTIVE) ? 1 : 0;
-    	int e = state.getValue(ELEMENT).intValue();
+    	int e = 0;
+    	if(state.getValue(ACTIVE))
+    	{
+    		e = state.getValue(ELEMENT) + 1;
+    	}
     	
     	int facing = ((EnumFacing)state.getValue(FACING)).getIndex();
     	
-        return ((EnumFacing)state.getValue(FACING)).getIndex() + 6*r + e;
+        return ((EnumFacing)state.getValue(FACING)).getIndex() + 3*e;
     }
     
     @SideOnly(Side.CLIENT)

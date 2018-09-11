@@ -3,6 +3,7 @@ package com.water.elementmod.init;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.water.elementmod.blocks.BlockBase;
 import com.water.elementmod.blocks.OreBase;
 import com.water.elementmod.blocks.extractor.BlockExtractor;
 import com.water.elementmod.blocks.infuser.BlockInfuser;
