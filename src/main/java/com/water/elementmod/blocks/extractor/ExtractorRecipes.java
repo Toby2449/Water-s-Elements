@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
-import com.water.elementmod.init.EmItems;
+import com.water.elementmod.EMCoreItems;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -26,7 +26,7 @@ public class ExtractorRecipes
 	private ExtractorRecipes() 
 	{
 		// input, output, success percentage
-		addExtractorRecipe(new ItemStack(EmItems.FIRESMPL), new ItemStack(EmItems.EMBERS), 70);
+		addExtractorRecipe(new ItemStack(EMCoreItems.FIRESMPL), new ItemStack(EMCoreItems.EMBERS), 70);
 	}
 
 	

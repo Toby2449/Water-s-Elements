@@ -1,10 +1,12 @@
 package com.water.elementmod.util.handlers;
 
-import com.water.elementmod.init.EmBlocks;
-import com.water.elementmod.init.EmItems;
-import com.water.elementmod.util.IHasModel;
+import java.rmi.registry.Registry;
+
+import com.water.elementmod.EMCoreBlocks;
+import com.water.elementmod.EMCoreItems;
+import com.water.elementmod.gen.WorldGenOres;
 import com.water.elementmod.util.Utils;
-import com.water.elementmod.world.gen.WorldGenOres;
+import com.water.elementmod.util.interfaces.IHasModel;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -15,27 +17,27 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @EventBusSubscriber
-public class RegistryHandler 
+public class EMRegistryHandler 
 {	
 	// Items
 	@SubscribeEvent
 	public static void onItemRegister(RegistryEvent.Register<Item> event)
 	{
-		event.getRegistry().registerAll(EmItems.ITEMS.toArray(new Item[0]));
+		event.getRegistry().registerAll(EMCoreItems.ITEMS.toArray(new Item[0]));
 	}
 	
 	// Blocks
 	@SubscribeEvent
 	public static void onBlockRegister(RegistryEvent.Register<Block> event)
 	{
-		event.getRegistry().registerAll(EmBlocks.BLOCKS.toArray(new Block[0]));
-		TileEntityHandler.registerTileEntities();
+		event.getRegistry().registerAll(EMCoreBlocks.BLOCKS.toArray(new Block[0]));
+		EMTileEntityHandler.registerTileEntities();
 	}
 	
 	@SubscribeEvent
 	public static void onModelRegister(ModelRegistryEvent event)
 	{
-		for(Item item : EmItems.ITEMS)
+		for(Item item : EMCoreItems.ITEMS)
 		{
 			if(item instanceof IHasModel)
 			{
@@ -43,7 +45,7 @@ public class RegistryHandler
 			}
 		}
 		
-		for(Block block : EmBlocks.BLOCKS)
+		for(Block block : EMCoreBlocks.BLOCKS)
 		{
 			if(block instanceof IHasModel)
 			{

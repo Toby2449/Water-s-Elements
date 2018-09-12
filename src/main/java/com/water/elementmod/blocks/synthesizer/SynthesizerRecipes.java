@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
-import com.water.elementmod.init.EmItems;
+import com.water.elementmod.EMCoreItems;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -24,9 +24,9 @@ public class SynthesizerRecipes
 	
 	private SynthesizerRecipes() 
 	{
-		addSynthesizerRecipe(new ItemStack(EmItems.FIRESMPL), new ItemStack(EmItems.FIRESMPL), new ItemStack(Items.QUARTZ));
-		addSynthesizerRecipe(new ItemStack(EmItems.NATURESMPL), new ItemStack(EmItems.NATURESMPL), new ItemStack(Items.QUARTZ));
-		addSynthesizerRecipe(new ItemStack(EmItems.WATERDRP), new ItemStack(EmItems.WATERDRP), new ItemStack(Items.QUARTZ));
+		addSynthesizerRecipe(new ItemStack(EMCoreItems.FIRESMPL), new ItemStack(EMCoreItems.FIRESMPL), new ItemStack(Items.QUARTZ));
+		addSynthesizerRecipe(new ItemStack(EMCoreItems.NATURESMPL), new ItemStack(EMCoreItems.NATURESMPL), new ItemStack(Items.QUARTZ));
+		addSynthesizerRecipe(new ItemStack(EMCoreItems.WATERDRP), new ItemStack(EMCoreItems.WATERDRP), new ItemStack(Items.QUARTZ));
 	}
 
 	

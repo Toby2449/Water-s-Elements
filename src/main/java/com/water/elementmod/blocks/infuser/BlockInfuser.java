@@ -5,9 +5,9 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.water.elementmod.Main;
-import com.water.elementmod.blocks.BlockBase;
-import com.water.elementmod.init.EmBlocks;
+import com.water.elementmod.EMCore;
+import com.water.elementmod.EMCoreBlocks;
+import com.water.elementmod.blocks.EMBlockBase;
 import com.water.elementmod.util.References;
 
 import net.minecraft.block.BlockHorizontal;
@@ -44,7 +44,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockInfuser extends BlockBase implements ITileEntityProvider
+public class BlockInfuser extends EMBlockBase implements ITileEntityProvider
 {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
@@ -94,13 +94,13 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
-		return Item.getItemFromBlock(EmBlocks.INFUSER);
+		return Item.getItemFromBlock(EMCoreBlocks.INFUSER);
 	}
 	
 	@Override
 	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
 	{
-		return new ItemStack(EmBlocks.INFUSER);
+		return new ItemStack(EMCoreBlocks.INFUSER);
 		
 	}
 	
@@ -110,7 +110,7 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 	{
 		if(!worldIn.isRemote)
 		{
-			playerIn.openGui(Main.instance, References.INFUSER, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			playerIn.openGui(EMCore.instance, References.INFUSER, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		
 		return true;
@@ -140,8 +140,8 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
 		IBlockState state = worldIn.getBlockState(pos);
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 		
-		if(active) worldIn.setBlockState(pos, EmBlocks.INFUSER.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVE, true).withProperty(ELEMENT, element), 3);
-		else worldIn.setBlockState(pos, EmBlocks.INFUSER.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVE, false).withProperty(ELEMENT, element), 3);
+		if(active) worldIn.setBlockState(pos, EMCoreBlocks.INFUSER.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVE, true).withProperty(ELEMENT, element), 3);
+		else worldIn.setBlockState(pos, EMCoreBlocks.INFUSER.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVE, false).withProperty(ELEMENT, element), 3);
 		
 		if(tileentity != null)
 		{
@@ -203,34 +203,24 @@ public class BlockInfuser extends BlockBase implements ITileEntityProvider
     {
 		boolean blockIsActive = false;
 		int element = 0;
-		
 		element = Integer.valueOf(meta >> 2);
-		
 		if(element != 0)
 		{
 			blockIsActive = true;
 			element -= 1;
 		}
-		
-        //System.out.println(EnumFacing.getHorizontal(meta));
-        System.out.println(element);
         return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(ACTIVE, blockIsActive).withProperty(ELEMENT, element);
     }
 	
     /**
-	Saves the state(s) as an integer. (I have no idea why they did it this way)
+	Saves the state(s) as an integer.
 	**/
     @Override
     public int getMetaFromState(IBlockState state)
     {
-    	//System.out.println(state);
     	int i = 0;
     	i = i | ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
-    	if(state.getValue(ACTIVE))
-    	{
-    		i = i | ((Integer)state.getValue(ELEMENT)).intValue() + 1 << 2;
-    	}
-        //System.out.println(state.getValue(ELEMENT).intValue());
+    	if(state.getValue(ACTIVE)) i = i | ((Integer)state.getValue(ELEMENT)).intValue() + 1 << 2;
     	return i;
     }
     

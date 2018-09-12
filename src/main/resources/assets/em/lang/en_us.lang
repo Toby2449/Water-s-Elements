@@ -6,8 +6,8 @@ item.item_void_essence.name=§5§oVoid Essence§r
 item.item_void_singularity.name=§5§lVoid Singularity§r
 item.item_void_crystal.name=§5§lVoid Crystal§r
 
-itemGroup.emmain=WateR's Elements Main
-itemGroup.emweapons=WateR's Elements Weapons
+itemGroup.em_main=WateR's Elements Essentials
+itemGroup.em_weapons=WateR's Elements Weapons
 
 tile.synthesizer.name=Synthesizer
 tile.extractor.name=Extractor
@@ -18,30 +18,30 @@ container.synthesizer=Synthesizer
 container.extractor=Extractor
 container.infuser=Infuser
 
+
 tooltip.Enchant=Element: 
-
-tooltip.FireEnchant=§6§oEnchanted with §lFire§r
-tooltip.WaterEnchant=§9§oEnchanted with §lWater§r
-tooltip.NatureEnchant=§2§oEnchanted with §lNature§r
-
-tooltip.2xDamageNature=§6§o2x Damage to §r§2§l§oNature§r§6§o types§r
-tooltip.2xDamageFire=§9§o2x Damage to §r§6§l§oFire§r§9§o types§r
-tooltip.2xDamageWater=§2§o2x Damage to §r§9§l§oWater§r§2§o types§r
-
-tooltip.EnchantFireLevel=§6§oLevel§r§6§l
 tooltip.ResetFormatting=§r
 tooltip.PressAlt=§7§oHold §lALT§r §7§ofor stats...
-tooltip.FireFormatting=§6§o
 tooltip.MoreAttackDamage=Attack Damage
+
+tooltip.FireEnchant=§6§oEnchanted with §lFire§r
+tooltip.2xDamageFire=§9§o2x Damage to §r§6§l§oFire§r§9§o types§r
+tooltip.EnchantFireLevel=§6§oLevel§r§6§l
+tooltip.FireFormatting=§6§o
 tooltip.FireDuration=§6§oFire Duration: 
 
+tooltip.WaterEnchant=§9§oEnchanted with §lWater§r
+tooltip.2xDamageWater=§2§o2x Damage to §r§9§l§oWater§r§2§o types§r
 tooltip.EnchantWaterLevel=§9§oLevel§r§9§l
 tooltip.WaterFormatting=§9§o
 tooltip.WaterDuration=§9§oDrownding Duration: 
 
+tooltip.NatureEnchant=§2§oEnchanted with §lNature§r
+tooltip.2xDamageNature=§6§o2x Damage to §r§2§l§oNature§r§6§o types§r
 tooltip.EnchantNatureLevel=§2§oLevel§r§2§l
 tooltip.NatureFormatting=§2§o
 tooltip.NatureDuration=§2§oPoison Duration: 
+
 
 item.fire_sword1.name=Diamond Sword
 item.fire_sword2.name=Diamond Sword

@@ -1,6 +1,6 @@
 package com.water.elementmod.blocks.synthesizer;
 
-import com.water.elementmod.init.EmItems;
+import com.water.elementmod.EMCoreItems;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -270,7 +270,7 @@ public class TileEntitySynthesizer extends TileEntity implements ITickable, IInv
 			Item item = fuel.getItem();
 
 			
-			if (item == EmItems.VOIDESS) return 1000;
+			if (item == EMCoreItems.VOIDESS) return 1000;
 
 			return GameRegistry.getFuelValue(fuel);
 		}

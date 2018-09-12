@@ -2,9 +2,9 @@ package com.water.elementmod.blocks.special;
 
 import java.util.Random;
 
-import com.water.elementmod.blocks.OreBase;
-import com.water.elementmod.init.EmBlocks;
-import com.water.elementmod.init.EmItems;
+import com.water.elementmod.EMCoreBlocks;
+import com.water.elementmod.EMCoreItems;
+import com.water.elementmod.blocks.EMOreBase;
 
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockVoidOre extends OreBase
+public class BlockVoidOre extends EMOreBase
 {
 	
 	public BlockVoidOre(String name, Item item, int min, int max, Material material, SoundType soundtype, Float hardness, Float resistance, String type, Integer level, Float lightlevel, Integer opacity, Integer expMin, Integer expMax)

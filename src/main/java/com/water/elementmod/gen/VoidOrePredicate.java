@@ -1,4 +1,4 @@
-package com.water.elementmod.world.gen.predicates;
+package com.water.elementmod.gen;
 
 import com.google.common.base.Predicate;
 

@@ -1,15 +1,15 @@
 package com.water.elementmod;
 
-import com.water.elementmod.creativetabs.Tab_Main;
-import com.water.elementmod.creativetabs.Tab_Weapons;
-import com.water.elementmod.items.tools.NatureSword;
-import com.water.elementmod.items.tools.WaterSword;
+import com.water.elementmod.items.weapons.NatureSword;
+import com.water.elementmod.items.weapons.WaterSword;
 import com.water.elementmod.proxy.CommonProxy;
+import com.water.elementmod.tabs.EMTab_Main;
+import com.water.elementmod.tabs.EMTab_Weapons;
 import com.water.elementmod.util.References;
 import com.water.elementmod.util.Utils;
-import com.water.elementmod.util.handlers.EmSoundHandler;
-import com.water.elementmod.util.handlers.GuiHandler;
-import com.water.elementmod.util.handlers.RegistryHandler;
+import com.water.elementmod.util.handlers.EMSoundHandler;
+import com.water.elementmod.util.handlers.EMGuiHandler;
+import com.water.elementmod.util.handlers.EMRegistryHandler;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
@@ -22,15 +22,14 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 @Mod(modid = References.MOD_ID, name = References.NAME, version = References.VERSION)
-public class Main 
+public class EMCore 
 {
 	
-	//Creative Tab
-	public static final CreativeTabs tab_main = new Tab_Main();
-	public static final CreativeTabs tab_weapons = new Tab_Weapons();
+	public static final CreativeTabs TAB_MAIN = new EMTab_Main();
+	public static final CreativeTabs TAB_WEAPONS = new EMTab_Weapons();
 	
 	@Mod.Instance(References.MOD_ID)
-	public static Main instance;
+	public static EMCore instance;
 	
 	@SidedProxy(clientSide = References.CLIENT_PROXY_CLASS, serverSide = References.COMMON_PROXY_CLASS)
 	public static CommonProxy proxy;
@@ -38,17 +37,17 @@ public class Main
 	@EventHandler
 	public static void PreInit(FMLPreInitializationEvent event)
 	{
-		RegistryHandler.otherRegistries();
+		EMRegistryHandler.otherRegistries();
 		Utils.getLogger().info("Pre Initialize");
 	}
 	
 	@EventHandler
 	public static void Init(FMLInitializationEvent event)
 	{
-		NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, new GuiHandler());
+		NetworkRegistry.INSTANCE.registerGuiHandler(EMCore.instance, new EMGuiHandler());
 		MinecraftForge.EVENT_BUS.register(WaterSword.class);
 		MinecraftForge.EVENT_BUS.register(NatureSword.class);
-		EmSoundHandler.init();
+		EMSoundHandler.init();
 		Utils.getLogger().info("Initialize");
 	}
 	

@@ -1,4 +1,4 @@
-package com.water.elementmod.items.tools;
+package com.water.elementmod.items.weapons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,10 +6,9 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.water.elementmod.Main;
-import com.water.elementmod.init.EmItems;
-import com.water.elementmod.util.IHasModel;
-import com.water.elementmod.util.Utils;
+import com.water.elementmod.EMCore;
+import com.water.elementmod.EMCoreItems;
+import com.water.elementmod.util.interfaces.IHasModel;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -20,38 +19,38 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
-import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class NatureSword extends ItemSword implements IHasModel
+public class WaterSword extends ItemSword implements IHasModel
 {
 	private int level;
 	private ToolMaterial material;
-	private List superPoisonTime = new ArrayList();
-	private List superPoisonEntities = new ArrayList();
+	private List drowndingTime = new ArrayList();
+	private List drowndingEntities = new ArrayList();
 	
-	public NatureSword(String name, Integer level, ToolMaterial material) 
+	public WaterSword(String name, Integer level, ToolMaterial material) 
 	{
 		super(material);
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(Main.tab_weapons);
+		setCreativeTab(EMCore.TAB_WEAPONS);
 		canApplyAtEnchantingTable(new ItemStack(this), Enchantments.FIRE_ASPECT);
 		
 		this.level = level;
 		this.material = material;
-		EmItems.ITEMS.add(this);
+		EMCoreItems.ITEMS.add(this);
 	}
 	
 	public String intToNumeral()
@@ -112,9 +111,9 @@ public class NatureSword extends ItemSword implements IHasModel
 		return true;
 	}
 	
-	public int getPosionDuration(Boolean isRandom, Boolean isMax)
+	public int getDrowndDuration(Boolean isRandom, Boolean isMax)
 	{
-		int Range = 3;
+		int Range = 6;
 		Random rand = new Random();
 		if(!isMax) 
 		{
@@ -124,32 +123,32 @@ public class NatureSword extends ItemSword implements IHasModel
 				if(!isRandom) return 2;
 				return 2 + rand.nextInt(Range + 1);
 			case 2:
-				if(!isRandom) return 2;
+				if(!isRandom) return 3;
 				return 3 + rand.nextInt(Range + 1);
 			case 3:
 				if(!isRandom) return 3;
 				return 3 + rand.nextInt(Range + 1);
 			case 4:
-				if(!isRandom) return 3;
-				return 3 + rand.nextInt(Range + 1);
+				if(!isRandom) return 4;
+				return 4 + rand.nextInt(Range + 1);
 			case 5:
-				if(!isRandom) return 4;
-				return 4 + rand.nextInt(Range + 1);
+				if(!isRandom) return 5;
+				return 6 + rand.nextInt(Range + 1);
 			case 6:
-				if(!isRandom) return 4;
-				return 4 + rand.nextInt(Range + 1);
+				if(!isRandom) return 5;
+				return 5 + rand.nextInt(Range + 1);
 			case 7:
-				if(!isRandom) return 4;
-				return 4 + rand.nextInt(Range + 1);
-			case 8:
-				if(!isRandom) return 5;
-				return 5 + rand.nextInt(Range + 1);
-			case 9:
-				if(!isRandom) return 5;
-				return 5 + rand.nextInt(Range + 1);
-			case 10:
 				if(!isRandom) return 6;
-				return 6 + rand.nextInt(Range + 1); // Have to add +1 because it goes from 0-1 (which is 2 numbers)
+				return 7 + rand.nextInt(Range + 1);
+			case 8:
+				if(!isRandom) return 6;
+				return 6 + rand.nextInt(Range + 1);
+			case 9:
+				if(!isRandom) return 7;
+				return 7 + rand.nextInt(Range + 1);
+			case 10:
+				if(!isRandom) return 8;
+				return 8 + rand.nextInt(Range + 1); // Have to add +1 because it goes from 0-1 (which is 2 numbers)
 			}
 		}
 		return Range;
@@ -158,15 +157,15 @@ public class NatureSword extends ItemSword implements IHasModel
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn)
 	{
-		list.add(I18n.format("tooltip.NatureEnchant"));
-	    list.add(I18n.format("tooltip.EnchantNatureLevel") + " " + intToNumeral() + I18n.format("tooltip.ResetFormatting"));
+		list.add(I18n.format("tooltip.WaterEnchant"));
+	    list.add(I18n.format("tooltip.EnchantWaterLevel") + " " + intToNumeral() + I18n.format("tooltip.ResetFormatting"));
 	    
 	    if(GuiScreen.isAltKeyDown()){
 	    	//list.remove(I18n.format("tooltip.PressAlt") + I18n.format("tooltip.ResetFormatting"));
 	    	list.add("");
-	    	list.add(I18n.format("tooltip.2xDamageWater"));
-	    	list.add(I18n.format("tooltip.NatureFormatting") + "+" + this.getAddedDamage() + " " + I18n.format("tooltip.MoreAttackDamage") + I18n.format("tooltip.ResetFormatting"));
-	    	list.add(I18n.format("tooltip.NatureDuration") + this.getPosionDuration(false, false) + "-" + (this.getPosionDuration(false, false) + this.getPosionDuration(false, true) ) + "s" + I18n.format("tooltip.ResetFormatting"));
+	    	list.add(I18n.format("tooltip.2xDamageFire"));
+	    	list.add(I18n.format("tooltip.WaterFormatting") + "+" + this.getAddedDamage() + " " + I18n.format("tooltip.MoreAttackDamage") + I18n.format("tooltip.ResetFormatting"));
+	    	list.add(I18n.format("tooltip.WaterDuration") + this.getDrowndDuration(false, false) + "-" + (this.getDrowndDuration(false, false) + this.getDrowndDuration(false, true) ) + "s" + I18n.format("tooltip.ResetFormatting"));
 	    } else {
 	    	list.add(I18n.format("tooltip.PressAlt") + I18n.format("tooltip.ResetFormatting"));
 	    }
@@ -177,11 +176,18 @@ public class NatureSword extends ItemSword implements IHasModel
 	@Override
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
 	{
-		this.superPoisonEntities.add(target);
-		this.superPoisonTime.add(this.getPosionDuration(true, false) * 25);
-		NatureParticleHitEffect(target);
+		target.extinguish();
+		setDrownding(target, getDrowndDuration(true, false));
 		stack.damageItem(1, attacker);
+		WaterParticleEffect(target);
 	    return true;
+	}
+	
+	private void setDrownding(EntityLivingBase target, Integer time) 
+	{
+		this.drowndingTime.add(time * 20);
+		this.drowndingEntities.add(target);
+		
 	}
 	
 	@Override
@@ -190,39 +196,34 @@ public class NatureSword extends ItemSword implements IHasModel
 		if(!par2World.isRemote)
 		{
 			int i = 0;
-			while(i < this.superPoisonEntities.size())
+			while(i < this.drowndingEntities.size())
 			{
-				int superPoisonTimeInstance = (Integer)this.superPoisonTime.get(i);
-				EntityLivingBase currentEnt = (EntityLivingBase) this.superPoisonEntities.get(i);
+				int drowndingTimeInstance = (Integer)this.drowndingTime.get(i);
+				EntityLivingBase currentEnt = (EntityLivingBase) this.drowndingEntities.get(i);
 				if(currentEnt != null)
 				{
 					if(!currentEnt.isDead)
 					{
-						if((Integer)this.superPoisonTime.get(i) > 0) 
+						if((Integer)this.drowndingTime.get(i) > 0) 
 						{
-							if ((Integer)this.superPoisonTime.get(i) % 25 == 0)
+							if ((Integer)this.drowndingTime.get(i) % 20 == 0)
 						    {
-								if(currentEnt.getHealth() > 0.5)
-								{
-									currentEnt.attackEntityFrom(DamageSource.MAGIC, 0.5F);
-								}
+								WaterParticleEffect(currentEnt);
+								currentEnt.attackEntityFrom(DamageSource.DROWN, 0.5F);
 						    }
-							
-							//Random rand = new Random();
-							//par2World.spawnParticle(EnumParticleTypes.SPELL_WITCH, currentEnt.posX + (rand.nextDouble() - 0.5D) * (double)currentEnt.width, currentEnt.posY + rand.nextDouble() * (double)currentEnt.height - (double)currentEnt.getYOffset(), currentEnt.posZ + (rand.nextDouble() - 0.5D) * (double)currentEnt.width, 0.0D, 0.0D,0.0D);
-							NatureParticleEffect(currentEnt);
-							this.superPoisonTime.set(i, superPoisonTimeInstance - 1);
+						
+						    this.drowndingTime.set(i, drowndingTimeInstance - 1);
 						}
 						else
 						{
-							this.superPoisonTime.remove(i);
-							this.superPoisonEntities.remove(i);
+							this.drowndingTime.remove(i);
+							this.drowndingEntities.remove(i);
 						}
 					}
 					else
 					{
-						this.superPoisonTime.remove(i);
-						this.superPoisonEntities.remove(i);
+						this.drowndingTime.remove(i);
+						this.drowndingEntities.remove(i);
 					}
 				}
 				
@@ -232,23 +233,20 @@ public class NatureSword extends ItemSword implements IHasModel
 		
 	}
 	
-	public boolean NatureParticleEffect(EntityLivingBase target)
+	public boolean WaterParticleEffect(EntityLivingBase target)
 	{
 		World world = Minecraft.getMinecraft().world;
 		if(world == null) return false;
-		Random rand = new Random();
-		world.spawnParticle(EnumParticleTypes.SPELL_MOB, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0, 1.47D, 0.09D, 1);
-		return true;
-	}
-	
-	public boolean NatureParticleHitEffect(EntityLivingBase target)
-	{
-		World world = Minecraft.getMinecraft().world;
-		if(world == null) return false;
-		for(int countparticles = 0; countparticles <= 5 * this.level / 2; ++countparticles)
+		for(int countparticles = 0; countparticles <= 18 * this.level / 2; ++countparticles)
 		{
 			Random rand = new Random();
-			world.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
+			world.spawnParticle(EnumParticleTypes.WATER_SPLASH, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
+			world.spawnParticle(EnumParticleTypes.WATER_DROP, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
+		}
+		for(int countparticles = 0; countparticles <= 60 * this.level / 2; ++countparticles)
+		{
+			Random rand = new Random();
+			world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
 		}
 		return true;
 	}
@@ -263,7 +261,7 @@ public class NatureSword extends ItemSword implements IHasModel
 	@Override
 	public void registerModels()
 	{
-		Main.proxy.registerItemRenderer(this, 0, "inventory");
+		EMCore.proxy.registerItemRenderer(this, 0, "inventory");
 	}
 	
 }

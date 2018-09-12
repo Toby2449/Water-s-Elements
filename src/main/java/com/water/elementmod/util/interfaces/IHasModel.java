@@ -1,4 +1,4 @@
-package com.water.elementmod.util;
+package com.water.elementmod.util.interfaces;
 
 public interface IHasModel 
 {

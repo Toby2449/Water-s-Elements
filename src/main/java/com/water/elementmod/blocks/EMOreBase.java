@@ -2,8 +2,8 @@ package com.water.elementmod.blocks;
 
 import java.util.Random;
 
-import com.water.elementmod.init.EmBlocks;
-import com.water.elementmod.init.EmItems;
+import com.water.elementmod.EMCoreBlocks;
+import com.water.elementmod.EMCoreItems;
 
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -16,13 +16,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class OreBase extends BlockBase
+public class EMOreBase extends EMBlockBase
 {
 	private Item item;
 	private int min, max;
 	private int expMin, expMax;
 	
-	public OreBase(String name, Item item, int min, int max, Material material, SoundType soundtype, Float hardness, Float resistance, String type, Integer level, Float lightlevel, Integer opacity, Integer expMin, Integer expMax)
+	public EMOreBase(String name, Item item, int min, int max, Material material, SoundType soundtype, Float hardness, Float resistance, String type, Integer level, Float lightlevel, Integer opacity, Integer expMin, Integer expMax)
 	{
 		super(name, material, soundtype, hardness, resistance, type, level, lightlevel, opacity);
 		this.item = item;

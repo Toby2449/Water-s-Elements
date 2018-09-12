@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
-import com.water.elementmod.init.EmItems;
+import com.water.elementmod.EMCoreItems;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -25,23 +25,23 @@ public class InfuserRecipes
 	
 	private InfuserRecipes() 
 	{
-		addInfuserItemRecipe(Items.DIAMOND_SWORD, new ItemStack(EmItems.FIRESMPL), EmItems.FIRE_SWORD1);
-		addInfuserItemRecipe(EmItems.FIRE_SWORD1, new ItemStack(EmItems.FIRESMPL), EmItems.FIRE_SWORD2);
-		addInfuserItemRecipe(EmItems.FIRE_SWORD2, new ItemStack(EmItems.FIRESMPL), EmItems.FIRE_SWORD3);
-		addInfuserItemRecipe(EmItems.FIRE_SWORD3, new ItemStack(EmItems.FIRESMPL), EmItems.FIRE_SWORD4);
-		addInfuserItemRecipe(EmItems.FIRE_SWORD4, new ItemStack(EmItems.FIRESMPL), EmItems.FIRE_SWORD5);
+		addInfuserItemRecipe(Items.DIAMOND_SWORD, new ItemStack(EMCoreItems.FIRESMPL), EMCoreItems.FIRE_SWORD1);
+		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD1, new ItemStack(EMCoreItems.FIRESMPL), EMCoreItems.FIRE_SWORD2);
+		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD2, new ItemStack(EMCoreItems.FIRESMPL), EMCoreItems.FIRE_SWORD3);
+		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD3, new ItemStack(EMCoreItems.FIRESMPL), EMCoreItems.FIRE_SWORD4);
+		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD4, new ItemStack(EMCoreItems.FIRESMPL), EMCoreItems.FIRE_SWORD5);
 		
-		addInfuserItemRecipe(Items.DIAMOND_SWORD, new ItemStack(EmItems.WATERDRP), EmItems.WATER_SWORD1);
-		addInfuserItemRecipe(EmItems.WATER_SWORD1, new ItemStack(EmItems.WATERDRP), EmItems.WATER_SWORD2);
-		addInfuserItemRecipe(EmItems.WATER_SWORD2, new ItemStack(EmItems.WATERDRP), EmItems.WATER_SWORD3);
-		addInfuserItemRecipe(EmItems.WATER_SWORD3, new ItemStack(EmItems.WATERDRP), EmItems.WATER_SWORD4);
-		addInfuserItemRecipe(EmItems.WATER_SWORD4, new ItemStack(EmItems.WATERDRP), EmItems.WATER_SWORD5);
+		addInfuserItemRecipe(Items.DIAMOND_SWORD, new ItemStack(EMCoreItems.WATERDRP), EMCoreItems.WATER_SWORD1);
+		addInfuserItemRecipe(EMCoreItems.WATER_SWORD1, new ItemStack(EMCoreItems.WATERDRP), EMCoreItems.WATER_SWORD2);
+		addInfuserItemRecipe(EMCoreItems.WATER_SWORD2, new ItemStack(EMCoreItems.WATERDRP), EMCoreItems.WATER_SWORD3);
+		addInfuserItemRecipe(EMCoreItems.WATER_SWORD3, new ItemStack(EMCoreItems.WATERDRP), EMCoreItems.WATER_SWORD4);
+		addInfuserItemRecipe(EMCoreItems.WATER_SWORD4, new ItemStack(EMCoreItems.WATERDRP), EMCoreItems.WATER_SWORD5);
 		
-		addInfuserItemRecipe(Items.DIAMOND_SWORD, new ItemStack(EmItems.NATURESMPL), EmItems.NATURE_SWORD1);
-		addInfuserItemRecipe(EmItems.NATURE_SWORD1, new ItemStack(EmItems.NATURESMPL), EmItems.NATURE_SWORD2);
-		addInfuserItemRecipe(EmItems.NATURE_SWORD2, new ItemStack(EmItems.NATURESMPL), EmItems.NATURE_SWORD3);
-		addInfuserItemRecipe(EmItems.NATURE_SWORD3, new ItemStack(EmItems.NATURESMPL), EmItems.NATURE_SWORD4);
-		addInfuserItemRecipe(EmItems.NATURE_SWORD4, new ItemStack(EmItems.NATURESMPL), EmItems.NATURE_SWORD5);
+		addInfuserItemRecipe(Items.DIAMOND_SWORD, new ItemStack(EMCoreItems.NATURESMPL), EMCoreItems.NATURE_SWORD1);
+		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD1, new ItemStack(EMCoreItems.NATURESMPL), EMCoreItems.NATURE_SWORD2);
+		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD2, new ItemStack(EMCoreItems.NATURESMPL), EMCoreItems.NATURE_SWORD3);
+		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD3, new ItemStack(EMCoreItems.NATURESMPL), EMCoreItems.NATURE_SWORD4);
+		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD4, new ItemStack(EMCoreItems.NATURESMPL), EMCoreItems.NATURE_SWORD5);
 	}
 	
 	public void addInfuserItemRecipe(Item input, ItemStack stack, Item result)

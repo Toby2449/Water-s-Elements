@@ -6,7 +6,7 @@ import com.water.elementmod.blocks.synthesizer.TileEntitySynthesizer;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class TileEntityHandler 
+public class EMTileEntityHandler 
 {
 	public static void registerTileEntities()
 	{

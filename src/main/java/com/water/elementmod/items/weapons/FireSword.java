@@ -1,14 +1,14 @@
-package com.water.elementmod.items.tools;
+package com.water.elementmod.items.weapons;
 
 import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.water.elementmod.Main;
-import com.water.elementmod.init.EmItems;
-import com.water.elementmod.util.IHasModel;
+import com.water.elementmod.EMCore;
+import com.water.elementmod.EMCoreItems;
 import com.water.elementmod.util.Utils;
+import com.water.elementmod.util.interfaces.IHasModel;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -38,12 +38,12 @@ public class FireSword extends ItemSword implements IHasModel
 		super(material);
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(Main.tab_weapons);
+		setCreativeTab(EMCore.TAB_WEAPONS);
 		canApplyAtEnchantingTable(new ItemStack(this), Enchantments.FIRE_ASPECT);
 		
 		this.level = level;
 		this.material = material;
-		EmItems.ITEMS.add(this);
+		EMCoreItems.ITEMS.add(this);
 	}
 	
 	public String intToNumeral()
@@ -202,7 +202,7 @@ public class FireSword extends ItemSword implements IHasModel
 	@Override
 	public void registerModels()
 	{
-		Main.proxy.registerItemRenderer(this, 0, "inventory");
+		EMCore.proxy.registerItemRenderer(this, 0, "inventory");
 	}
 	
 }

@@ -1,9 +1,8 @@
-package com.water.elementmod.world.gen;
+package com.water.elementmod.gen;
 
 import java.util.Random;
 
-import com.water.elementmod.init.EmBlocks;
-import com.water.elementmod.world.gen.predicates.VoidOrePredicate;
+import com.water.elementmod.EMCoreBlocks;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.state.pattern.BlockMatcher;
@@ -23,7 +22,7 @@ public class WorldGenOres implements IWorldGenerator
 	
 	public WorldGenOres()
 	{
-		void_bedrock = new WorldGenMinable(EmBlocks.ORE_VOID_BEDROCK.getDefaultState(), 4, new VoidOrePredicate());
+		void_bedrock = new WorldGenMinable(EMCoreBlocks.ORE_VOID_BEDROCK.getDefaultState(), 4, new VoidOrePredicate());
 	}
 	
 	private void runGenerator(WorldGenerator generator, World world, Random rand, int x, int z, int minY, int maxY, int chance)

@@ -1,10 +1,10 @@
 package com.water.elementmod.blocks;
 
-import com.water.elementmod.Main;
-import com.water.elementmod.init.EmBlocks;
-import com.water.elementmod.init.EmItems;
-import com.water.elementmod.util.IHasModel;
+import com.water.elementmod.EMCore;
+import com.water.elementmod.EMCoreBlocks;
+import com.water.elementmod.EMCoreItems;
 import com.water.elementmod.util.Utils;
+import com.water.elementmod.util.interfaces.IHasModel;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -12,15 +12,15 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 
-public class BlockBase extends Block implements IHasModel
+public class EMBlockBase extends Block implements IHasModel
 {
 	
-	public BlockBase(String name, Material material, SoundType soundtype, Float hardness, Float resistance, String type, Integer level, Float lightlevel, Integer opacity)
+	public EMBlockBase(String name, Material material, SoundType soundtype, Float hardness, Float resistance, String type, Integer level, Float lightlevel, Integer opacity)
 	{
 		super(material);
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(Main.tab_main);
+		setCreativeTab(EMCore.TAB_MAIN);
 		setSoundType(soundtype);
 		setHardness(hardness);
 		setResistance(resistance); //Blast resistance
@@ -29,15 +29,14 @@ public class BlockBase extends Block implements IHasModel
 		setLightOpacity(opacity);
 		
 		
-		
-		EmBlocks.BLOCKS.add(this);
-		EmItems.ITEMS.add(new ItemBlock(this).setRegistryName(this.getRegistryName()));
+		EMCoreBlocks.BLOCKS.add(this);
+		EMCoreItems.ITEMS.add(new ItemBlock(this).setRegistryName(this.getRegistryName()));
 	}
 	
 	@Override
 	public void registerModels() 
 	{
-		Main.proxy.registerItemRenderer(Item.getItemFromBlock(this), 0, "inventory");
+		EMCore.proxy.registerItemRenderer(Item.getItemFromBlock(this), 0, "inventory");
 		Utils.getLogger().info("Registered render for block." + this.getUnlocalizedName().substring(5));
 	}
 	

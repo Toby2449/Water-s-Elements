@@ -1,20 +1,20 @@
-package com.water.elementmod.init;
+package com.water.elementmod;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.water.elementmod.items.ItemBase;
-import com.water.elementmod.items.ItemBaseShiny;
-import com.water.elementmod.items.tools.FireSword;
-import com.water.elementmod.items.tools.NatureSword;
-import com.water.elementmod.items.tools.WaterSword;
+import com.water.elementmod.items.EMItemBase;
+import com.water.elementmod.items.EMShinyItemBase;
+import com.water.elementmod.items.weapons.FireSword;
+import com.water.elementmod.items.weapons.NatureSword;
+import com.water.elementmod.items.weapons.WaterSword;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemSword;
 import net.minecraftforge.common.util.EnumHelper;
 
-public class EmItems 
+public class EMCoreItems 
 {
 	
 	public static final List<Item> ITEMS = new ArrayList<Item>();
@@ -76,15 +76,15 @@ public class EmItems
 	public static final ItemSword NATURE_SWORD9 = new NatureSword("nature_sword9", 9, MATERIAL_WATER9);
 	public static final ItemSword NATURE_SWORD10 = new NatureSword("nature_sword10", 10, MATERIAL_WATER10);
 	
-	public static final Item VOIDESS = new ItemBaseShiny("item_void_essence", 16);
-	public static final Item VOIDSING = new ItemBaseShiny("item_void_singularity", 1);
-	public static final Item VOIDCRY = new ItemBaseShiny("item_void_crystal", 16);
+	public static final Item VOIDESS = new EMShinyItemBase("item_void_essence", 16);
+	public static final Item VOIDSING = new EMShinyItemBase("item_void_singularity", 1);
+	public static final Item VOIDCRY = new EMShinyItemBase("item_void_crystal", 16);
 	
-	public static final Item FIRESMPL = new ItemBase("item_fire_sample", 64); // 1.5/0.5x damage to nature
-	public static final Item WATERDRP = new ItemBase("item_water_drop", 64); // 1.5/0.5x damage to fire
-	public static final Item NATURESMPL = new ItemBase("item_nature_sample", 64); // 1.5/0.5x damage to water
+	public static final Item FIRESMPL = new EMItemBase("item_fire_sample", 64); // 1.5/0.5x damage to nature
+	public static final Item WATERDRP = new EMItemBase("item_water_drop", 64); // 1.5/0.5x damage to fire
+	public static final Item NATURESMPL = new EMItemBase("item_nature_sample", 64); // 1.5/0.5x damage to water
 	
 	
-	public static final Item EMBERS = new ItemBase("item_scolding_embers", 64);
+	public static final Item EMBERS = new EMItemBase("item_scolding_embers", 64);
 
 }

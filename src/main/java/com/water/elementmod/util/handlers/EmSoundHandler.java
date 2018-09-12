@@ -8,7 +8,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 
-public class EmSoundHandler {
+public class EMSoundHandler {
 	
 	public static SoundEvent FIRE_BURN, WATER_FLOW, NATURE_LEAVES;
 	

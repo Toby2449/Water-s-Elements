@@ -2,9 +2,9 @@ package com.water.elementmod.blocks.extractor;
 
 import java.util.Random;
 
-import com.water.elementmod.Main;
-import com.water.elementmod.blocks.BlockBase;
-import com.water.elementmod.init.EmBlocks;
+import com.water.elementmod.EMCore;
+import com.water.elementmod.EMCoreBlocks;
+import com.water.elementmod.blocks.EMBlockBase;
 import com.water.elementmod.util.References;
 
 import net.minecraft.block.Block;
@@ -31,7 +31,7 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockExtractor extends BlockBase implements ITileEntityProvider
+public class BlockExtractor extends EMBlockBase implements ITileEntityProvider
 {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
@@ -46,13 +46,13 @@ public class BlockExtractor extends BlockBase implements ITileEntityProvider
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
-		return Item.getItemFromBlock(EmBlocks.EXTRACTOR);
+		return Item.getItemFromBlock(EMCoreBlocks.EXTRACTOR);
 	}
 	
 	@Override
 	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
 	{
-		return new ItemStack(EmBlocks.EXTRACTOR);
+		return new ItemStack(EMCoreBlocks.EXTRACTOR);
 		
 	}
 	
@@ -62,7 +62,7 @@ public class BlockExtractor extends BlockBase implements ITileEntityProvider
 	{
 		if(!worldIn.isRemote)
 		{
-			playerIn.openGui(Main.instance, References.EXTRACTOR, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			playerIn.openGui(EMCore.instance, References.EXTRACTOR, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		
 		return true;
@@ -92,8 +92,8 @@ public class BlockExtractor extends BlockBase implements ITileEntityProvider
 		IBlockState state = worldIn.getBlockState(pos);
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 		
-		if(active) worldIn.setBlockState(pos, EmBlocks.EXTRACTOR.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVE, true), 3);
-		else worldIn.setBlockState(pos, EmBlocks.EXTRACTOR.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVE, false), 3);
+		if(active) worldIn.setBlockState(pos, EMCoreBlocks.EXTRACTOR.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVE, true), 3);
+		else worldIn.setBlockState(pos, EMCoreBlocks.EXTRACTOR.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(ACTIVE, false), 3);
 		
 		if(tileentity != null)
 		{
