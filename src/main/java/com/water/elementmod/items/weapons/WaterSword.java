@@ -39,6 +39,8 @@ public class WaterSword extends ItemSword implements IHasModel
 	private ToolMaterial material;
 	private List drowndingTime = new ArrayList();
 	private List drowndingEntities = new ArrayList();
+	private List abilityTimer = new ArrayList();
+	private List abilityPlayers = new ArrayList();
 	
 	public WaterSword(String name, Integer level, ToolMaterial material) 
 	{
@@ -57,26 +59,26 @@ public class WaterSword extends ItemSword implements IHasModel
 	{
 		switch(this.level)
 		{
-		case 1:
-			return "I";
-		case 2:
-			return "II";
-		case 3:
-			return "III";
-		case 4:
-			return "IV";
-		case 5:
-			return  "V";
-		case 6:
-			return  "VI";
-		case 7:
-			return  "VII";
-		case 8:
-			return  "VIII";
-		case 9:
-			return  "IX";
-		case 10:
-			return  "X";
+			case 1:
+				return "I";
+			case 2:
+				return "II";
+			case 3:
+				return "III";
+			case 4:
+				return "IV";
+			case 5:
+				return  "V";
+			case 6:
+				return  "VI";
+			case 7:
+				return  "VII";
+			case 8:
+				return  "VIII";
+			case 9:
+				return  "IX";
+			case 10:
+				return  "X";
 		}
 		
 		return "??";
@@ -113,42 +115,53 @@ public class WaterSword extends ItemSword implements IHasModel
 	
 	public int getDrowndDuration(Boolean isRandom, Boolean isMax)
 	{
-		int Range = 6;
+		int i = 0;
+		int Range = 4;
 		Random rand = new Random();
 		if(!isMax) 
 		{
 			switch(this.level)
 			{
-			case 1:
-				if(!isRandom) return 2;
-				return 2 + rand.nextInt(Range + 1);
-			case 2:
-				if(!isRandom) return 3;
-				return 3 + rand.nextInt(Range + 1);
-			case 3:
-				if(!isRandom) return 3;
-				return 3 + rand.nextInt(Range + 1);
-			case 4:
-				if(!isRandom) return 4;
-				return 4 + rand.nextInt(Range + 1);
-			case 5:
-				if(!isRandom) return 5;
-				return 6 + rand.nextInt(Range + 1);
-			case 6:
-				if(!isRandom) return 5;
-				return 5 + rand.nextInt(Range + 1);
-			case 7:
-				if(!isRandom) return 6;
-				return 7 + rand.nextInt(Range + 1);
-			case 8:
-				if(!isRandom) return 6;
-				return 6 + rand.nextInt(Range + 1);
-			case 9:
-				if(!isRandom) return 7;
-				return 7 + rand.nextInt(Range + 1);
-			case 10:
-				if(!isRandom) return 8;
-				return 8 + rand.nextInt(Range + 1); // Have to add +1 because it goes from 0-1 (which is 2 numbers)
+				case 1:
+					i = 2;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1);
+				case 2:
+					i = 3;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1);
+				case 3:
+					i = 3;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1);
+				case 4:
+					i = 4;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1);
+				case 5:
+					i = 4;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1);
+				case 6:
+					i = 5;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1);
+				case 7:
+					i = 5;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1);
+				case 8:
+					i = 6;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1);
+				case 9:
+					i = 7;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1);
+				case 10:
+					i = 8;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1); // Have to add +1 because it goes from 0-1 (which is 2 numbers)
 			}
 		}
 		return Range;
@@ -195,6 +208,37 @@ public class WaterSword extends ItemSword implements IHasModel
 	{
 		if(!par2World.isRemote)
 		{
+			int p = 0;
+			while(p < this.abilityPlayers.size())
+			{
+				int playerAbilityRemaining = (Integer)this.abilityTimer.get(p);
+				EntityPlayer currentPlayer = (EntityPlayer) this.abilityPlayers.get(p);
+				if(currentPlayer != null)
+				{
+					if(!currentPlayer.isDead)
+					{
+						if((Integer)this.abilityTimer.get(p) > 0)
+						{
+							WaterAbilityParticleEffect(currentPlayer);
+							
+							this.abilityTimer.set(p, playerAbilityRemaining - 1);
+						}
+						else
+						{
+							this.abilityTimer.remove(p);
+							this.abilityPlayers.remove(p);
+						}
+					}
+					else
+					{
+						this.abilityTimer.remove(p);
+						this.abilityPlayers.remove(p);
+					}
+				}
+				
+				p++;
+			}
+			
 			int i = 0;
 			while(i < this.drowndingEntities.size())
 			{
@@ -250,12 +294,40 @@ public class WaterSword extends ItemSword implements IHasModel
 		}
 		return true;
 	}
-	
+
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer target, EnumHand handIn)
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn)
     {
+		int i = 0;
+		while (i < this.abilityPlayers.size())
+		{
+			EntityPlayer playercheck = (EntityPlayer) this.abilityPlayers.get(i);
+			i++;
+			
+			if(playercheck != player)
+			{
+				this.abilityTimer.add(10 * 20); // 5 Seconds
+				this.abilityPlayers.add(player);
+				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
+			}
+			else
+			{
+				return new ActionResult<ItemStack>(EnumActionResult.FAIL, player.getHeldItem(handIn));
+			}
+		}
 		
-		return new ActionResult<ItemStack>(EnumActionResult.PASS, target.getHeldItem(handIn));
+		return new ActionResult<ItemStack>(EnumActionResult.PASS, player.getHeldItem(handIn));
+	}
+	
+	public void WaterAbilityParticleEffect(EntityPlayer target) 
+	{
+		World world = Minecraft.getMinecraft().world;
+		
+		for(int countparticles = 0; countparticles <= 10; ++countparticles)
+		{
+			Random rand = new Random();
+			world.spawnParticle(EnumParticleTypes.WATER_SPLASH, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
+		}
 	}
 	
 	@Override

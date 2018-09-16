@@ -50,26 +50,26 @@ public class FireSword extends ItemSword implements IHasModel
 	{
 		switch(this.level)
 		{
-		case 1:
-			return "I";
-		case 2:
-			return "II";
-		case 3:
-			return "III";
-		case 4:
-			return "IV";
-		case 5:
-			return  "V";
-		case 6:
-			return  "VI";
-		case 7:
-			return  "VII";
-		case 8:
-			return  "VIII";
-		case 9:
-			return  "IX";
-		case 10:
-			return  "X";
+			case 1:
+				return "I";
+			case 2:
+				return "II";
+			case 3:
+				return "III";
+			case 4:
+				return "IV";
+			case 5:
+				return  "V";
+			case 6:
+				return  "VI";
+			case 7:
+				return  "VII";
+			case 8:
+				return  "VIII";
+			case 9:
+				return  "IX";
+			case 10:
+				return  "X";
 		}
 		
 		return "??";
@@ -106,42 +106,53 @@ public class FireSword extends ItemSword implements IHasModel
 	
 	public int getFireDuration(Boolean isRandom, Boolean isMax)
 	{
+		int i = 0;
 		int Range = 2;
 		Random rand = new Random();
 		if(!isMax) 
 		{
 			switch(this.level)
 			{
-			case 1:
-				if(!isRandom) return 2;
-				return 2 + rand.nextInt(Range + 1);
-			case 2:
-				if(!isRandom) return 3;
-				return 3 + rand.nextInt(Range + 1);
-			case 3:
-				if(!isRandom) return 4;
-				return 4 + rand.nextInt(Range + 1);
-			case 4:
-				if(!isRandom) return 5;
-				return 5 + rand.nextInt(Range + 1);
-			case 5:
-				if(!isRandom) return 5;
-				return 5 + rand.nextInt(Range + 1);
-			case 6:
-				if(!isRandom) return 6;
-				return 6 + rand.nextInt(Range + 1);
-			case 7:
-				if(!isRandom) return 7;
-				return 7 + rand.nextInt(Range + 1);
-			case 8:
-				if(!isRandom) return 8;
-				return 8 + rand.nextInt(Range + 1);
-			case 9:
-				if(!isRandom) return 9;
-				return 9 + rand.nextInt(Range + 1);
-			case 10:
-				if(!isRandom) return 10;
-				return 10 + rand.nextInt(Range + 1); // Have to add +1 because it goes from 0-1 (which is 2 numbers)
+				case 1:
+					i = 2;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1);
+				case 2:
+					i = 3;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1);
+				case 3:
+					i = 4;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1);
+				case 4:
+					i = 5;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1);
+				case 5:
+					i = 5;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1);
+				case 6:
+					i = 6;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1);
+				case 7:
+					i = 7;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1);
+				case 8:
+					i = 8;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1);
+				case 9:
+					i = 9;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1);
+				case 10:
+					i = 10;
+					if(!isRandom) return i;
+					return i + rand.nextInt(Range + 1); // Have to add +1 because it goes from 0-1 (which is 2 numbers)
 			}
 		}
 		return Range;

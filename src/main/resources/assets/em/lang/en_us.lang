@@ -1,7 +1,11 @@
 item.item_fire_sample.name=§6Active Fire Sample§r
 item.item_water_drop.name=§9Drop of Water§r
 item.item_nature_sample.name=§2Living Organism§r
+
 item.item_scolding_embers.name=§6Scolding Embers§r
+item.item_micro_droplets.name=§9Micro Droplets§r
+item.item_thriving_cells.name=§2Thriving Cells§r
+
 item.item_void_essence.name=§5§oVoid Essence§r
 item.item_void_singularity.name=§5§lVoid Singularity§r
 item.item_void_crystal.name=§5§lVoid Crystal§r
