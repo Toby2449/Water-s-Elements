@@ -302,21 +302,19 @@ public class WaterSword extends ItemSword implements IHasModel
 		while (i < this.abilityPlayers.size())
 		{
 			EntityPlayer playercheck = (EntityPlayer) this.abilityPlayers.get(i);
-			i++;
 			
-			if(playercheck != player)
+			if(playercheck == player)
 			{
-				this.abilityTimer.add(10 * 20); // 5 Seconds
-				this.abilityPlayers.add(player);
-				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
+				return new ActionResult<ItemStack>(EnumActionResult.FAIL, player.getHeldItem(handIn);	
 			}
-			else
-			{
-				return new ActionResult<ItemStack>(EnumActionResult.FAIL, player.getHeldItem(handIn));
-			}
+			
+			i++;
 		}
 		
-		return new ActionResult<ItemStack>(EnumActionResult.PASS, player.getHeldItem(handIn));
+		this.abilityTimer.add(10 * 20); // 10 Seconds
+		this.abilityPlayers.add(player);
+		
+		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
 	}
 	
 	public void WaterAbilityParticleEffect(EntityPlayer target) 
