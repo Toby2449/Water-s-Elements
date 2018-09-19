@@ -36,11 +36,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class WaterSword extends ItemSword implements IHasModel
 {
 	private int level;
+	private int abilityCD = 10;
 	private ToolMaterial material;
 	private List drowndingTime = new ArrayList();
 	private List drowndingEntities = new ArrayList();
 	private List abilityTimer = new ArrayList();
 	private List abilityPlayers = new ArrayList();
+	private List abilityPlayerCD = new ArrayList();
 	
 	public WaterSword(String name, Integer level, ToolMaterial material) 
 	{
@@ -167,6 +169,73 @@ public class WaterSword extends ItemSword implements IHasModel
 		return Range;
 	}
 	
+	public int getAbilityDuration()
+	{
+		int i = 0;
+		switch(this.level)
+		{
+			case 1:
+				i = 0;
+				return i;
+			case 2:
+				i = 0;
+				return i;
+			case 3:
+				i = 0;
+				return i;
+			case 4:
+				i = 0;
+				return i;
+			case 5:
+				i = 2;
+				return i;
+			case 6:
+				i = 3;
+				return i;
+			case 7:
+				i = 3;
+				return i;
+			case 8:
+				i = 4;
+				return i;
+			case 9:
+				i = 4;
+				return i;
+			case 10:
+				i = 4;
+				return i;
+		}
+		return i;
+	}
+	
+	public boolean getEliagibleForAbility()
+	{
+		switch(this.level)
+		{
+			case 1:
+				return false;
+			case 2:
+				return false;
+			case 3:
+				return false;
+			case 4:
+				return false;
+			case 5:
+				return true;
+			case 6:
+				return true;
+			case 7:
+				return true;
+			case 8:
+				return true;
+			case 9:
+				return true;
+			case 10:
+				return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn)
 	{
@@ -179,6 +248,11 @@ public class WaterSword extends ItemSword implements IHasModel
 	    	list.add(I18n.format("tooltip.2xDamageFire"));
 	    	list.add(I18n.format("tooltip.WaterFormatting") + "+" + this.getAddedDamage() + " " + I18n.format("tooltip.MoreAttackDamage") + I18n.format("tooltip.ResetFormatting"));
 	    	list.add(I18n.format("tooltip.WaterDuration") + this.getDrowndDuration(false, false) + "-" + (this.getDrowndDuration(false, false) + this.getDrowndDuration(false, true) ) + "s" + I18n.format("tooltip.ResetFormatting"));
+	    	if(getEliagibleForAbility())
+	    	{
+	    		list.add(I18n.format("tooltip.WaterAbilityDuration") + this.getAbilityDuration() + "s" + I18n.format("tooltip.ResetFormatting"));
+	    		list.add(I18n.format("tooltip.WaterAbilityCDDuration") + this.abilityCD + "s" + I18n.format("tooltip.ResetFormatting"));
+	    	}
 	    } else {
 	    	list.add(I18n.format("tooltip.PressAlt") + I18n.format("tooltip.ResetFormatting"));
 	    }
@@ -212,6 +286,7 @@ public class WaterSword extends ItemSword implements IHasModel
 			while(p < this.abilityPlayers.size())
 			{
 				int playerAbilityRemaining = (Integer)this.abilityTimer.get(p);
+				int playerAbilityCDRemaining = (Integer)this.abilityPlayerCD.get(p);
 				EntityPlayer currentPlayer = (EntityPlayer) this.abilityPlayers.get(p);
 				if(currentPlayer != null)
 				{
@@ -225,14 +300,23 @@ public class WaterSword extends ItemSword implements IHasModel
 						}
 						else
 						{
-							this.abilityTimer.remove(p);
-							this.abilityPlayers.remove(p);
+							if((Integer)this.abilityPlayerCD.get(p) > 0)
+							{
+								this.abilityPlayerCD.set(p, playerAbilityCDRemaining - 1);
+							}
+							else
+							{
+								this.abilityTimer.remove(p);
+								this.abilityPlayers.remove(p);
+								this.abilityPlayerCD.remove(p);
+							}
 						}
 					}
 					else
 					{
 						this.abilityTimer.remove(p);
 						this.abilityPlayers.remove(p);
+						this.abilityPlayerCD.remove(p);
 					}
 				}
 				
@@ -257,11 +341,6 @@ public class WaterSword extends ItemSword implements IHasModel
 						    }
 						
 						    this.drowndingTime.set(i, drowndingTimeInstance - 1);
-						}
-						else
-						{
-							this.drowndingTime.remove(i);
-							this.drowndingEntities.remove(i);
 						}
 					}
 					else
@@ -305,14 +384,15 @@ public class WaterSword extends ItemSword implements IHasModel
 			
 			if(playercheck == player)
 			{
-				return new ActionResult<ItemStack>(EnumActionResult.FAIL, player.getHeldItem(handIn);	
+				return new ActionResult<ItemStack>(EnumActionResult.FAIL, player.getHeldItem(handIn));	
 			}
 			
 			i++;
 		}
 		
-		this.abilityTimer.add(10 * 20); // 10 Seconds
+		this.abilityTimer.add(this.getAbilityDuration() * 20);
 		this.abilityPlayers.add(player);
+		this.abilityPlayerCD.add(this.abilityCD * 20);
 		
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
 	}
@@ -321,7 +401,7 @@ public class WaterSword extends ItemSword implements IHasModel
 	{
 		World world = Minecraft.getMinecraft().world;
 		
-		for(int countparticles = 0; countparticles <= 10; ++countparticles)
+		for(int countparticles = 0; countparticles <= 14; ++countparticles)
 		{
 			Random rand = new Random();
 			world.spawnParticle(EnumParticleTypes.WATER_SPLASH, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
