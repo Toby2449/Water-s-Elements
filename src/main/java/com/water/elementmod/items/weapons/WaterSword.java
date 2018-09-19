@@ -62,6 +62,9 @@ public class WaterSword extends ItemSword implements IHasModel
 		EMCoreItems.ITEMS.add(this);
 	}
 	
+	/**
+	* Returns the Roman Numeral for the sword's level
+	*/
 	public String intToNumeral()
 	{
 		switch(this.level)
@@ -120,6 +123,11 @@ public class WaterSword extends ItemSword implements IHasModel
 		return true;
 	}
 	
+	/**
+	* Returns how long the entity will drownd for.
+	* @param isRandom returns the random version of the drownd duration of the sword's level
+	* @param isMax returns the maximum possible drownd duration for the sword's level
+	*/
 	public int getDrowndDuration(Boolean isRandom, Boolean isMax)
 	{
 		int i = 0;
@@ -174,6 +182,9 @@ public class WaterSword extends ItemSword implements IHasModel
 		return Range;
 	}
 	
+	/**
+	* Gets how long the ability lasts for the sword's level
+	*/
 	public int getAbilityDuration()
 	{
 		int i = 0;
@@ -213,6 +224,9 @@ public class WaterSword extends ItemSword implements IHasModel
 		return i;
 	}
 	
+	/**
+	* Checks if the current level of the sword is eliagible for the ability
+	*/
 	public boolean getEliagibleForAbility()
 	{
 		switch(this.level)
@@ -275,6 +289,9 @@ public class WaterSword extends ItemSword implements IHasModel
 	    return true;
 	}
 	
+	/**
+	* Adds an entity to the array so they drownd
+	*/
 	private void setDrownding(EntityLivingBase target, Integer time) 
 	{
 		this.drowndingTime.add(time * 20);
@@ -384,10 +401,12 @@ public class WaterSword extends ItemSword implements IHasModel
     {
 		int i = 0;
 		
+		// Checks if the player is still on cooldown
 		while (i < this.abilityPlayers.size())
 		{
 			EntityPlayer playercheck = (EntityPlayer) this.abilityPlayers.get(i);
 			
+			// If player is in the table, return fail
 			if(playercheck == player)
 			{
 				return new ActionResult<ItemStack>(EnumActionResult.FAIL, player.getHeldItem(handIn));	
@@ -396,15 +415,18 @@ public class WaterSword extends ItemSword implements IHasModel
 			i++;
 		}
 		
+		// Add the player to table so they can activate the ability
 		this.abilityTimer.add(this.getAbilityDuration() * 20);
 		this.abilityPlayers.add(player);
 		this.abilityPlayerCD.add(this.abilityCD * 20);
 		
+		// Extend the players hitbox
 		AxisAlignedBB e = player.getEntityBoundingBox().grow(5.0D, 5.0D, 5.0D);
 		
 		List<EntityMob> listMobs = worldIn.<EntityMob>getEntitiesWithinAABB(EntityMob.class, e);
 		List<EntityPlayer> listPlayers = worldIn.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, e);
 
+	// Get current mobs inside the player's ability aabb
         if (!listMobs.isEmpty())
         {
             for (EntityMob entitymob : listMobs)
@@ -413,10 +435,12 @@ public class WaterSword extends ItemSword implements IHasModel
             }
         }
         
+	// Get all current players inside the player's ability aabb
         if (!listPlayers.isEmpty())
         {
             for (EntityPlayer entityplayer : listPlayers)
             {
+	    	// Check if the player is the player that activates the ability
             	if(entityplayer == player)
             	{
             		entityplayer.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, this.getAbilityDuration() * 20, 1));
@@ -430,6 +454,7 @@ public class WaterSword extends ItemSword implements IHasModel
 		
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
 	}
+	
 	
 	public void WaterAbilityParticleEffect(EntityPlayer target) 
 	{
