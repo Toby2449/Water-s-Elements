@@ -17,16 +17,21 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -378,6 +383,7 @@ public class WaterSword extends ItemSword implements IHasModel
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn)
     {
 		int i = 0;
+		
 		while (i < this.abilityPlayers.size())
 		{
 			EntityPlayer playercheck = (EntityPlayer) this.abilityPlayers.get(i);
@@ -393,6 +399,34 @@ public class WaterSword extends ItemSword implements IHasModel
 		this.abilityTimer.add(this.getAbilityDuration() * 20);
 		this.abilityPlayers.add(player);
 		this.abilityPlayerCD.add(this.abilityCD * 20);
+		
+		AxisAlignedBB e = player.getEntityBoundingBox().grow(5.0D, 5.0D, 5.0D);
+		
+		List<EntityMob> listMobs = worldIn.<EntityMob>getEntitiesWithinAABB(EntityMob.class, e);
+		List<EntityPlayer> listPlayers = worldIn.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, e);
+
+        if (!listMobs.isEmpty())
+        {
+            for (EntityMob entitymob : listMobs)
+            {
+            	entitymob.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, this.getAbilityDuration() * 20, 0));
+            }
+        }
+        
+        if (!listPlayers.isEmpty())
+        {
+            for (EntityPlayer entityplayer : listPlayers)
+            {
+            	if(entityplayer == player)
+            	{
+            		entityplayer.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, this.getAbilityDuration() * 20, 1));
+            	}
+            	else
+            	{
+            		entityplayer.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, this.getAbilityDuration() * 20, 0));
+            	}
+            }
+        }
 		
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
 	}
