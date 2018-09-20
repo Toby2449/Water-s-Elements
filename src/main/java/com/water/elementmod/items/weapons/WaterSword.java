@@ -124,12 +124,17 @@ public class WaterSword extends ItemSword implements IHasModel
 	}
 	
 	/**
-	* Returns how long the entity will drownd for.
+	* Returns how long the entity will drownd for. Both parameters cannot be true.
 	* @param isRandom returns the random version of the drownd duration of the sword's level
 	* @param isMax returns the maximum possible drownd duration for the sword's level
 	*/
 	public int getDrowndDuration(Boolean isRandom, Boolean isMax)
 	{
+		if(isRandom && isMax)
+		{
+			throw new IllegalArgumentException("isRandom and isMax cannot both be true");
+		}
+		
 		int i = 0;
 		int Range = 4;
 		Random rand = new Random();
@@ -203,22 +208,22 @@ public class WaterSword extends ItemSword implements IHasModel
 				i = 0;
 				return i;
 			case 5:
-				i = 2;
+				i = 5;
 				return i;
 			case 6:
-				i = 3;
+				i = 5;
 				return i;
 			case 7:
-				i = 3;
+				i = 6;
 				return i;
 			case 8:
-				i = 4;
+				i = 7;
 				return i;
 			case 9:
-				i = 4;
+				i = 7;
 				return i;
 			case 10:
-				i = 4;
+				i = 8;
 				return i;
 		}
 		return i;
