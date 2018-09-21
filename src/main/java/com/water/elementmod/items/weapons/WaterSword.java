@@ -405,6 +405,7 @@ public class WaterSword extends ItemSword implements IHasModel
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn)
     {
 		int i = 0;
+		Vec3d playerpos = player.getPositionVector();
 		
 		// Checks if the player is still on cooldown
 		while (i < this.abilityPlayers.size())
@@ -436,6 +437,9 @@ public class WaterSword extends ItemSword implements IHasModel
         {
             for (EntityMob entitymob : listMobs)
             {
+	    	// Knockback the entity and set a potion effect
+	    	Vec3d targetpos = entitymob.getPositionVector();
+		entitymob.knockback(player, 2, playerpos.x - targetpos.x, playerpos.z - targetpos.z)
             	entitymob.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, this.getAbilityDuration() * 20, 0));
             }
         }
