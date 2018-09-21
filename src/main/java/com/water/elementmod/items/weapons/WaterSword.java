@@ -32,6 +32,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -230,6 +231,48 @@ public class WaterSword extends ItemSword implements IHasModel
 	}
 	
 	/**
+	* Checks if the current level's knockback strength
+	*/
+	public float getKnockbackStrength()
+	{
+		float i = 0.0F;
+		switch(this.level)
+		{
+			case 1:
+				i = 0.0F;
+				return i;
+			case 2:
+				i = 0.0F;
+				return i;
+			case 3:
+				i = 0.0F;
+				return i;
+			case 4:
+				i = 0.0F;
+				return i;
+			case 5:
+				i = 0.5F;
+				return i;
+			case 6:
+				i = 0.6F;
+				return i;
+			case 7:
+				i = 0.7F;
+				return i;
+			case 8:
+				i = 0.8F;
+				return i;
+			case 9:
+				i = 0.9F;
+				return i;
+			case 10:
+				i = 1.0F;
+				return i;
+		}
+		return i;
+	}
+	
+	/**
 	* Checks if the current level of the sword is eliagible for the ability
 	*/
 	public boolean getEliagibleForAbility()
@@ -276,6 +319,7 @@ public class WaterSword extends ItemSword implements IHasModel
 	    	{
 	    		list.add(I18n.format("tooltip.WaterAbilityDuration") + this.getAbilityDuration() + "s" + I18n.format("tooltip.ResetFormatting"));
 	    		list.add(I18n.format("tooltip.WaterAbilityCDDuration") + this.abilityCD + "s" + I18n.format("tooltip.ResetFormatting"));
+	    		list.add(I18n.format("tooltip.WaterKnockbackStrength") + "x" + (this.getKnockbackStrength() * 2) + I18n.format("tooltip.ResetFormatting"));
 	    	}
 	    } else {
 	    	list.add(I18n.format("tooltip.PressAlt") + I18n.format("tooltip.ResetFormatting"));
@@ -432,15 +476,15 @@ public class WaterSword extends ItemSword implements IHasModel
 		List<EntityMob> listMobs = worldIn.<EntityMob>getEntitiesWithinAABB(EntityMob.class, e);
 		List<EntityPlayer> listPlayers = worldIn.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, e);
 
-	// Get current mobs inside the player's ability aabb
+		// Get current mobs inside the player's ability aabb
         if (!listMobs.isEmpty())
         {
             for (EntityMob entitymob : listMobs)
             {
-	    	// Knockback the entity and set a potion effect
-	    	Vec3d targetpos = entitymob.getPositionVector();
-		entitymob.knockback(player, 2, playerpos.x - targetpos.x, playerpos.z - targetpos.z)
-            	entitymob.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, this.getAbilityDuration() * 20, 0));
+            	// Knockback the entity and set a potion effect
+            	Vec3d targetpos = entitymob.getPositionVector();
+	    		entitymob.knockBack(player, this.getKnockbackStrength(), playerpos.x - targetpos.x, playerpos.z - targetpos.z);
+            	entitymob.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, this.getAbilityDuration() * 20, 0));
             }
         }
         

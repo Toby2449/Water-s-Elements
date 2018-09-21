@@ -41,6 +41,7 @@ tooltip.WaterFormatting=§9§o
 tooltip.WaterDuration=§9§oDrownding Duration: 
 tooltip.WaterAbilityDuration=§9§o§lAbility Duration: 
 tooltip.WaterAbilityCDDuration=§9§o§lAbility Cooldown: 
+tooltip.WaterKnockbackStrength=§9§o§lKnockback Strength: 
 
 tooltip.NatureEnchant=§2§oEnchanted with §lNature§r
 tooltip.2xDamageNature=§6§o2x Damage to §r§2§l§oNature§r§6§o types§r
