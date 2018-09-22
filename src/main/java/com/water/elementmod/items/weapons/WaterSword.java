@@ -353,49 +353,45 @@ public class WaterSword extends ItemSword implements IHasModel
 	{
 		if(!par2World.isRemote)
 		{
-			int p = 0;
-			while(p < this.abilityPlayers.size())
+			for(int i = 0; i < this.abilityPlayers.size(); i++)
 			{
-				int playerAbilityRemaining = (Integer)this.abilityTimer.get(p);
-				int playerAbilityCDRemaining = (Integer)this.abilityPlayerCD.get(p);
-				EntityPlayer currentPlayer = (EntityPlayer) this.abilityPlayers.get(p);
+				int playerAbilityRemaining = (Integer)this.abilityTimer.get(i);
+				int playerAbilityCDRemaining = (Integer)this.abilityPlayerCD.get(i);
+				EntityPlayer currentPlayer = (EntityPlayer) this.abilityPlayers.get(i);
 				if(currentPlayer != null)
 				{
 					if(!currentPlayer.isDead)
 					{
-						if((Integer)this.abilityTimer.get(p) > 0)
+						if((Integer)this.abilityTimer.get(i) > 0)
 						{
 							WaterAbilityParticleEffect(currentPlayer);
 							
-							this.abilityTimer.set(p, playerAbilityRemaining - 1);
+							this.abilityTimer.set(i, playerAbilityRemaining - 1);
 						}
 						else
 						{
-							if((Integer)this.abilityPlayerCD.get(p) > 0)
+							if((Integer)this.abilityPlayerCD.get(i) > 0)
 							{
-								this.abilityPlayerCD.set(p, playerAbilityCDRemaining - 1);
+								this.abilityPlayerCD.set(i, playerAbilityCDRemaining - 1);
 							}
 							else
 							{
-								this.abilityTimer.remove(p);
-								this.abilityPlayers.remove(p);
-								this.abilityPlayerCD.remove(p);
+								this.abilityTimer.remove(i);
+								this.abilityPlayers.remove(i);
+								this.abilityPlayerCD.remove(i);
 							}
 						}
 					}
 					else
 					{
-						this.abilityTimer.remove(p);
-						this.abilityPlayers.remove(p);
-						this.abilityPlayerCD.remove(p);
+						this.abilityTimer.remove(i);
+						this.abilityPlayers.remove(i);
+						this.abilityPlayerCD.remove(i);
 					}
 				}
-				
-				p++;
 			}
 			
-			int i = 0;
-			while(i < this.drowndingEntities.size())
+			for(int i = 0; i < this.drowndingEntities.size(); i++)
 			{
 				int drowndingTimeInstance = (Integer)this.drowndingTime.get(i);
 				EntityLivingBase currentEnt = (EntityLivingBase) this.drowndingEntities.get(i);
@@ -420,8 +416,6 @@ public class WaterSword extends ItemSword implements IHasModel
 						this.drowndingEntities.remove(i);
 					}
 				}
-				
-				i++;
 			}
 		}
 		
@@ -448,11 +442,11 @@ public class WaterSword extends ItemSword implements IHasModel
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn)
     {
-		int i = 0;
+		WaveParticleEffect((EntityLivingBase)player);
 		Vec3d playerpos = player.getPositionVector();
 		
 		// Checks if the player is still on cooldown
-		while (i < this.abilityPlayers.size())
+		for(int i = 0; i < this.abilityPlayers.size(); i++)
 		{
 			EntityPlayer playercheck = (EntityPlayer) this.abilityPlayers.get(i);
 			
@@ -461,8 +455,6 @@ public class WaterSword extends ItemSword implements IHasModel
 			{
 				return new ActionResult<ItemStack>(EnumActionResult.FAIL, player.getHeldItem(handIn));	
 			}
-			
-			i++;
 		}
 		
 		// Add the player to table so they can activate the ability
@@ -470,8 +462,10 @@ public class WaterSword extends ItemSword implements IHasModel
 		this.abilityPlayers.add(player);
 		this.abilityPlayerCD.add(this.abilityCD * 20);
 		
+		
+		
 		// Extend the players hitbox
-		AxisAlignedBB e = player.getEntityBoundingBox().grow(5.0D, 5.0D, 5.0D);
+		AxisAlignedBB e = player.getEntityBoundingBox().grow(4.0D, 4.0D, 4.0D);
 		
 		List<EntityMob> listMobs = worldIn.<EntityMob>getEntitiesWithinAABB(EntityMob.class, e);
 		List<EntityPlayer> listPlayers = worldIn.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, e);
@@ -482,25 +476,34 @@ public class WaterSword extends ItemSword implements IHasModel
             for (EntityMob entitymob : listMobs)
             {
             	// Knockback the entity and set a potion effect
+            	LesserWaterParticleEffect((EntityLivingBase)entitymob);
             	Vec3d targetpos = entitymob.getPositionVector();
 	    		entitymob.knockBack(player, this.getKnockbackStrength(), playerpos.x - targetpos.x, playerpos.z - targetpos.z);
-            	entitymob.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, this.getAbilityDuration() * 20, 0));
+	    		int potionstrength = 0;
+        		if(this.level >= 8) potionstrength = 1;
+            	entitymob.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, this.getAbilityDuration() * 20 / 2, potionstrength));
             }
         }
         
-	// Get all current players inside the player's ability aabb
+        // Get all current players inside the player's ability aabb
         if (!listPlayers.isEmpty())
         {
             for (EntityPlayer entityplayer : listPlayers)
             {
-	    	// Check if the player is the player that activates the ability
+            	// Check if the player is the player that activates the ability
             	if(entityplayer == player)
             	{
+            		entityplayer.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 30, 1)); // 1.5 seconds
             		entityplayer.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, this.getAbilityDuration() * 20, 1));
             	}
             	else
             	{
-            		entityplayer.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, this.getAbilityDuration() * 20, 0));
+            		LesserWaterParticleEffect((EntityLivingBase)entityplayer);
+            		Vec3d targetpos = entityplayer.getPositionVector();
+            		entityplayer.knockBack(player, this.getKnockbackStrength() / 2, playerpos.x - targetpos.x, playerpos.z - targetpos.z);
+            		int potionstrength = 0;
+            		if(this.level >= 8) potionstrength = 1;
+            		entityplayer.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, this.getAbilityDuration() * 20 / 2, potionstrength));
             	}
             }
         }
@@ -509,15 +512,69 @@ public class WaterSword extends ItemSword implements IHasModel
 	}
 	
 	
-	public void WaterAbilityParticleEffect(EntityPlayer target) 
+	public boolean WaterAbilityParticleEffect(EntityPlayer target) 
 	{
 		World world = Minecraft.getMinecraft().world;
-		
+		if(world == null) return false;
 		for(int countparticles = 0; countparticles <= 14; ++countparticles)
 		{
 			Random rand = new Random();
 			world.spawnParticle(EnumParticleTypes.WATER_SPLASH, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
 		}
+		return true;
+	}
+	
+	public boolean WaveParticleEffect(EntityLivingBase target)
+	{
+		World world = Minecraft.getMinecraft().world;
+		if(world == null) return false;
+		
+		for(double r = 0.6D; r <= 4.0D; r += 0.2D)
+		{
+			for(float i = 0.0F; i < 360.0F; i += 5.0F)
+			{
+				double deltaX = Math.cos(Math.toRadians(i))*r;
+				double deltaZ = -Math.sin(Math.toRadians(i))*r;
+				double finalX = target.posX + deltaX;
+				double finalZ = target.posZ + deltaZ;
+			    
+				world.spawnParticle(EnumParticleTypes.WATER_SPLASH, finalX, target.posY, finalZ, 0.0D,0.0D,0.0D);
+			}
+		}
+		
+		for(float i = 0.0F; i < 360.0F; i += 2.0F)
+		{
+			double radius = 4.0D;
+			double deltaX = Math.cos(Math.toRadians(i))*radius;
+			double deltaZ = -Math.sin(Math.toRadians(i))*radius;
+			double finalX = target.posX + deltaX;
+			double finalZ = target.posZ + deltaZ;
+		    
+			for(double p = 4.0D; p >= 0.0D; p -= 0.2D)
+			{
+				world.spawnParticle(EnumParticleTypes.WATER_SPLASH, finalX, target.posY + p, finalZ, 0.0D,0.0D,0.0D);
+			}
+		}
+		
+		return true;
+	}
+	
+	public boolean LesserWaterParticleEffect(EntityLivingBase target)
+	{
+		World world = Minecraft.getMinecraft().world;
+		if(world == null) return false;
+		for(int countparticles = 0; countparticles <= 13 * this.level / 2; ++countparticles)
+		{
+			Random rand = new Random();
+			world.spawnParticle(EnumParticleTypes.WATER_SPLASH, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
+			world.spawnParticle(EnumParticleTypes.WATER_DROP, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
+		}
+		for(int countparticles = 0; countparticles <= 50 * this.level / 2; ++countparticles)
+		{
+			Random rand = new Random();
+			world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
+		}
+		return true;
 	}
 	
 	@Override
