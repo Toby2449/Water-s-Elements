@@ -343,19 +343,8 @@ public class WaterSword extends ItemSword implements IHasModel
 	*/
 	private void setDrownding(EntityLivingBase target, Integer time) 
 	{
-		for(int i = 0; i < this.drowndingEntities.size(); i++)
-		{
-			if(this.drowndingEntities.get(i) == target)
-			{
-				// Remove old timer
-				this.drowndingTime.remove(i);
-				this.drowndingEntities.remove(i);
-			}
-			
-			// Add a new one
-			this.drowndingTime.add(time * 20);
-			this.drowndingEntities.add(target);
-		}
+		this.drowndingTime.add(time * 20);
+		this.drowndingEntities.add(target);
 	}
 	
 	@Override
@@ -487,6 +476,7 @@ public class WaterSword extends ItemSword implements IHasModel
             	// Knockback the entity and set a potion effect
             	LesserWaterParticleEffect((EntityLivingBase)entitymob);
             	Vec3d targetpos = entitymob.getPositionVector();
+            	entitymob.attackEntityFrom(DamageSource.DROWN, 0.5F);
 	    		entitymob.knockBack(player, this.getKnockbackStrength(), playerpos.x - targetpos.x, playerpos.z - targetpos.z);
 	    		int potionstrength = 0;
         		if(this.level >= 8) potionstrength = 1;
@@ -509,6 +499,7 @@ public class WaterSword extends ItemSword implements IHasModel
             	{
             		LesserWaterParticleEffect((EntityLivingBase)entityplayer);
             		Vec3d targetpos = entityplayer.getPositionVector();
+            		entityplayer.attackEntityFrom(DamageSource.DROWN, 0.5F);
             		entityplayer.knockBack(player, this.getKnockbackStrength() / 2, playerpos.x - targetpos.x, playerpos.z - targetpos.z);
             		int potionstrength = 0;
             		if(this.level >= 8) potionstrength = 1;
@@ -537,6 +528,7 @@ public class WaterSword extends ItemSword implements IHasModel
 	{
 		World world = Minecraft.getMinecraft().world;
 		if(world == null) return false;
+		Random rand = new Random();
 		
 		for(double r = 0.6D; r <= 4.0D; r += 0.2D)
 		{
@@ -547,7 +539,8 @@ public class WaterSword extends ItemSword implements IHasModel
 				double finalX = target.posX + deltaX;
 				double finalZ = target.posZ + deltaZ;
 			    
-				world.spawnParticle(EnumParticleTypes.WATER_SPLASH, finalX, target.posY, finalZ, 0.0D,0.0D,0.0D);
+				world.spawnParticle(EnumParticleTypes.WATER_DROP, finalX, target.posY, finalZ, 0.0D,0.0D,0.0D);
+				world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, finalX, target.posY + rand.nextDouble(), finalZ, 0.0D,0.0D,0.0D);
 			}
 		}
 		
@@ -559,9 +552,10 @@ public class WaterSword extends ItemSword implements IHasModel
 			double finalX = target.posX + deltaX;
 			double finalZ = target.posZ + deltaZ;
 		    
-			for(double p = 4.0D; p >= 0.0D; p -= 0.2D)
+			for(double p = 4.0D; p >= 0.0D; p -= 0.5D)
 			{
-				world.spawnParticle(EnumParticleTypes.WATER_SPLASH, finalX, target.posY + p, finalZ, 0.0D,0.0D,0.0D);
+				world.spawnParticle(EnumParticleTypes.DRIP_WATER, finalX, target.posY + p + rand.nextDouble(), finalZ, 0.0D,0.0D,0.0D);
+				world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, finalX, target.posY + p + rand.nextDouble(), finalZ, 0.0D,0.0D,0.0D);
 			}
 		}
 		
