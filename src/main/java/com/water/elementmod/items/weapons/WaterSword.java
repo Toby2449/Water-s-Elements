@@ -343,9 +343,19 @@ public class WaterSword extends ItemSword implements IHasModel
 	*/
 	private void setDrownding(EntityLivingBase target, Integer time) 
 	{
-		this.drowndingTime.add(time * 20);
-		this.drowndingEntities.add(target);
-		
+		for(int i = 0; i < this.drowndingEntities.size(); i++)
+		{
+			if(this.drowndingEntities.get(i) == target)
+			{
+				// Remove old timer
+				this.drowndingTime.remove(i);
+				this.drowndingEntities.remove(i);
+			}
+			
+			// Add a new one
+			this.drowndingTime.add(time * 20);
+			this.drowndingEntities.add(target);
+		}
 	}
 	
 	@Override
@@ -442,7 +452,6 @@ public class WaterSword extends ItemSword implements IHasModel
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn)
     {
-		WaveParticleEffect((EntityLivingBase)player);
 		Vec3d playerpos = player.getPositionVector();
 		
 		// Checks if the player is still on cooldown
@@ -461,7 +470,7 @@ public class WaterSword extends ItemSword implements IHasModel
 		this.abilityTimer.add(this.getAbilityDuration() * 20);
 		this.abilityPlayers.add(player);
 		this.abilityPlayerCD.add(this.abilityCD * 20);
-		
+		WaveAnimation((EntityLivingBase)player);
 		
 		
 		// Extend the players hitbox
@@ -524,7 +533,7 @@ public class WaterSword extends ItemSword implements IHasModel
 		return true;
 	}
 	
-	public boolean WaveParticleEffect(EntityLivingBase target)
+	public boolean WaveAnimation(EntityLivingBase target)
 	{
 		World world = Minecraft.getMinecraft().world;
 		if(world == null) return false;
