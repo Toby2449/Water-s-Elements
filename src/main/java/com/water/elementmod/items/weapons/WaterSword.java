@@ -23,19 +23,15 @@ import net.minecraft.init.Enchantments;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -97,6 +93,7 @@ public class WaterSword extends ItemSword implements IHasModel
 		
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean hasEffect(ItemStack par1ItemStack)
 	{
@@ -274,6 +271,48 @@ public class WaterSword extends ItemSword implements IHasModel
 	}
 	
 	/**
+	* Checks the ability radius for the level of the sword
+	*/
+	public double getAbilityRadius()
+	{
+		double i = 0.0D;
+		switch(this.level)
+		{
+			case 1:
+				i = 0.0D;
+				return i;
+			case 2:
+				i = 0.0D;
+				return i;
+			case 3:
+				i = 0.0D;
+				return i;
+			case 4:
+				i = 0.0D;
+				return i;
+			case 5:
+				i = 2.0D;
+				return i;
+			case 6:
+				i = 2.2D;
+				return i;
+			case 7:
+				i = 2.4D;
+				return i;
+			case 8:
+				i = 2.6D;
+				return i;
+			case 9:
+				i = 2.8D;
+				return i;
+			case 10:
+				i = 3.0D;
+				return i;
+		}
+		return i;
+	}
+	
+	/**
 	* Checks if the current level of the sword is eliagible for the ability
 	*/
 	public boolean getEliagibleForAbility()
@@ -319,6 +358,7 @@ public class WaterSword extends ItemSword implements IHasModel
 	    	if(getEliagibleForAbility())
 	    	{
 	    		list.add(I18n.format("tooltip.WaterAbilityDuration") + this.getAbilityDuration() + "s" + I18n.format("tooltip.ResetFormatting"));
+	    		list.add(I18n.format("tooltip.WaterAbilityRadius") + this.getAbilityRadius() + " blocks" + I18n.format("tooltip.ResetFormatting"));
 	    		list.add(I18n.format("tooltip.WaterAbilityCDDuration") + this.abilityCD + "s" + I18n.format("tooltip.ResetFormatting"));
 	    		list.add(I18n.format("tooltip.WaterKnockbackStrength") + "x" + (this.getKnockbackStrength() * 2) + I18n.format("tooltip.ResetFormatting"));
 	    	}
@@ -358,7 +398,7 @@ public class WaterSword extends ItemSword implements IHasModel
 				int playerAbilityRemaining = (Integer)this.abilityTimer.get(i);
 				int playerAbilityCDRemaining = (Integer)this.abilityPlayerCD.get(i);
 				EntityPlayer currentPlayer = (EntityPlayer) this.abilityPlayers.get(i);
-				if((Integer)this.abilityTimer.get(i) == (this.getAbilityDuration() * 20) - 3) WaveWallAnimation((EntityLivingBase)currentPlayer);
+				if((Integer)this.abilityTimer.get(i) == (this.getAbilityDuration() * 20) - 3) WaveWallAnimation(currentPlayer);
 				if(currentPlayer != null)
 				{
 					if(!currentPlayer.isDead)
@@ -419,7 +459,6 @@ public class WaterSword extends ItemSword implements IHasModel
 				}
 			}
 		}
-		
 	}
 	
 	public boolean WaterParticleEffect(EntityLivingBase target)
@@ -429,13 +468,13 @@ public class WaterSword extends ItemSword implements IHasModel
 		for(int countparticles = 0; countparticles <= 18 * this.level / 2; ++countparticles)
 		{
 			Random rand = new Random();
-			world.spawnParticle(EnumParticleTypes.WATER_SPLASH, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
-			world.spawnParticle(EnumParticleTypes.WATER_DROP, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
+			world.spawnParticle(EnumParticleTypes.WATER_SPLASH, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D);
+			world.spawnParticle(EnumParticleTypes.WATER_DROP, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D);
 		}
 		for(int countparticles = 0; countparticles <= 60 * this.level / 2; ++countparticles)
 		{
 			Random rand = new Random();
-			world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
+			world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D);
 		}
 		return true;
 	}
@@ -463,11 +502,11 @@ public class WaterSword extends ItemSword implements IHasModel
 		this.abilityTimer.add(this.getAbilityDuration() * 20);
 		this.abilityPlayers.add(player);
 		this.abilityPlayerCD.add(this.abilityCD * 20);
-		WaveAnimation((EntityLivingBase)player);
+		WaveAnimation(player);
 		
 		
 		// Extend the players hitbox
-		AxisAlignedBB e = player.getEntityBoundingBox().grow(4.0D, 4.0D, 4.0D);
+		AxisAlignedBB e = player.getEntityBoundingBox().grow(this.getAbilityRadius(), 4.0D, this.getAbilityRadius());
 		
 		List<EntityMob> listMobs = worldIn.<EntityMob>getEntitiesWithinAABB(EntityMob.class, e);
 		List<EntityPlayer> listPlayers = worldIn.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, e);
@@ -478,7 +517,7 @@ public class WaterSword extends ItemSword implements IHasModel
             for (EntityMob entitymob : listMobs)
             {
             	// Knockback the entity and set a potion effect
-            	LesserWaterParticleEffect((EntityLivingBase)entitymob);
+            	LesserWaterParticleEffect(entitymob);
             	Vec3d targetpos = entitymob.getPositionVector();
             	entitymob.attackEntityFrom(DamageSource.DROWN, 0.5F);
 	    		entitymob.knockBack(player, this.getKnockbackStrength(), playerpos.x - targetpos.x, playerpos.z - targetpos.z);
@@ -501,7 +540,7 @@ public class WaterSword extends ItemSword implements IHasModel
             	}
             	else
             	{
-            		LesserWaterParticleEffect((EntityLivingBase)entityplayer);
+            		LesserWaterParticleEffect(entityplayer);
             		Vec3d targetpos = entityplayer.getPositionVector();
             		entityplayer.attackEntityFrom(DamageSource.DROWN, 0.5F);
             		entityplayer.knockBack(player, this.getKnockbackStrength() / 2, playerpos.x - targetpos.x, playerpos.z - targetpos.z);
@@ -516,14 +555,14 @@ public class WaterSword extends ItemSword implements IHasModel
 	}
 	
 	
-	public boolean WaterAbilityParticleEffect(EntityPlayer target) 
+	public boolean WaterAbilityParticleEffect(EntityPlayer target)
 	{
 		World world = Minecraft.getMinecraft().world;
 		if(world == null) return false;
 		for(int countparticles = 0; countparticles <= 14; ++countparticles)
 		{
 			Random rand = new Random();
-			world.spawnParticle(EnumParticleTypes.WATER_SPLASH, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
+			world.spawnParticle(EnumParticleTypes.WATER_SPLASH, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D);
 		}
 		return true;
 	}
@@ -534,7 +573,7 @@ public class WaterSword extends ItemSword implements IHasModel
 		if(world == null) return false;
 		Random rand = new Random();
 		
-		for(double r = 0.6D; r <= 4.0D; r += 0.2D)
+		for(double r = 0.6D; r <= this.getAbilityRadius(); r += 0.2D)
 		{
 			for(float i = 0.0F; i < 360.0F; i += 5.0F)
 			{
@@ -559,19 +598,18 @@ public class WaterSword extends ItemSword implements IHasModel
 		
 		for(float i = 0.0F; i < 360.0F; i += 2.0F)
 		{
-			double radius = 4.0D;
+			double radius = this.getAbilityRadius();
 			double deltaX = Math.cos(Math.toRadians(i))*radius;
 			double deltaZ = -Math.sin(Math.toRadians(i))*radius;
 			double finalX = target.posX + deltaX;
 			double finalZ = target.posZ + deltaZ;
 		    
-			for(double p = 4.0D; p >= 0.0D; p -= 0.5D)
+			for(double p = this.getAbilityRadius(); p >= 0.0D; p -= 0.5D)
 			{
 				world.spawnParticle(EnumParticleTypes.DRIP_WATER, finalX, target.posY + p + rand.nextDouble(), finalZ, 0.0D,0.0D,0.0D);
 				world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, finalX, target.posY + p + rand.nextDouble(), finalZ, 0.0D,0.0D,0.0D);
 			}
 		}
-		
 		return true;
 	}
 	
@@ -582,13 +620,13 @@ public class WaterSword extends ItemSword implements IHasModel
 		for(int countparticles = 0; countparticles <= 13 * this.level / 2; ++countparticles)
 		{
 			Random rand = new Random();
-			world.spawnParticle(EnumParticleTypes.WATER_SPLASH, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
-			world.spawnParticle(EnumParticleTypes.WATER_DROP, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
+			world.spawnParticle(EnumParticleTypes.WATER_SPLASH, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D);
+			world.spawnParticle(EnumParticleTypes.WATER_DROP, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D);
 		}
 		for(int countparticles = 0; countparticles <= 50 * this.level / 2; ++countparticles)
 		{
 			Random rand = new Random();
-			world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
+			world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D);
 		}
 		return true;
 	}
