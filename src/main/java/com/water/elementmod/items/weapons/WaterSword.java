@@ -42,11 +42,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class WaterSword extends ItemSword implements IHasModel
 {
 	private int level;
-	private int abilityCD = 10;
+	private int abilityCD = 3;
 	private ToolMaterial material;
 	private List drowndingTime = new ArrayList();
 	private List drowndingEntities = new ArrayList();
 	private List abilityTimer = new ArrayList();
+	private List abilityTimerTotal = new ArrayList();
 	private List abilityPlayers = new ArrayList();
 	private List abilityPlayerCD = new ArrayList();
 	
@@ -357,6 +358,7 @@ public class WaterSword extends ItemSword implements IHasModel
 				int playerAbilityRemaining = (Integer)this.abilityTimer.get(i);
 				int playerAbilityCDRemaining = (Integer)this.abilityPlayerCD.get(i);
 				EntityPlayer currentPlayer = (EntityPlayer) this.abilityPlayers.get(i);
+				if((Integer)this.abilityTimer.get(i) == (this.getAbilityDuration() * 20) - 3) WaveWallAnimation((EntityLivingBase)currentPlayer);
 				if(currentPlayer != null)
 				{
 					if(!currentPlayer.isDead)
@@ -441,6 +443,8 @@ public class WaterSword extends ItemSword implements IHasModel
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn)
     {
+		if(!this.getEliagibleForAbility()) return new ActionResult<ItemStack>(EnumActionResult.FAIL, player.getHeldItem(handIn));
+		
 		Vec3d playerpos = player.getPositionVector();
 		
 		// Checks if the player is still on cooldown
@@ -539,10 +543,19 @@ public class WaterSword extends ItemSword implements IHasModel
 				double finalX = target.posX + deltaX;
 				double finalZ = target.posZ + deltaZ;
 			    
-				world.spawnParticle(EnumParticleTypes.WATER_DROP, finalX, target.posY, finalZ, 0.0D,0.0D,0.0D);
-				world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, finalX, target.posY + rand.nextDouble(), finalZ, 0.0D,0.0D,0.0D);
+				world.spawnParticle(EnumParticleTypes.WATER_DROP, finalX, target.posY + rand.nextDouble(), finalZ, 0.0D,0.0D,0.0D);
+				//world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, finalX, target.posY + rand.nextDouble(), finalZ, 0.0D,0.0D,0.0D);
 			}
 		}
+		
+		return true;
+	}
+	
+	public boolean WaveWallAnimation(EntityLivingBase target)
+	{
+		World world = Minecraft.getMinecraft().world;
+		if(world == null) return false;
+		Random rand = new Random();
 		
 		for(float i = 0.0F; i < 360.0F; i += 2.0F)
 		{
