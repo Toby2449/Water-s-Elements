@@ -1,5 +1,6 @@
 package com.water.elementmod;
 
+import com.water.elementmod.items.weapons.FireSword;
 import com.water.elementmod.items.weapons.NatureSword;
 import com.water.elementmod.items.weapons.WaterSword;
 import com.water.elementmod.proxy.CommonProxy;
@@ -7,9 +8,9 @@ import com.water.elementmod.tabs.EMTab_Main;
 import com.water.elementmod.tabs.EMTab_Weapons;
 import com.water.elementmod.util.References;
 import com.water.elementmod.util.Utils;
-import com.water.elementmod.util.handlers.EMSoundHandler;
 import com.water.elementmod.util.handlers.EMGuiHandler;
 import com.water.elementmod.util.handlers.EMRegistryHandler;
+import com.water.elementmod.util.handlers.EMSoundHandler;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
@@ -45,6 +46,7 @@ public class EMCore
 	public static void Init(FMLInitializationEvent event)
 	{
 		NetworkRegistry.INSTANCE.registerGuiHandler(EMCore.instance, new EMGuiHandler());
+		MinecraftForge.EVENT_BUS.register(FireSword.class);
 		MinecraftForge.EVENT_BUS.register(WaterSword.class);
 		MinecraftForge.EVENT_BUS.register(NatureSword.class);
 		EMSoundHandler.init();

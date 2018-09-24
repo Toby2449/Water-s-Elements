@@ -1,5 +1,6 @@
 package com.water.elementmod.items.weapons;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -15,11 +16,14 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -31,7 +35,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class FireSword extends ItemSword implements IHasModel
 {
 	private int level;
+	private int abilityCD = 3;
 	private ToolMaterial material;
+	private List abilityTimer = new ArrayList();
+	private List abilityPlayers = new ArrayList();
+	private List abilityTimerCD = new ArrayList();
 	
 	public FireSword(String name, Integer level, ToolMaterial material) 
 	{
@@ -158,6 +166,79 @@ public class FireSword extends ItemSword implements IHasModel
 		return Range;
 	}
 	
+	/**
+	* Gets how long the ability lasts for the sword's level
+	*/
+	public int getAbilityDuration()
+	{
+		int i = 0;
+		switch(this.level)
+		{
+			case 1:
+				i = 0;
+				return i;
+			case 2:
+				i = 0;
+				return i;
+			case 3:
+				i = 0;
+				return i;
+			case 4:
+				i = 0;
+				return i;
+			case 5:
+				i = 5;
+				return i;
+			case 6:
+				i = 5;
+				return i;
+			case 7:
+				i = 6;
+				return i;
+			case 8:
+				i = 7;
+				return i;
+			case 9:
+				i = 7;
+				return i;
+			case 10:
+				i = 8;
+				return i;
+		}
+		return i;
+	}
+	
+	/**
+	* Checks if the current level of the sword is eliagible for the ability
+	*/
+	public boolean getEliagibleForAbility()
+	{
+		switch(this.level)
+		{
+			case 1:
+				return false;
+			case 2:
+				return false;
+			case 3:
+				return false;
+			case 4:
+				return false;
+			case 5:
+				return true;
+			case 6:
+				return true;
+			case 7:
+				return true;
+			case 8:
+				return true;
+			case 9:
+				return true;
+			case 10:
+				return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn)
 	{
@@ -170,6 +251,10 @@ public class FireSword extends ItemSword implements IHasModel
 	    	list.add(I18n.format("tooltip.2xDamageNature"));
 	    	list.add(I18n.format("tooltip.FireFormatting") + "+" + this.getAddedDamage() + " " + I18n.format("tooltip.MoreAttackDamage") + I18n.format("tooltip.ResetFormatting"));
 	    	list.add(I18n.format("tooltip.FireDuration") + this.getFireDuration(false, false) + "-" + (this.getFireDuration(false, false) + this.getFireDuration(false, true) ) + "s" + I18n.format("tooltip.ResetFormatting"));
+	    	if(this.getEliagibleForAbility())
+	    	{
+	    		list.add(I18n.format("tooltip.FireAbilityDuration") + this.getAbilityDuration() + "s" + I18n.format("tooltip.ResetFormatting"));
+	    	}
 	    } else {
 	    	list.add(I18n.format("tooltip.PressAlt") + I18n.format("tooltip.ResetFormatting"));
 	    }
@@ -184,6 +269,38 @@ public class FireSword extends ItemSword implements IHasModel
 		stack.damageItem(1, attacker);
 		FireParticleEffect(target);
 	    return true;
+	}
+	
+	@Override
+	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) 
+	{
+		if(!par2World.isRemote)
+		{
+			for(int i = 0; i < this.abilityPlayers.size(); i++)
+			{
+				int playerAbilityRemaining = (Integer)this.abilityTimer.get(i);
+				int playerAbilityRemainingCD = (Integer)this.abilityTimerCD.get(i);
+				EntityLivingBase currentPlayer = (EntityLivingBase)this.abilityPlayers.get(i);
+			}
+		}
+	}
+	
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn)
+    {
+		activateAbility(player, this.getAbilityDuration());
+		
+		player.addPotionEffect(new PotionEffect(MobEffects.SPEED, this.getAbilityDuration() * 20, 0));
+		player.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, this.getAbilityDuration() * 20, 1));
+		
+		return new ActionResult<ItemStack>(EnumActionResult.PASS, player.getHeldItem(handIn));
+    }
+	
+	public void activateAbility(EntityLivingBase player, Integer time)
+	{
+		this.abilityPlayers.add(player);
+		this.abilityTimer.add(time * 20);
+		this.abilityTimerCD.add(this.abilityCD * 20);
 	}
 	
 	public boolean FireParticleEffect(EntityLivingBase target)
@@ -201,13 +318,6 @@ public class FireSword extends ItemSword implements IHasModel
 			world.spawnParticle(EnumParticleTypes.LAVA, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
 		}
 		return true;
-	}
-	
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer target, EnumHand handIn)
-    {
-		
-		return new ActionResult<ItemStack>(EnumActionResult.PASS, target.getHeldItem(handIn));
 	}
 	
 	@Override
