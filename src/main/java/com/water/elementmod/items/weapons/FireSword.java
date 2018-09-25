@@ -39,7 +39,7 @@ public class FireSword extends ItemSword implements IHasModel
 	private ToolMaterial material;
 	private List abilityTimer = new ArrayList();
 	private List abilityPlayers = new ArrayList();
-	private List abilityTimerCD = new ArrayList();
+	private List abilityPlayerCD = new ArrayList();
 	
 	public FireSword(String name, Integer level, ToolMaterial material) 
 	{
@@ -279,8 +279,37 @@ public class FireSword extends ItemSword implements IHasModel
 			for(int i = 0; i < this.abilityPlayers.size(); i++)
 			{
 				int playerAbilityRemaining = (Integer)this.abilityTimer.get(i);
-				int playerAbilityRemainingCD = (Integer)this.abilityTimerCD.get(i);
+				int playerAbilityRemainingCD = (Integer)this.abilityPlayerCD.get(i);
 				EntityLivingBase currentPlayer = (EntityLivingBase)this.abilityPlayers.get(i);
+				if(currentPlayer != null)
+				{
+					if(!currentPlayer.isDead)
+					{
+						if((Integer)this.abilityTimer.get(i) > 0)
+						{
+							this.abilityTimer.set(i, playerAbilityRemaining - 1);
+						} 
+						else 
+						{
+							if((Integer)this.abilityPlayerCD.get(i) > 0)
+							{
+								this.abilityPlayerCD.set(i, playerAbilityRemainingCD - 1);
+							}
+							else
+							{
+								this.abilityTimer.remove(i);
+								this.abilityPlayers.remove(i);
+								this.abilityPlayerCD.remove(i);
+							}
+						}
+					}
+					else
+					{
+						this.abilityTimer.remove(i);
+						this.abilityPlayers.remove(i);
+						this.abilityPlayerCD.remove(i);
+					}
+				}
 			}
 		}
 	}
@@ -288,19 +317,50 @@ public class FireSword extends ItemSword implements IHasModel
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn)
     {
+		FireRingAnimation(player, 3);
+		
+		for(int i = 0; i < this.abilityPlayers.size(); i++)
+		{
+			EntityPlayer entityPlayer = (EntityPlayer)this.abilityPlayers.get(i);
+			
+			if(entityPlayer == player)
+			{
+				return new ActionResult<ItemStack>(EnumActionResult.FAIL, player.getHeldItem(handIn));
+			}
+		}
+		
 		activateAbility(player, this.getAbilityDuration());
 		
 		player.addPotionEffect(new PotionEffect(MobEffects.SPEED, this.getAbilityDuration() * 20, 0));
 		player.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, this.getAbilityDuration() * 20, 1));
 		
-		return new ActionResult<ItemStack>(EnumActionResult.PASS, player.getHeldItem(handIn));
+		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
     }
 	
-	public void activateAbility(EntityLivingBase player, Integer time)
+	public void activateAbility(EntityPlayer player, Integer time)
 	{
 		this.abilityPlayers.add(player);
 		this.abilityTimer.add(time * 20);
-		this.abilityTimerCD.add(this.abilityCD * 20);
+		this.abilityPlayerCD.add(this.abilityCD * 20);
+	}
+	
+	public boolean FireRingAnimation(EntityLivingBase target, double radius)
+	{
+		World world = Minecraft.getMinecraft().world;
+		if(world == null) return false;
+		Random rand = new Random();
+		
+		for(float i = 0.0F; i < 360.0F; i += 2.0F)
+		{
+			double deltaX = Math.cos(Math.toRadians(i))*radius + rand.nextDouble();
+			double deltaZ = -Math.sin(Math.toRadians(i))*radius + rand.nextDouble();
+			double finalX = target.posX - 0.5D + deltaX;
+			double finalZ = target.posZ - 0.5D + deltaZ;
+		    
+			world.spawnParticle(EnumParticleTypes.FLAME, finalX, target.posY + 0.15D, finalZ, 0.0D,0.0D,0.0D);
+			world.spawnParticle(EnumParticleTypes.LAVA, finalX, target.posY + 0.15D, finalZ, 0.0D,0.0D,0.0D);
+		}
+		return true;
 	}
 	
 	public boolean FireParticleEffect(EntityLivingBase target)
