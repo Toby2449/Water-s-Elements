@@ -583,7 +583,6 @@ public class WaterSword extends ItemSword implements IHasModel
 				double finalZ = target.posZ + deltaZ;
 			    
 				world.spawnParticle(EnumParticleTypes.WATER_DROP, finalX, target.posY + rand.nextDouble(), finalZ, 0.0D,0.0D,0.0D);
-				//world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, finalX, target.posY + rand.nextDouble(), finalZ, 0.0D,0.0D,0.0D);
 			}
 		}
 		
