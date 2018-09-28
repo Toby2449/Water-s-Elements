@@ -37,11 +37,7 @@ public class FireSword extends ItemSword implements IHasModel
 	private int level;
 	private int abilityCD = 10;
 	private ToolMaterial material;
-	private List abilityTimer = new ArrayList();
-	private List abilityPlayers = new ArrayList();
-	private List abilityPlayerCD = new ArrayList();
-	private List abilityAoePoints = new ArrayList();
-	private List abilityAoeTimers = new ArrayList();
+	private List abilityTimer, abilityPlayers, abilityPlayerCD, abilityAoePoints, abilityAoeTimers = new ArrayList();
 	
 	public FireSword(String name, Integer level, ToolMaterial material) 
 	{
@@ -347,7 +343,18 @@ public class FireSword extends ItemSword implements IHasModel
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn)
-    {
+    	{	
+    		checkIfAbilityActive(player);
+		activateAbility(player, this.getAbilityDuration());
+		
+		player.addPotionEffect(new PotionEffect(MobEffects.SPEED, this.getAbilityDuration() * 20, 1));
+		player.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, this.getAbilityDuration() * 20, 1));
+		
+		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
+    	}
+	
+	public ActionResult<ItemStack> checkIfAbilityActive(EntityPlayer player)
+	{
 		for(int i = 0; i < this.abilityPlayers.size(); i++)
 		{
 			EntityPlayer entityPlayer = (EntityPlayer)this.abilityPlayers.get(i);
@@ -357,14 +364,7 @@ public class FireSword extends ItemSword implements IHasModel
 				return new ActionResult<ItemStack>(EnumActionResult.FAIL, player.getHeldItem(handIn));
 			}
 		}
-		
-		activateAbility(player, this.getAbilityDuration());
-		
-		player.addPotionEffect(new PotionEffect(MobEffects.SPEED, this.getAbilityDuration() * 20, 1));
-		player.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, this.getAbilityDuration() * 20, 1));
-		
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
-    }
+	}
 	
 	public void activateAbility(EntityPlayer player, Integer time)
 	{
