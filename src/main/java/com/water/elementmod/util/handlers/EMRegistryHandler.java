@@ -5,6 +5,7 @@ import java.rmi.registry.Registry;
 import com.water.elementmod.EMCoreBlocks;
 import com.water.elementmod.EMCoreItems;
 import com.water.elementmod.gen.WorldGenOres;
+import com.water.elementmod.util.References;
 import com.water.elementmod.util.Utils;
 import com.water.elementmod.util.interfaces.IHasModel;
 
@@ -12,11 +13,12 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-@EventBusSubscriber
+@Mod.EventBusSubscriber(modid = References.MOD_ID)
 public class EMRegistryHandler 
 {	
 	// Items
@@ -56,7 +58,7 @@ public class EMRegistryHandler
 	
 	public static void otherRegistries()
 	{
-		GameRegistry.registerWorldGenerator(new WorldGenOres(), 3);
+		//GameRegistry.registerWorldGenerator(new WorldGenOres(), 3);
 		Utils.getLogger().info("World gens intialized");
 	}
 }

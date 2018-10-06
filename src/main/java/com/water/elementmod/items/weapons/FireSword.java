@@ -276,7 +276,7 @@ public class FireSword extends ItemSword implements IHasModel
 	@Override
 	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) 
 	{
-		if(!par2World.isRemote)
+		if(par2World.isRemote)
 		{
 			for(int i = 0; i < this.abilityPlayers.size(); i++)
 			{
@@ -327,12 +327,12 @@ public class FireSword extends ItemSword implements IHasModel
 				{
 					if((Integer)this.abilityAoeTimers.get(i) % 20 == 0)
 					{
-						FireRingAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 4);
+						FireRingAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 4, par2World);
 					}
 					
 					if((Integer)this.abilityAoeTimers.get(i) % 5 == 0)
 					{
-						FireSpitAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2));
+						FireSpitAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), par2World);
 					}
 					this.abilityAoeTimers.set(i, CircleTimer - 1);
 				}
@@ -383,9 +383,8 @@ public class FireSword extends ItemSword implements IHasModel
 		this.abilityAoeTimers.add(time);
 	}
 	
-	public boolean FireRingAnimation(double x, double y, double z, double radius)
+	public boolean FireRingAnimation(double x, double y, double z, double radius, World world)
 	{
-		World world = Minecraft.getMinecraft().world;
 		if(world == null) return false;
 		Random rand = new Random();
 		for(double r = 0.6D; r <= radius; r += 0.2D)
@@ -416,9 +415,8 @@ public class FireSword extends ItemSword implements IHasModel
 		return true;
 	}
 	
-	public boolean FireSpitAnimation(double x, double y, double z)
+	public boolean FireSpitAnimation(double x, double y, double z, World world)
 	{
-		World world = Minecraft.getMinecraft().world;
 		if(world == null) return false;
 		world.spawnParticle(EnumParticleTypes.LAVA, x, y + 0.15D, z, 0.0D,0.0D,0.0D);
 		
@@ -427,7 +425,7 @@ public class FireSword extends ItemSword implements IHasModel
 	
 	public boolean FireParticleEffect(EntityLivingBase target)
 	{
-		World world = Minecraft.getMinecraft().world;
+		World world = target.getEntityWorld();
 		if(world == null) return false;
 		for(int countparticles = 0; countparticles <= 7 * this.level / 2; ++countparticles)
 		{

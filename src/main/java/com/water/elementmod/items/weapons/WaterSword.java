@@ -391,21 +391,21 @@ public class WaterSword extends ItemSword implements IHasModel
 	@Override
 	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) 
 	{
-		if(!par2World.isRemote)
+		if(par2World.isRemote)
 		{
 			for(int i = 0; i < this.abilityPlayers.size(); i++)
 			{
 				int playerAbilityRemaining = (Integer)this.abilityTimer.get(i);
 				int playerAbilityCDRemaining = (Integer)this.abilityPlayerCD.get(i);
 				EntityPlayer currentPlayer = (EntityPlayer) this.abilityPlayers.get(i);
-				if((Integer)this.abilityTimer.get(i) == (this.getAbilityDuration() * 20) - 3) WaveWallAnimation(currentPlayer);
+				if((Integer)this.abilityTimer.get(i) == (this.getAbilityDuration() * 20) - 3) WaveWallAnimation(currentPlayer, par2World);
 				if(currentPlayer != null)
 				{
 					if(!currentPlayer.isDead)
 					{
 						if((Integer)this.abilityTimer.get(i) > 0)
 						{
-							WaterAbilityParticleEffect(currentPlayer);
+							WaterAbilityParticleEffect(currentPlayer, par2World);
 							
 							this.abilityTimer.set(i, playerAbilityRemaining - 1);
 						}
@@ -463,7 +463,7 @@ public class WaterSword extends ItemSword implements IHasModel
 	
 	public boolean WaterParticleEffect(EntityLivingBase target)
 	{
-		World world = Minecraft.getMinecraft().world;
+		World world = target.getEntityWorld();
 		if(world == null) return false;
 		for(int countparticles = 0; countparticles <= 18 * this.level / 2; ++countparticles)
 		{
@@ -502,7 +502,7 @@ public class WaterSword extends ItemSword implements IHasModel
 		this.abilityTimer.add(this.getAbilityDuration() * 20);
 		this.abilityPlayers.add(player);
 		this.abilityPlayerCD.add(this.abilityCD * 20);
-		WaveAnimation(player);
+		WaveAnimation(player, worldIn);
 		
 		
 		// Extend the players hitbox
@@ -517,7 +517,7 @@ public class WaterSword extends ItemSword implements IHasModel
             for (EntityMob entitymob : listMobs)
             {
             	// Knockback the entity and set a potion effect
-            	LesserWaterParticleEffect(entitymob);
+            	LesserWaterParticleEffect(entitymob, worldIn);
             	Vec3d targetpos = entitymob.getPositionVector();
             	entitymob.attackEntityFrom(DamageSource.DROWN, 0.5F);
 	    		entitymob.knockBack(player, this.getKnockbackStrength(), playerpos.x - targetpos.x, playerpos.z - targetpos.z);
@@ -540,7 +540,7 @@ public class WaterSword extends ItemSword implements IHasModel
             	}
             	else
             	{
-            		LesserWaterParticleEffect(entityplayer);
+            		LesserWaterParticleEffect(entityplayer, worldIn);
             		Vec3d targetpos = entityplayer.getPositionVector();
             		entityplayer.attackEntityFrom(DamageSource.DROWN, 0.5F);
             		entityplayer.knockBack(player, this.getKnockbackStrength() / 2, playerpos.x - targetpos.x, playerpos.z - targetpos.z);
@@ -555,9 +555,8 @@ public class WaterSword extends ItemSword implements IHasModel
 	}
 	
 	
-	public boolean WaterAbilityParticleEffect(EntityPlayer target)
+	public boolean WaterAbilityParticleEffect(EntityPlayer target, World world)
 	{
-		World world = Minecraft.getMinecraft().world;
 		if(world == null) return false;
 		for(int countparticles = 0; countparticles <= 14; ++countparticles)
 		{
@@ -567,9 +566,8 @@ public class WaterSword extends ItemSword implements IHasModel
 		return true;
 	}
 	
-	public boolean WaveAnimation(EntityLivingBase target)
+	public boolean WaveAnimation(EntityLivingBase target, World world)
 	{
-		World world = Minecraft.getMinecraft().world;
 		if(world == null) return false;
 		Random rand = new Random();
 		
@@ -589,9 +587,8 @@ public class WaterSword extends ItemSword implements IHasModel
 		return true;
 	}
 	
-	public boolean WaveWallAnimation(EntityLivingBase target)
+	public boolean WaveWallAnimation(EntityLivingBase target, World world)
 	{
-		World world = Minecraft.getMinecraft().world;
 		if(world == null) return false;
 		Random rand = new Random();
 		
@@ -612,9 +609,8 @@ public class WaterSword extends ItemSword implements IHasModel
 		return true;
 	}
 	
-	public boolean LesserWaterParticleEffect(EntityLivingBase target)
+	public boolean LesserWaterParticleEffect(EntityLivingBase target, World world)
 	{
-		World world = Minecraft.getMinecraft().world;
 		if(world == null) return false;
 		for(int countparticles = 0; countparticles <= 13 * this.level / 2; ++countparticles)
 		{

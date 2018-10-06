@@ -198,7 +198,7 @@ public class NatureSword extends ItemSword implements IHasModel
 	@Override
 	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) 
 	{
-		if(!par2World.isRemote)
+		if(par2World.isRemote)
 		{
 			int i = 0;
 			while(i < this.superPoisonEntities.size())
@@ -221,7 +221,7 @@ public class NatureSword extends ItemSword implements IHasModel
 							
 							//Random rand = new Random();
 							//par2World.spawnParticle(EnumParticleTypes.SPELL_WITCH, currentEnt.posX + (rand.nextDouble() - 0.5D) * (double)currentEnt.width, currentEnt.posY + rand.nextDouble() * (double)currentEnt.height - (double)currentEnt.getYOffset(), currentEnt.posZ + (rand.nextDouble() - 0.5D) * (double)currentEnt.width, 0.0D, 0.0D,0.0D);
-							NatureParticleEffect(currentEnt);
+							NatureParticleEffect(currentEnt, par2World);
 							this.superPoisonTime.set(i, superPoisonTimeInstance - 1);
 						}
 						else
@@ -243,9 +243,8 @@ public class NatureSword extends ItemSword implements IHasModel
 		
 	}
 	
-	public boolean NatureParticleEffect(EntityLivingBase target)
+	public boolean NatureParticleEffect(EntityLivingBase target, World world)
 	{
-		World world = Minecraft.getMinecraft().world;
 		if(world == null) return false;
 		Random rand = new Random();
 		world.spawnParticle(EnumParticleTypes.SPELL_MOB, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0, 1.47D, 0.09D, 1);
@@ -254,7 +253,7 @@ public class NatureSword extends ItemSword implements IHasModel
 	
 	public boolean NatureParticleHitEffect(EntityLivingBase target)
 	{
-		World world = Minecraft.getMinecraft().world;
+		World world = target.getEntityWorld();
 		if(world == null) return false;
 		for(int countparticles = 0; countparticles <= 5 * this.level / 2; ++countparticles)
 		{
