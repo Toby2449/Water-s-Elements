@@ -40,12 +40,7 @@ public class WaterSword extends ItemSword implements IHasModel
 	private int level;
 	private int abilityCD = 3;
 	private ToolMaterial material;
-	private List drowndingTime = new ArrayList();
-	private List drowndingEntities = new ArrayList();
-	private List abilityTimer = new ArrayList();
-	private List abilityTimerTotal = new ArrayList();
-	private List abilityPlayers = new ArrayList();
-	private List abilityPlayerCD = new ArrayList();
+	private List drowndingTime, drowndingEntities, abilityTimer, abilityTimerTotal, abilityPlayers, abilityPlayerCD = new ArrayList();
 	
 	public WaterSword(String name, Integer level, ToolMaterial material) 
 	{
