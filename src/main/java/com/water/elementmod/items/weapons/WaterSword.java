@@ -40,7 +40,12 @@ public class WaterSword extends ItemSword implements IHasModel
 	private int level;
 	private int abilityCD = 3;
 	private ToolMaterial material;
-	private List drowndingTime, drowndingEntities, abilityTimer, abilityTimerTotal, abilityPlayers, abilityPlayerCD = new ArrayList();
+	private List drowndingTime = new ArrayList();
+	private List drowndingEntities = new ArrayList();
+	private List abilityTimer = new ArrayList();
+	private List abilityTimerTotal = new ArrayList();
+	private List abilityPlayers = new ArrayList();
+	private List abilityPlayerCD = new ArrayList();
 	
 	public WaterSword(String name, Integer level, ToolMaterial material) 
 	{
@@ -339,6 +344,7 @@ public class WaterSword extends ItemSword implements IHasModel
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn)
 	{
 		list.add(I18n.format("tooltip.WaterEnchant"));

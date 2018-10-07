@@ -11,28 +11,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod.EventBusSubscriber(modid = References.MOD_ID)
-public class ClientProxy extends ServerProxy
+public class ClientProxy extends CommonProxy
 {
-	@Override
-	public void preInitalizationEvent(FMLPreInitializationEvent event)
-	{
-		super.preInitalizationEvent(event);
-	}
-	
-	@Override
-	public void initalizationEvent(FMLInitializationEvent event)
-	{
-		super.initalizationEvent(event);
-	}
-	
-	@Override
-	public void postInitalizationEvent(FMLPostInitializationEvent event)
-	{
-		super.postInitalizationEvent(event);
-	}
-	
-	@Override
 	public void registerItemRenderer(Item item, int meta, String id)
 	{
 		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName(), id));

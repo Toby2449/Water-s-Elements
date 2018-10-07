@@ -242,6 +242,7 @@ public class FireSword extends ItemSword implements IHasModel
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn)
 	{
 		list.add(I18n.format("tooltip.FireEnchant"));

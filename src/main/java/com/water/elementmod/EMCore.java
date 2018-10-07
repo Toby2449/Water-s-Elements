@@ -3,7 +3,7 @@ package com.water.elementmod;
 import com.water.elementmod.items.weapons.FireSword;
 import com.water.elementmod.items.weapons.NatureSword;
 import com.water.elementmod.items.weapons.WaterSword;
-import com.water.elementmod.proxy.ServerProxy;
+import com.water.elementmod.proxy.CommonProxy;
 import com.water.elementmod.tabs.EMTab_Main;
 import com.water.elementmod.tabs.EMTab_Weapons;
 import com.water.elementmod.util.References;
@@ -32,27 +32,30 @@ public class EMCore
 	@Mod.Instance(References.MOD_ID)
 	public static EMCore instance;
 	
-	@SidedProxy(clientSide = References.CLIENT_PROXY_CLASS, serverSide = References.SERVER_PROXY_CLASS)
-	public static ServerProxy proxy;
+	@SidedProxy(clientSide = References.CLIENT_PROXY_CLASS, serverSide = References.COMMON_PROXY_CLASS)
+	public static CommonProxy proxy;
 	
-	@Mod.EventHandler
+	@EventHandler
 	public static void PreInit(FMLPreInitializationEvent event)
 	{
-		proxy.preInitalizationEvent(event);
+		EMRegistryHandler.otherRegistries();
 		Utils.getLogger().info("Pre Initialize");
 	}
 	
-	@Mod.EventHandler
+	@EventHandler
 	public static void Init(FMLInitializationEvent event)
 	{
-		proxy.initalizationEvent(event);
+		NetworkRegistry.INSTANCE.registerGuiHandler(EMCore.instance, new EMGuiHandler());
+		MinecraftForge.EVENT_BUS.register(FireSword.class);
+		MinecraftForge.EVENT_BUS.register(WaterSword.class);
+		MinecraftForge.EVENT_BUS.register(NatureSword.class);
+		EMSoundHandler.init();
 		Utils.getLogger().info("Initialize");
 	}
 	
-	@Mod.EventHandler
+	@EventHandler
 	public static void PostInit(FMLPostInitializationEvent event)
 	{
-		proxy.postInitalizationEvent(event);
 		Utils.getLogger().info("Post Initialize");
 	}
 	

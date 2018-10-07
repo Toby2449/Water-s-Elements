@@ -17,27 +17,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
-@Mod.EventBusSubscriber(modid = References.MOD_ID)
-public class ServerProxy 
+public class CommonProxy 
 {
-	public void preInitalizationEvent(FMLPreInitializationEvent event)
-	{
-		EMRegistryHandler.otherRegistries();
-	}
-	
-	public void initalizationEvent(FMLInitializationEvent event)
-	{
-		NetworkRegistry.INSTANCE.registerGuiHandler(EMCore.instance, new EMGuiHandler());
-		//MinecraftForge.EVENT_BUS.register(FireSword.class);
-		//MinecraftForge.EVENT_BUS.register(WaterSword.class);
-		//MinecraftForge.EVENT_BUS.register(NatureSword.class);
-		EMSoundHandler.init();
-	}
-	
-	public void postInitalizationEvent(FMLPostInitializationEvent event)
-	{
-		
-	}
 	
 	public void registerItemRenderer(Item item, int meta, String id) {}
 }
