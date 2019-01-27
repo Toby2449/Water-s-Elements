@@ -376,7 +376,7 @@ public class WaterSword extends ItemSword implements IHasModel
 		target.extinguish();
 		setDrownding(target, getDrowndDuration(true, false));
 		stack.damageItem(1, attacker);
-		WaterParticleEffect(target);
+		WaterParticleEffect(target, target.getEntityWorld());
 	    return true;
 	}
 	
@@ -445,7 +445,7 @@ public class WaterSword extends ItemSword implements IHasModel
 						{
 							if ((Integer)this.drowndingTime.get(i) % 20 == 0)
 						    {
-								WaterParticleEffect(currentEnt);
+								WaterParticleEffect(currentEnt, par2World);
 								currentEnt.attackEntityFrom(DamageSource.DROWN, 0.5F);
 						    }
 						
@@ -462,9 +462,8 @@ public class WaterSword extends ItemSword implements IHasModel
 		}
 	}
 	
-	public boolean WaterParticleEffect(EntityLivingBase target)
+	public boolean WaterParticleEffect(EntityLivingBase target, World world)
 	{
-		World world = target.getEntityWorld();
 		if(world == null) return false;
 		for(int countparticles = 0; countparticles <= 18 * this.level / 2; ++countparticles)
 		{
