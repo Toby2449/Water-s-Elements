@@ -8,6 +8,9 @@ import javax.annotation.Nullable;
 
 import com.water.elementmod.EMCore;
 import com.water.elementmod.EMCoreItems;
+import com.water.elementmod.network.PacketHandler;
+import com.water.elementmod.network.PacketParticleData;
+import com.water.elementmod.util.References;
 import com.water.elementmod.util.Utils;
 import com.water.elementmod.util.interfaces.IHasModel;
 
@@ -31,6 +34,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -199,7 +203,7 @@ public class NatureSword extends ItemSword implements IHasModel
 	@Override
 	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) 
 	{
-		if(par2World.isRemote)
+		if(!par2World.isRemote)
 		{
 			int i = 0;
 			while(i < this.superPoisonEntities.size())
@@ -244,12 +248,10 @@ public class NatureSword extends ItemSword implements IHasModel
 		
 	}
 	
-	public boolean NatureParticleEffect(EntityLivingBase target, World world)
+	public void NatureParticleEffect(EntityLivingBase target, World world)
 	{
-		if(world == null) return false;
 		Random rand = new Random();
-		world.spawnParticle(EnumParticleTypes.SPELL_MOB, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0, 1.47D, 0.09D, 1);
-		return true;
+		PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(target, world, 15, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - 0.25D, target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 1.47D, 0.09D, 1), new TargetPoint(target.dimension, target.posX, target.posY, target.posZ, References.PARTICLE_RENDER_RADIUS));
 	}
 	
 	public boolean NatureParticleHitEffect(EntityLivingBase target)
@@ -259,7 +261,7 @@ public class NatureSword extends ItemSword implements IHasModel
 		for(int countparticles = 0; countparticles <= 5 * this.level / 2; ++countparticles)
 		{
 			Random rand = new Random();
-			world.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - (double)target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D,0.0D);
+			PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(target, world, 21, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - 0.25D, target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D, 0.0D, -1), new TargetPoint(target.dimension, target.posX, target.posY, target.posZ, References.PARTICLE_RENDER_RADIUS));
 		}
 		return true;
 	}

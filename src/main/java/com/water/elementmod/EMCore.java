@@ -3,6 +3,7 @@ package com.water.elementmod;
 import com.water.elementmod.items.weapons.FireSword;
 import com.water.elementmod.items.weapons.NatureSword;
 import com.water.elementmod.items.weapons.WaterSword;
+import com.water.elementmod.network.PacketHandler;
 import com.water.elementmod.proxy.CommonProxy;
 import com.water.elementmod.tabs.EMTab_Main;
 import com.water.elementmod.tabs.EMTab_Weapons;
@@ -39,6 +40,7 @@ public class EMCore
 	public static void PreInit(FMLPreInitializationEvent event)
 	{
 		EMRegistryHandler.otherRegistries();
+		PacketHandler.registerMessages(References.MOD_ID);
 		Utils.getLogger().info("Pre Initialize");
 	}
 	

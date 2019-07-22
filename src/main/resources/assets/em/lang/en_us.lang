@@ -34,6 +34,7 @@ tooltip.EnchantFireLevel=§6§oLevel§r§6§l
 tooltip.FireFormatting=§6§o
 tooltip.FireDuration=§6§oFire Duration: 
 tooltip.FireAbilityDuration=§6§o§lAbility Duration: 
+tooltip.FireAbilityCDDuration=§6§o§lAbility Cooldown: 
 
 tooltip.WaterEnchant=§9§oEnchanted with §lWater§r
 tooltip.2xDamageWater=§2§o2x Damage to §r§9§l§oWater§r§2§o types§r

@@ -11,5 +11,6 @@ public class References {
 	public static final int SYNTHESIZER = 0;
 	public static final int EXTRACTOR = 1;
 	public static final int INFUSER = 2;
+	public static final double PARTICLE_RENDER_RADIUS = 100.0D;
 	
 }
