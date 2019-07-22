@@ -270,7 +270,7 @@ public class FireSword extends ItemSword implements IHasModel
 	{
 		target.setFire(getFireDuration(true, false));
 		stack.damageItem(1, attacker);
-		if(!target.world.isRemote) FireParticleEffect(target, target.getEntityWorld());
+		if(!target.world.isRemote) FireParticleEffect(target, target.world);
 	    return true;
 	}
 	
