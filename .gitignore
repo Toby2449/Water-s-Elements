@@ -16,9 +16,10 @@ out
 # gradle
 build
 .gradle
+gradle
 build.gradle
 CREDITS.TXT
-forge-1.12.2-14.23.4.2757-changelog.txt
+forge-1.12.2-14.23.5.2768-changelog.txt
 gradle.properties
 gradlew
 gradlew.bat
