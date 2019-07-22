@@ -426,7 +426,6 @@ public class FireSword extends ItemSword implements IHasModel
 	
 	public boolean FireParticleEffect(EntityLivingBase target, World world)
 	{
-		if(world == null) return false;
 		for(int countparticles = 0; countparticles <= 7 * this.level / 2; ++countparticles)
 		{
 			Random rand = new Random();
