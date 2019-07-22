@@ -6,4 +6,4 @@ Requirements for reporting an issue/bug (Choose one or more of the following)
 
 * A crash log
 * How to reproduce the issue
-* A screenshot/video/gif on how to reproduce the issue
+* Message me or somethin
