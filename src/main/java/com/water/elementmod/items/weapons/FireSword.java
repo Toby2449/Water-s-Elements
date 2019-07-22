@@ -270,7 +270,7 @@ public class FireSword extends ItemSword implements IHasModel
 	{
 		target.setFire(getFireDuration(true, false));
 		stack.damageItem(1, attacker);
-		FireParticleEffect(target, target.getEntityWorld());
+		if(!target.world.isRemote) FireParticleEffect(target, target.getEntityWorld());
 	    return true;
 	}
 	
@@ -424,6 +424,7 @@ public class FireSword extends ItemSword implements IHasModel
 		return true;
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public boolean FireParticleEffect(EntityLivingBase target, World world)
 	{
 		for(int countparticles = 0; countparticles <= 7 * this.level / 2; ++countparticles)
