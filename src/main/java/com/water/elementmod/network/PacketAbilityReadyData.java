@@ -79,11 +79,11 @@ public class PacketAbilityReadyData implements IMessage
 		{
 			Entity ent = Minecraft.getMinecraft().world.getEntityByID(message.entID);
 
-			ent.world.playSound((EntityPlayer) ent, ent.getPosition(), SoundEvents.ENTITY_ENDEREYE_DEATH, SoundCategory.BLOCKS, 1.0F, 1.0F);;
-			for(int countparticles = 0; countparticles <= 5 * 4; ++countparticles)
+			ent.world.playSound((EntityPlayer) ent, ent.getPosition(), SoundEvents.ENTITY_ENDEREYE_DEATH, SoundCategory.PLAYERS, 1.0F, 1.0F);;
+			for(int countparticles = 0; countparticles <= 30; ++countparticles)
 			{
 				Random rand = new Random();
-				ent.world.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, ent.posX + (rand.nextDouble() - 0.5D) * (double)ent.width, ent.posY + rand.nextDouble() * (double)ent.height - 0.25D, ent.posZ + (rand.nextDouble() - 0.5D) * (double)ent.width, 0.0D, 0.0D, 0.0D);
+				ent.world.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, ent.posX + (rand.nextDouble() - 0.5D) * (double)ent.width, ent.posY + rand.nextDouble() * (double)ent.height, ent.posZ + (rand.nextDouble() - 0.5D) * (double)ent.width, 0.0D, 0.0D, 0.0D);
 			}
 		}
 		

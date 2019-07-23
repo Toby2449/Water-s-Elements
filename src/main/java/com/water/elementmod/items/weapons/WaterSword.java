@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 
 import com.water.elementmod.EMCore;
 import com.water.elementmod.EMCoreItems;
+import com.water.elementmod.network.PacketAbilityReadyData;
 import com.water.elementmod.network.PacketHandler;
 import com.water.elementmod.network.PacketParticleData;
 import com.water.elementmod.util.References;
@@ -23,6 +24,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.MobEffects;
@@ -45,7 +47,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class WaterSword extends ItemSword implements IHasModel
 {
 	private int level;
-	private int abilityCD = 3;
 	private ToolMaterial material;
 	private List drowndingTime = new ArrayList();
 	private List drowndingEntities = new ArrayList();
@@ -53,10 +54,6 @@ public class WaterSword extends ItemSword implements IHasModel
 	private List abilityTimerTotal = new ArrayList();
 	private List abilityPlayers = new ArrayList();
 	private List abilityPlayerCD = new ArrayList();
-	private List abilityIceCubeRestore = new ArrayList();
-	private List abilityPlayerLocationX = new ArrayList();
-	private List abilityPlayerLocationY = new ArrayList();
-	private List abilityPlayerLocationZ = new ArrayList();
 	
 	public WaterSword(String name, Integer level, ToolMaterial material) 
 	{
@@ -218,22 +215,64 @@ public class WaterSword extends ItemSword implements IHasModel
 				i = 0;
 				return i;
 			case 5:
+				i = 3;
+				return i;
+			case 6:
+				i = 4;
+				return i;
+			case 7:
+				i = 4;
+				return i;
+			case 8:
+				i = 5;
+				return i;
+			case 9:
+				i = 5;
+				return i;
+			case 10:
+				i = 6;
+				return i;
+		}
+		return i;
+	}
+	
+	/**
+	* Returns the cooldown time
+	*/
+	public int getAbilityCooldown()
+	{
+		int i = 0;
+		switch(this.level)
+		{
+			case 1:
+				i = 0;
+				return i;
+			case 2:
+				i = 0;
+				return i;
+			case 3:
+				i = 0;
+				return i;
+			case 4:
+				i = 0;
+				return i;
+			case 5:
 				i = 5;
 				return i;
 			case 6:
-				i = 5;
+				i = 8;
 				return i;
 			case 7:
-				i = 6;
+				i = 11;
 				return i;
 			case 8:
-				i = 7;
+				i = 14;
 				return i;
 			case 9:
-				i = 7;
+				i = 17;
 				return i;
 			case 10:
-				i = 8;
+				i = 20;
 				return i;
 		}
 		return i;
@@ -371,7 +410,7 @@ public class WaterSword extends ItemSword implements IHasModel
 	    	{
 	    		list.add(I18n.format("tooltip.WaterAbilityDuration") + this.getAbilityDuration() + "s" + I18n.format("tooltip.ResetFormatting"));
 	    		list.add(I18n.format("tooltip.WaterAbilityRadius") + this.getAbilityRadius() + " blocks" + I18n.format("tooltip.ResetFormatting"));
-	    		list.add(I18n.format("tooltip.WaterAbilityCDDuration") + this.abilityCD + "s" + I18n.format("tooltip.ResetFormatting"));
+	    		list.add(I18n.format("tooltip.WaterAbilityCDDuration") + this.getAbilityCooldown() + "s" + I18n.format("tooltip.ResetFormatting"));
 	    		list.add(I18n.format("tooltip.WaterKnockbackStrength") + "x" + (this.getKnockbackStrength() * 2) + I18n.format("tooltip.ResetFormatting"));
 	    	}
 	    } else {
@@ -389,21 +428,6 @@ public class WaterSword extends ItemSword implements IHasModel
 		stack.damageItem(1, attacker);
 		WaterParticleEffect(target, target.getEntityWorld());
 	    return true;
-	}
-	
-	public void WaterParticleEffect(EntityLivingBase target, World world)
-	{
-		for(int countparticles = 0; countparticles <= 18 * this.level / 2; ++countparticles)
-		{
-			Random rand = new Random();
-			PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(target, world, 5, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D, -1), new TargetPoint(target.dimension, target.posX, target.posY, target.posZ, References.PARTICLE_RENDER_RADIUS));
-			PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(target, world, 39, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D, -1), new TargetPoint(target.dimension, target.posX, target.posY, target.posZ, References.PARTICLE_RENDER_RADIUS));
-		}
-		for(int countparticles = 0; countparticles <= 60 * this.level / 2; ++countparticles)
-		{
-			Random rand = new Random();
-			PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(target, world, 4, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D, -1), new TargetPoint(target.dimension, target.posX, target.posY, target.posZ, References.PARTICLE_RENDER_RADIUS));
-		}
 	}
 	
 	/**
@@ -425,17 +449,21 @@ public class WaterSword extends ItemSword implements IHasModel
 				int playerAbilityRemaining = (Integer)this.abilityTimer.get(i);
 				int playerAbilityCDRemaining = (Integer)this.abilityPlayerCD.get(i);
 				EntityPlayer currentPlayer = (EntityPlayer) this.abilityPlayers.get(i);
-				if((Integer)this.abilityTimer.get(i) == (this.getAbilityDuration() * 20)) IceCube(currentPlayer, par2World, (Double)this.abilityPlayerLocationX.get(i), (Double)this.abilityPlayerLocationY.get(i), (Double)this.abilityPlayerLocationZ.get(i));
-				if((Integer)this.abilityTimer.get(i) <= 10) ReverseIceCube(currentPlayer, par2World, (List)this.abilityIceCubeRestore.get(i), (Double)this.abilityPlayerLocationX.get(i), (Double)this.abilityPlayerLocationY.get(i), (Double)this.abilityPlayerLocationZ.get(i));
+				if((Integer)this.abilityTimer.get(i) == (this.getAbilityDuration() * 20) - 3) WaveWallAnimation(currentPlayer, par2World);
+				
+				if(playerAbilityCDRemaining == 0)
+				{
+					PacketHandler.INSTANCE.sendTo(new PacketAbilityReadyData(currentPlayer, par2World), (EntityPlayerMP) par3Entity);
+				}
+				
 				if(currentPlayer != null)
 				{
 					if(!currentPlayer.isDead)
 					{
 						if((Integer)this.abilityTimer.get(i) > 0)
 						{
+							//currentPlayer.setPosition(Math.round((double)currentPlayer.posX) - 0.5D, Math.round((double)currentPlayer.posY), Math.round((double)currentPlayer.posZ) - 0.5D);
 							WaterAbilityParticleEffect(currentPlayer, par2World);
-							if ((Integer)this.abilityTimer.get(i) > 2) IceCube(currentPlayer, par2World, (Double)this.abilityPlayerLocationX.get(i), (Double)this.abilityPlayerLocationY.get(i), (Double)this.abilityPlayerLocationZ.get(i));
-							currentPlayer.setPositionAndUpdate(Math.round((double)this.abilityPlayerLocationX.get(i)) - 0.5D, Math.round((double)this.abilityPlayerLocationY.get(i)), Math.round((double)this.abilityPlayerLocationZ.get(i)) - 0.5D);
 							this.abilityTimer.set(i, playerAbilityRemaining - 1);
 						}
 						else
@@ -449,10 +477,6 @@ public class WaterSword extends ItemSword implements IHasModel
 								this.abilityTimer.remove(i);
 								this.abilityPlayers.remove(i);
 								this.abilityPlayerCD.remove(i);
-								this.abilityIceCubeRestore.remove(i);
-								this.abilityPlayerLocationX.remove(i);
-								this.abilityPlayerLocationY.remove(i);
-								this.abilityPlayerLocationZ.remove(i);
 							}
 						}
 					}
@@ -461,10 +485,6 @@ public class WaterSword extends ItemSword implements IHasModel
 						this.abilityTimer.remove(i);
 						this.abilityPlayers.remove(i);
 						this.abilityPlayerCD.remove(i);
-						this.abilityIceCubeRestore.remove(i);
-						this.abilityPlayerLocationX.remove(i);
-						this.abilityPlayerLocationY.remove(i);
-						this.abilityPlayerLocationZ.remove(i);
 					}
 				}
 			}
@@ -498,164 +518,6 @@ public class WaterSword extends ItemSword implements IHasModel
 		}
 	}
 	
-	public boolean IceCube(EntityPlayer player, World worldIn, Double x, Double y, Double z)
-	{
-		BlockPos pos1 = new BlockPos(Math.round(x), Math.round(y), Math.round(z));
-		BlockPos pos2 = new BlockPos(Math.round(x) - 1D, Math.round(y), Math.round(z - 1D));
-		BlockPos pos3 = new BlockPos(Math.round(x) - 2D, Math.round(y), Math.round(z - 2D));
-		BlockPos pos4 = new BlockPos(Math.round(x) - 2D, Math.round(y), Math.round(z - 1D));
-		BlockPos pos5 = new BlockPos(Math.round(x) - 1D, Math.round(y), Math.round(z - 2D));
-		BlockPos pos6 = new BlockPos(Math.round(x) - 0D, Math.round(y), Math.round(z - 2D));
-		BlockPos pos7 = new BlockPos(Math.round(x) - 1D, Math.round(y), Math.round(z - 0D));
-		BlockPos pos8 = new BlockPos(Math.round(x) - 2D, Math.round(y), Math.round(z - 0D));
-		BlockPos pos9 = new BlockPos(Math.round(x) - 0D, Math.round(y), Math.round(z - 1D));
-		
-		worldIn.setBlockState(pos1, Blocks.ICE.getDefaultState());
-		worldIn.setBlockState(pos1.up(1), Blocks.ICE.getDefaultState());
-		
-		worldIn.setBlockState(pos2, Blocks.AIR.getDefaultState());
-		worldIn.setBlockState(pos2.up(1), Blocks.AIR.getDefaultState());
-		worldIn.setBlockState(pos2.down(1), Blocks.ICE.getDefaultState());
-		worldIn.setBlockState(pos2.up(2), Blocks.ICE.getDefaultState());
-		
-		worldIn.setBlockState(pos3, Blocks.ICE.getDefaultState());
-		worldIn.setBlockState(pos3.up(1), Blocks.ICE.getDefaultState());
-		
-		worldIn.setBlockState(pos4, Blocks.ICE.getDefaultState());
-		worldIn.setBlockState(pos4.up(1), Blocks.ICE.getDefaultState());
-		worldIn.setBlockState(pos4.up(2), Blocks.ICE.getDefaultState());
-		worldIn.setBlockState(pos4.down(1), Blocks.ICE.getDefaultState());
-		
-		worldIn.setBlockState(pos5, Blocks.ICE.getDefaultState());
-		worldIn.setBlockState(pos5.up(1), Blocks.ICE.getDefaultState());
-		worldIn.setBlockState(pos5.up(2), Blocks.ICE.getDefaultState());
-		worldIn.setBlockState(pos5.down(1), Blocks.ICE.getDefaultState());
-		
-		worldIn.setBlockState(pos6, Blocks.ICE.getDefaultState());
-		worldIn.setBlockState(pos6.up(1), Blocks.ICE.getDefaultState());
-		
-		worldIn.setBlockState(pos7, Blocks.ICE.getDefaultState());
-		worldIn.setBlockState(pos7.up(1), Blocks.ICE.getDefaultState());
-		worldIn.setBlockState(pos7.up(2), Blocks.ICE.getDefaultState());
-		worldIn.setBlockState(pos7.down(1), Blocks.ICE.getDefaultState());
-		
-		worldIn.setBlockState(pos8, Blocks.ICE.getDefaultState());
-		worldIn.setBlockState(pos8.up(1), Blocks.ICE.getDefaultState());
-		
-		worldIn.setBlockState(pos9, Blocks.ICE.getDefaultState());
-		worldIn.setBlockState(pos9.up(1), Blocks.ICE.getDefaultState());
-		worldIn.setBlockState(pos9.up(2), Blocks.ICE.getDefaultState());
-		worldIn.setBlockState(pos9.down(1), Blocks.ICE.getDefaultState());
-		return true;
-	}
-	
-	public boolean ReverseIceCube(EntityPlayer player, World worldIn, List block, Double x, Double y, Double z)
-	{
-		BlockPos pos1 = new BlockPos(Math.round(x), Math.round(y), Math.round(z));
-		BlockPos pos2 = new BlockPos(Math.round(x) - 1D, Math.round(y), Math.round(z - 1D));
-		BlockPos pos3 = new BlockPos(Math.round(x) - 2D, Math.round(y), Math.round(z - 2D));
-		BlockPos pos4 = new BlockPos(Math.round(x) - 2D, Math.round(y), Math.round(z - 1D));
-		BlockPos pos5 = new BlockPos(Math.round(x) - 1D, Math.round(y), Math.round(z - 2D));
-		BlockPos pos6 = new BlockPos(Math.round(x) - 0D, Math.round(y), Math.round(z - 2D));
-		BlockPos pos7 = new BlockPos(Math.round(x) - 1D, Math.round(y), Math.round(z - 0D));
-		BlockPos pos8 = new BlockPos(Math.round(x) - 2D, Math.round(y), Math.round(z - 0D));
-		BlockPos pos9 = new BlockPos(Math.round(x) - 0D, Math.round(y), Math.round(z - 1D));
-		
-		worldIn.setBlockState(pos1, (IBlockState) block.get(0));
-		worldIn.setBlockState(pos1.up(1), (IBlockState) block.get(1));
-		
-		worldIn.setBlockState(pos2, (IBlockState) block.get(2));
-		worldIn.setBlockState(pos2.up(1), (IBlockState) block.get(3));
-		worldIn.setBlockState(pos2.down(1), (IBlockState) block.get(4));
-		worldIn.setBlockState(pos2.up(2), (IBlockState) block.get(5));
-		
-		worldIn.setBlockState(pos3, (IBlockState) block.get(6));
-		worldIn.setBlockState(pos3.up(1), (IBlockState) block.get(7));
-		
-		worldIn.setBlockState(pos4, (IBlockState) block.get(8));
-		worldIn.setBlockState(pos4.up(1), (IBlockState) block.get(9));
-		worldIn.setBlockState(pos4.up(2), (IBlockState) block.get(10));
-		worldIn.setBlockState(pos4.down(1), (IBlockState) block.get(11));
-		
-		worldIn.setBlockState(pos5, (IBlockState) block.get(12));
-		worldIn.setBlockState(pos5.up(1), (IBlockState) block.get(13));
-		worldIn.setBlockState(pos5.up(2), (IBlockState) block.get(14));
-		worldIn.setBlockState(pos5.down(1), (IBlockState) block.get(15));
-		
-		worldIn.setBlockState(pos6, (IBlockState) block.get(16));
-		worldIn.setBlockState(pos6.up(1), (IBlockState) block.get(17));
-		
-		worldIn.setBlockState(pos7, (IBlockState) block.get(18));
-		worldIn.setBlockState(pos7.up(1), (IBlockState) block.get(19));
-		worldIn.setBlockState(pos7.up(2), (IBlockState) block.get(20));
-		worldIn.setBlockState(pos7.down(1), (IBlockState) block.get(21));
-		
-		worldIn.setBlockState(pos8, (IBlockState) block.get(22));
-		worldIn.setBlockState(pos8.up(1), (IBlockState) block.get(23));
-		
-		worldIn.setBlockState(pos9, (IBlockState) block.get(24));
-		worldIn.setBlockState(pos9.up(1), (IBlockState) block.get(25));
-		worldIn.setBlockState(pos9.up(2), (IBlockState) block.get(26));
-		worldIn.setBlockState(pos9.down(1), (IBlockState) block.get(27));
-		
-		return true;
-	}
-	
-	public List StartIceCubeRestore(EntityPlayer player, World worldIn, Double x, Double y, Double z)
-	{
-		List BlockStates = new ArrayList();
-		
-		BlockPos pos1 = new BlockPos(Math.round(x), Math.round(y), Math.round(z));
-		BlockPos pos2 = new BlockPos(Math.round(x) - 1D, Math.round(y), Math.round(z - 1D));
-		BlockPos pos3 = new BlockPos(Math.round(x) - 2D, Math.round(y), Math.round(z - 2D));
-		BlockPos pos4 = new BlockPos(Math.round(x) - 2D, Math.round(y), Math.round(z - 1D));
-		BlockPos pos5 = new BlockPos(Math.round(x) - 1D, Math.round(y), Math.round(z - 2D));
-		BlockPos pos6 = new BlockPos(Math.round(x) - 0D, Math.round(y), Math.round(z - 2D));
-		BlockPos pos7 = new BlockPos(Math.round(x) - 1D, Math.round(y), Math.round(z - 0D));
-		BlockPos pos8 = new BlockPos(Math.round(x) - 2D, Math.round(y), Math.round(z - 0D));
-		BlockPos pos9 = new BlockPos(Math.round(x) - 0D, Math.round(y), Math.round(z - 1D));
-		
-		BlockStates.add(worldIn.getBlockState(pos1).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos1.up(1)).getBlock().getDefaultState());
-		
-		BlockStates.add(worldIn.getBlockState(pos2).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos2.up(1)).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos2.down(1)).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos2.up(2)).getBlock().getDefaultState());
-		
-		BlockStates.add(worldIn.getBlockState(pos3).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos3.up(1)).getBlock().getDefaultState());
-		
-		BlockStates.add(worldIn.getBlockState(pos4).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos4.up(1)).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos4.up(2)).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos4.down(1)).getBlock().getDefaultState());
-		
-		BlockStates.add(worldIn.getBlockState(pos5).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos5.up(1)).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos5.up(2)).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos5.down(1)).getBlock().getDefaultState());
-		
-		BlockStates.add(worldIn.getBlockState(pos6).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos6.up(1)).getBlock().getDefaultState());
-		
-		BlockStates.add(worldIn.getBlockState(pos7).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos7.up(1)).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos7.up(2)).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos7.down(1)).getBlock().getDefaultState());
-		
-		BlockStates.add(worldIn.getBlockState(pos8).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos8.up(1)).getBlock().getDefaultState());
-		
-		BlockStates.add(worldIn.getBlockState(pos9).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos9.up(1)).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos9.up(2)).getBlock().getDefaultState());
-		BlockStates.add(worldIn.getBlockState(pos9.down(1)).getBlock().getDefaultState());
-		System.out.println(worldIn.getBlockState(pos9.down(1)).getBlock().getDefaultState());
-		
-		return BlockStates;
-	}
-	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn)
     {
@@ -678,12 +540,10 @@ public class WaterSword extends ItemSword implements IHasModel
 		// Add the player to table so they can activate the ability
 		this.abilityTimer.add(this.getAbilityDuration() * 20);
 		this.abilityPlayers.add(player);
-		this.abilityPlayerCD.add(this.abilityCD * 20);
-		this.abilityIceCubeRestore.add(StartIceCubeRestore(player, worldIn, (Double)player.getPositionVector().x, (Double)player.getPositionVector().y, (Double)player.getPositionVector().z));
-		this.abilityPlayerLocationX.add(player.getPositionVector().x);
-		this.abilityPlayerLocationY.add(player.getPositionVector().y);
-		this.abilityPlayerLocationZ.add(player.getPositionVector().z);
+		this.abilityPlayerCD.add(this.getAbilityCooldown() * 20);
 		WaveAnimation(player, worldIn);
+		
+		player.heal(1.0F);
 		
 		// Extend the players hitbox
 		AxisAlignedBB e = player.getEntityBoundingBox().grow(this.getAbilityRadius(), 4.0D, this.getAbilityRadius());
@@ -715,8 +575,9 @@ public class WaterSword extends ItemSword implements IHasModel
             	// Check if the player is the player that activates the ability
             	if(entityplayer == player)
             	{
-            		entityplayer.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 30, 1)); // 1.5 seconds
-            		entityplayer.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, this.getAbilityDuration() * 20, 1));
+            		entityplayer.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, this.getAbilityDuration() * 20, 100));
+            		entityplayer.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, this.getAbilityDuration() * 20, 2));
+            		entityplayer.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, this.getAbilityDuration() * 20, this.level / 2 + 1));
             		
             	}
             	else
@@ -734,19 +595,33 @@ public class WaterSword extends ItemSword implements IHasModel
 		
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
 	}
+	
+	public void WaterParticleEffect(EntityLivingBase target, World world)
+	{
+		for(int countparticles = 0; countparticles <= 18 * this.level / 2; ++countparticles)
+		{
+			Random rand = new Random();
+			PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(target, world, 5, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D, -1), new TargetPoint(target.dimension, target.posX, target.posY, target.posZ, References.PARTICLE_RENDER_RADIUS));
+			PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(target, world, 39, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D, -1), new TargetPoint(target.dimension, target.posX, target.posY, target.posZ, References.PARTICLE_RENDER_RADIUS));
+		}
+		for(int countparticles = 0; countparticles <= 60 * this.level / 2; ++countparticles)
+		{
+			Random rand = new Random();
+			PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(target, world, 4, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D, -1), new TargetPoint(target.dimension, target.posX, target.posY, target.posZ, References.PARTICLE_RENDER_RADIUS));
+		}
+	}
 
 	public void WaterAbilityParticleEffect(EntityPlayer target, World world)
 	{
 		for(int countparticles = 0; countparticles <= 14; ++countparticles)
 		{
 			Random rand = new Random();
-			PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(target, world, 5, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D, -1), new TargetPoint(target.dimension, target.posX, target.posY, target.posZ, References.PARTICLE_RENDER_RADIUS));
+			PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 5, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D, -1), target.dimension);
 		}
 	}
 	
-	public boolean WaveAnimation(EntityLivingBase target, World world)
+	public void WaveAnimation(EntityLivingBase target, World world)
 	{
-		if(world == null) return false;
 		Random rand = new Random();
 		
 		for(double r = 0.6D; r <= this.getAbilityRadius(); r += 0.2D)
@@ -758,18 +633,14 @@ public class WaterSword extends ItemSword implements IHasModel
 				double finalX = target.posX + deltaX;
 				double finalZ = target.posZ + deltaZ;
 			    
-				world.spawnParticle(EnumParticleTypes.WATER_DROP, finalX, target.posY + rand.nextDouble(), finalZ, 0.0D,0.0D,0.0D);
+				PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 39, finalX, target.posY + rand.nextDouble(), finalZ, 0.0D, 0.0D, 0.0D, -1), target.dimension);
 			}
 		}
-		
-		return true;
 	}
 	
-	public boolean WaveWallAnimation(EntityLivingBase target, World world)
+	public void WaveWallAnimation(EntityLivingBase target, World world)
 	{
-		if(world == null) return false;
 		Random rand = new Random();
-		
 		for(float i = 0.0F; i < 360.0F; i += 2.0F)
 		{
 			double radius = this.getAbilityRadius();
@@ -780,28 +651,26 @@ public class WaterSword extends ItemSword implements IHasModel
 		    
 			for(double p = this.getAbilityRadius(); p >= 0.0D; p -= 0.5D)
 			{
-				world.spawnParticle(EnumParticleTypes.DRIP_WATER, finalX, target.posY + p + rand.nextDouble(), finalZ, 0.0D,0.0D,0.0D);
-				world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, finalX, target.posY + p + rand.nextDouble(), finalZ, 0.0D,0.0D,0.0D);
+				PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 18, finalX, target.posY + p + rand.nextDouble(), finalZ, 0.0D, 0.0D, 0.0D, -1), target.dimension);
+				PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 4, finalX, target.posY + p + rand.nextDouble(), finalZ, 0.0D, 0.0D, 0.0D, -1), target.dimension);
 			}
 		}
-		return true;
 	}
 	
-	public boolean LesserWaterParticleEffect(EntityLivingBase target, World world)
+	public void LesserWaterParticleEffect(EntityLivingBase target, World world)
 	{
-		if(world == null) return false;
 		for(int countparticles = 0; countparticles <= 13 * this.level / 2; ++countparticles)
 		{
 			Random rand = new Random();
-			world.spawnParticle(EnumParticleTypes.WATER_SPLASH, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D);
-			world.spawnParticle(EnumParticleTypes.WATER_DROP, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D);
+			PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 5, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D, 0.0D, -1), target.dimension);
+			PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 39, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D, 0.0D, -1), target.dimension);
 		}
 		for(int countparticles = 0; countparticles <= 50 * this.level / 2; ++countparticles)
 		{
 			Random rand = new Random();
 			world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D);
+			PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 4, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D, 0.0D, -1), target.dimension);
 		}
-		return true;
 	}
 	
 	@Override

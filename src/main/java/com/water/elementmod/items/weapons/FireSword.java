@@ -338,12 +338,12 @@ public class FireSword extends ItemSword implements IHasModel
 				EntityLivingBase currentPlayer = (EntityLivingBase)this.abilityPlayers.get(i);
 				if(playerAbilityRemaining != 0)
 				{
-					if(playerAbilityRemaining % ((this.getAbilityDuration() * 20) / ((this.getAbilityDuration()* 20) / 5)) == 0) spawnTrailNode(currentPlayer.posX, currentPlayer.posY, currentPlayer.posZ, playerAbilityRemaining);
+					if(playerAbilityRemaining % 4 == 0) spawnTrailNode(currentPlayer.posX, currentPlayer.posY, currentPlayer.posZ, playerAbilityRemaining);
 				}
 				
 				if(playerAbilityRemainingCD == 0)
 				{
-					PacketHandler.INSTANCE.sendTo(new PacketAbilityReadyData(par3Entity, par2World), (EntityPlayerMP) par3Entity);
+					PacketHandler.INSTANCE.sendTo(new PacketAbilityReadyData(currentPlayer, par2World), (EntityPlayerMP) par3Entity);
 				}
 				
 				if(currentPlayer != null)
@@ -382,11 +382,10 @@ public class FireSword extends ItemSword implements IHasModel
 				int CircleTimer = (Integer)this.abilityAoeTimers.get(i);
 				ArrayList pos = (ArrayList)this.abilityAoePoints.get(i);
 				
-				AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - 0.5D, (double)pos.get(1), (double)pos.get(2) - 0.5D, (double)pos.get(0) + 1.0D, (double)pos.get(1) + 1.0D, (double)pos.get(2) + 1.0D);
+				AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - 0.5D, (double)pos.get(1) - 0.5D, (double)pos.get(2) - 0.5D, (double)pos.get(0) + 1.0D, (double)pos.get(1) + 1.0D, (double)pos.get(2) + 1.0D);
 				List<EntityMob> AABBMob = par2World.<EntityMob>getEntitiesWithinAABB(EntityMob.class, AoePoint);
 				List<EntityAnimal> AABBAnimal = par2World.<EntityAnimal>getEntitiesWithinAABB(EntityAnimal.class, AoePoint);
 				List<EntityPlayer> AABBPlayer = par2World.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
-				
 				if (!AABBMob.isEmpty())
 		        {
 		            for (EntityMob ent : AABBMob)
@@ -420,12 +419,12 @@ public class FireSword extends ItemSword implements IHasModel
 				
 				if((Integer)this.abilityAoeTimers.get(i) > 0)
 				{
-					if((Integer)this.abilityAoeTimers.get(i) % 5 == 0)
+					if((Integer)this.abilityAoeTimers.get(i) % 4 == 0)
 					{
 						FireRingAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 1, par2World, par3Entity);
 					}
 					
-					if((Integer)this.abilityAoeTimers.get(i) % 20 == 0)
+					if((Integer)this.abilityAoeTimers.get(i) % 16 == 0)
 					{
 						FireSpitAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), par2World, par3Entity);
 					}
@@ -490,7 +489,7 @@ public class FireSword extends ItemSword implements IHasModel
 				double finalX = x - 0.5D + deltaX;
 				double finalZ = z - 0.5D + deltaZ;
 			    
-				PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(ent, world, 26, finalX, y + 0.15D, finalZ, 0.0D, 0.0D, 0.0D, -1), new TargetPoint(ent.dimension, x, y, z, References.PARTICLE_RENDER_RADIUS));
+				PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(ent, world, 26, finalX, y + 0.15D, finalZ, 0.0D, 0.0D, 0.0D, -1), ent.dimension);
 			}
 		}
 	}
@@ -500,31 +499,19 @@ public class FireSword extends ItemSword implements IHasModel
 		for(int countparticles = 0; countparticles <= 7 * this.level / 2; ++countparticles)
 		{
 			Random rand = new Random();
-			PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(target, world, 26, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - 0.25D, target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D, 0.0D, -1), new TargetPoint(target.dimension, target.posX, target.posY, target.posZ, References.PARTICLE_RENDER_RADIUS));
+			PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 26, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - 0.25D, target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D, 0.0D, -1), target.dimension);
         }
 		
 		for(int countparticles = 0; countparticles <= 10 * this.level / 2; ++countparticles)
 		{
 			Random rand = new Random();
-			PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(target, world, 27, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - 0.25D, target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D, 0.0D, -1), new TargetPoint(target.dimension, target.posX, target.posY, target.posZ, References.PARTICLE_RENDER_RADIUS));
+			PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 27, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - 0.25D, target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D, 0.0D, -1), target.dimension);
 	    }
     }
 	
-	public boolean NatureParticleHitEffect(EntityLivingBase target)
-	{
-		World world = target.getEntityWorld();
-		if(world == null) return false;
-		for(int countparticles = 0; countparticles <= 5 * this.level / 2; ++countparticles)
-		{
-			Random rand = new Random();
-			PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(target, world, 21, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - 0.25D, target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D, 0.0D, -1), new TargetPoint(target.dimension, target.posX, target.posY, target.posZ, References.PARTICLE_RENDER_RADIUS));
-		}
-		return true;
-	}
-	
 	public void FireSpitAnimation(double x, double y, double z, World world, Entity ent)
 	{
-		PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(ent, world, 27, x, y + 0.15D, z, 0.0D, 0.0D, 0.0D, -1), new TargetPoint(ent.dimension, x, y, z, References.PARTICLE_RENDER_RADIUS));
+		PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(ent, world, 27, x, y + 0.15D, z, 0.0D, 0.0D, 0.0D, -1), ent.dimension);
 	}
 	
 	@Override
