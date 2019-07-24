@@ -462,7 +462,7 @@ public class WaterSword extends ItemSword implements IHasModel
 					{
 						if((Integer)this.abilityTimer.get(i) > 0)
 						{
-							//currentPlayer.setPosition(Math.round((double)currentPlayer.posX) - 0.5D, Math.round((double)currentPlayer.posY), Math.round((double)currentPlayer.posZ) - 0.5D);
+							//currentPlayer.setPositionAndUpdate(Math.round((double)currentPlayer.posX) - 0.5D, Math.round((double)currentPlayer.posY), Math.round((double)currentPlayer.posZ) - 0.5D);
 							WaterAbilityParticleEffect(currentPlayer, par2World);
 							this.abilityTimer.set(i, playerAbilityRemaining - 1);
 						}
@@ -488,7 +488,7 @@ public class WaterSword extends ItemSword implements IHasModel
 					}
 				}
 			}
-				
+			
 			for(int i = 0; i < this.drowndingEntities.size(); i++)
 			{
 				int drowndingTimeInstance = (Integer)this.drowndingTime.get(i);
@@ -543,8 +543,6 @@ public class WaterSword extends ItemSword implements IHasModel
 		this.abilityPlayerCD.add(this.getAbilityCooldown() * 20);
 		WaveAnimation(player, worldIn);
 		
-		player.heal(1.0F);
-		
 		// Extend the players hitbox
 		AxisAlignedBB e = player.getEntityBoundingBox().grow(this.getAbilityRadius(), 4.0D, this.getAbilityRadius());
 		
@@ -575,7 +573,7 @@ public class WaterSword extends ItemSword implements IHasModel
             	// Check if the player is the player that activates the ability
             	if(entityplayer == player)
             	{
-            		entityplayer.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, this.getAbilityDuration() * 20, 100));
+            		entityplayer.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, this.getAbilityDuration() * 20, 1));
             		entityplayer.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, this.getAbilityDuration() * 20, 2));
             		entityplayer.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, this.getAbilityDuration() * 20, this.level / 2 + 1));
             		

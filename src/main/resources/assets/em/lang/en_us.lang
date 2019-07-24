@@ -51,6 +51,10 @@ tooltip.2xDamageNature=§6§o2x Damage to §r§2§l§oNature§r§6§o types§r
 tooltip.EnchantNatureLevel=§2§oLevel§r§2§l
 tooltip.NatureFormatting=§2§o
 tooltip.NatureDuration=§2§oPoison Duration: 
+tooltip.NatureAbilityDuration=§2§o§lAura Duration: 
+tooltip.NatureAbilityRadius=§2§o§lAura Radius: 
+tooltip.NatureAbilityCDDuration=§2§o§lAbility Cooldown: 
+tooltip.NatureRegenerationLevel=§2§o§lRegeneration Level: 
 
 
 item.fire_sword1.name=Diamond Sword

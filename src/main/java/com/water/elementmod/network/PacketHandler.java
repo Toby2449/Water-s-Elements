@@ -21,6 +21,7 @@ public class PacketHandler
 		
 		//Client Packets
 		INSTANCE.registerMessage(PacketParticleData.Handler.class, PacketParticleData.class, nextID(), Side.CLIENT);
+		INSTANCE.registerMessage(PacketCustomParticleData.Handler.class, PacketCustomParticleData.class, nextID(), Side.CLIENT);
 		INSTANCE.registerMessage(PacketAbilityReadyData.Handler.class, PacketAbilityReadyData.class, nextID(), Side.CLIENT);
 	}
 }
