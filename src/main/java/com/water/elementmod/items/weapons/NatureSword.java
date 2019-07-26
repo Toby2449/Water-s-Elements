@@ -24,6 +24,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Enchantments;
@@ -202,22 +203,22 @@ public class NatureSword extends ItemSword implements IHasModel
 				i = 0;
 				return i;
 			case 5:
-				i = 3;
+				i = 6;
 				return i;
 			case 6:
-				i = 4;
+				i = 6;
 				return i;
 			case 7:
-				i = 4;
+				i = 7;
 				return i;
 			case 8:
-				i = 5;
+				i = 7;
 				return i;
 			case 9:
-				i = 5;
+				i = 8;
 				return i;
 			case 10:
-				i = 6;
+				i = 8;
 				return i;
 		}
 		return i;
@@ -427,7 +428,7 @@ public class NatureSword extends ItemSword implements IHasModel
 	    	if(this.getEliagibleForAbility())
 	    	{
 	    		list.add(I18n.format("tooltip.NatureAbilityDuration") + this.getAbilityDuration() + "s" + I18n.format("tooltip.ResetFormatting"));
-	    		list.add(I18n.format("tooltip.NatureAbilityRadius") + this.getAbilityRadius() + " blocks" + I18n.format("tooltip.ResetFormatting"));
+	    		list.add(I18n.format("tooltip.NatureAbilityRadius") + (this.getAbilityRadius() * 2) + " blocks" + I18n.format("tooltip.ResetFormatting"));
 	    		list.add(I18n.format("tooltip.NatureAbilityCDDuration") + this.getAbilityCooldown() + "s" + I18n.format("tooltip.ResetFormatting"));
 	    		list.add(I18n.format("tooltip.NatureRegenerationLevel") + this.getRegenerationLevelRN() + I18n.format("tooltip.ResetFormatting"));
 	    	}
@@ -539,17 +540,32 @@ public class NatureSword extends ItemSword implements IHasModel
 			{
 				int CircleTimer = (Integer)this.abilityAoeTimers.get(i);
 				ArrayList pos = (ArrayList)this.abilityAoePoints.get(i);
+				if((Integer)this.abilityTimer.get(i) == (this.getAbilityDuration() * 20) - 1) HealingAoeAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), this.getAbilityRadius(), par2World, par3Entity);
+				
+				AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - this.getAbilityRadius(), (double)pos.get(1) - 0.5D, (double)pos.get(2) - this.getAbilityRadius(), (double)pos.get(0) + this.getAbilityRadius(), (double)pos.get(1) + 4.0D, (double)pos.get(2) + this.getAbilityRadius());
+				List<EntityPlayer> AABBPlayer = par2World.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
+				
+				if (!AABBPlayer.isEmpty())
+		        {
+		            for (EntityPlayer ent : AABBPlayer)
+		            {
+		            	if(!ent.isPotionActive(MobEffects.REGENERATION)) 
+		            	{
+		            		System.out.println("yo");
+		            		ent.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 50, this.getRegenerationLevel()));
+		            	}
+		            }
+		        }
 				
 				if((Integer)this.abilityAoeTimers.get(i) > 0)
 				{
 					if((Integer)this.abilityAoeTimers.get(i) % 25 == 0)
 					{
-						HealingAoeAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 5, par2World, par3Entity);
-						HeartParticleSpawner((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 5, par2World, par3Entity);
+						HealingAoeAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), this.getAbilityRadius(), par2World, par3Entity);
 					}
-					if((Integer)this.abilityAoeTimers.get(i) % 40 == 0)
+					if((Integer)this.abilityAoeTimers.get(i) % 5 == 0)
 					{
-						HeartParticleSpawner((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 5, par2World, par3Entity);
+						HeartParticleSpawner((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), this.getAbilityRadius(), par2World, par3Entity);
 					}
 					this.abilityAoeTimers.set(i, CircleTimer - 1);
 				}
@@ -631,7 +647,7 @@ public class NatureSword extends ItemSword implements IHasModel
 				double finalX = x - 0.5D + deltaX;
 				double finalZ = z - 0.5D + deltaZ;
 			    
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(ent, world, 1, finalX, y + 0.15D, finalZ, 0.0D, 0.0D, 0.0D, -1), ent.dimension);
+				if(rand.nextDouble() < 0.5D) PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(ent, world, 1, finalX, y + 0.15D, finalZ, 0.0D, 0.0D, 0.0D, -1), ent.dimension);
 			}
 		}
 	}
@@ -648,7 +664,7 @@ public class NatureSword extends ItemSword implements IHasModel
 				double finalX = x - 0.5D + deltaX;
 				double finalZ = z - 0.5D + deltaZ;
 			    
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(ent, world, 34, finalX, y + 0.15D, finalZ, 0.0D, 0.0D, 0.0D, -1), ent.dimension);
+				if(rand.nextDouble() < 0.005D) PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(ent, world, 2, finalX, y + 0.15D, finalZ, 0.0D, 0.0D, 0.0D, -1), ent.dimension);
 			}
 		}
 	}

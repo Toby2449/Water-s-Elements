@@ -10,7 +10,8 @@ import com.google.common.collect.Maps;
 public enum EnumCustomParticleTypes 
 {
 	GREEN_POLLEN("green_pollen", 0, false),
-	DARKGREEN_POLLEN("darkgreen_pollen", 1, false);
+	DARKGREEN_POLLEN("darkgreen_pollen", 1, false),
+	SMALL_HEART("small_heart", 2, false);
 	
 	private final String particleName;
     private final int particleID;
