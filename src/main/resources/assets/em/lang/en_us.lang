@@ -22,6 +22,7 @@ container.synthesizer=Synthesizer
 container.extractor=Extractor
 container.infuser=Infuser
 
+entity.fire_zombie.name=Fire Zombie
 
 tooltip.Enchant=Element: 
 tooltip.ResetFormatting=§r

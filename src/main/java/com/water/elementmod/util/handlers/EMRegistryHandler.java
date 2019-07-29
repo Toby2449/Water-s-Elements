@@ -3,6 +3,7 @@ package com.water.elementmod.util.handlers;
 import java.rmi.registry.Registry;
 
 import com.water.elementmod.EMCoreBlocks;
+import com.water.elementmod.EMCoreEntities;
 import com.water.elementmod.EMCoreItems;
 import com.water.elementmod.gen.WorldGenOres;
 import com.water.elementmod.util.References;
@@ -59,6 +60,8 @@ public class EMRegistryHandler
 	public static void otherRegistries()
 	{
 		//GameRegistry.registerWorldGenerator(new WorldGenOres(), 3);
+		EMCoreEntities.registerEntities();
+		EMRenderHandler.registerEntityRenders();
 		Utils.getLogger().info("World gens intialized");
 	}
 }

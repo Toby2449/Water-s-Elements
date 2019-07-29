@@ -462,7 +462,6 @@ public class WaterSword extends ItemSword implements IHasModel
 					{
 						if((Integer)this.abilityTimer.get(i) > 0)
 						{
-							//currentPlayer.setPositionAndUpdate(Math.round((double)currentPlayer.posX) - 0.5D, Math.round((double)currentPlayer.posY), Math.round((double)currentPlayer.posZ) - 0.5D);
 							WaterAbilityParticleEffect(currentPlayer, par2World);
 							this.abilityTimer.set(i, playerAbilityRemaining - 1);
 						}
@@ -599,13 +598,13 @@ public class WaterSword extends ItemSword implements IHasModel
 		for(int countparticles = 0; countparticles <= 18 * this.level / 2; ++countparticles)
 		{
 			Random rand = new Random();
-			PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(target, world, 5, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D, -1), new TargetPoint(target.dimension, target.posX, target.posY, target.posZ, References.PARTICLE_RENDER_RADIUS));
-			PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(target, world, 39, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D, -1), new TargetPoint(target.dimension, target.posX, target.posY, target.posZ, References.PARTICLE_RENDER_RADIUS));
+			PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 5, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D, -1), target.dimension);
+			PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 39, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D, -1), target.dimension);
 		}
 		for(int countparticles = 0; countparticles <= 60 * this.level / 2; ++countparticles)
 		{
 			Random rand = new Random();
-			PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(target, world, 4, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D, -1), new TargetPoint(target.dimension, target.posX, target.posY, target.posZ, References.PARTICLE_RENDER_RADIUS));
+			PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 4, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D, -1), target.dimension);
 		}
 	}
 

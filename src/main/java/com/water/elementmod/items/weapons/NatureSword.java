@@ -616,13 +616,13 @@ public class NatureSword extends ItemSword implements IHasModel
 	public void NatureParticleEffect(EntityLivingBase target, World world)
 	{
 		Random rand = new Random();
-		PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(target, world, 15, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - 0.25D, target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 1.47D, 0.09D, 1), new TargetPoint(target.dimension, target.posX, target.posY, target.posZ, References.PARTICLE_RENDER_RADIUS));
+		PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 15, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - 0.25D, target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 1.47D, 0.09D, 1), target.dimension);
 	}
 	
 	public void LesserNatureParticleEffect(EntityLivingBase target, World world)
 	{
 		Random rand = new Random();
-		PacketHandler.INSTANCE.sendToAllAround(new PacketParticleData(target, world, 21, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - 0.25D, target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 1.47D, 0.09D, 1), new TargetPoint(target.dimension, target.posX, target.posY, target.posZ, References.PARTICLE_RENDER_RADIUS));
+		PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 21, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - 0.25D, target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 1.47D, 0.09D, 1), target.dimension);
 	}
 	
 	public boolean NatureParticleHitEffect(EntityLivingBase target, World world)
@@ -630,7 +630,7 @@ public class NatureSword extends ItemSword implements IHasModel
 		for(int countparticles = 0; countparticles <= 15 * this.level / 2; ++countparticles)
 		{
 			Random rand = new Random();
-			PacketHandler.INSTANCE.sendToAllAround(new PacketCustomParticleData(target, world, 0, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - 0.25D, target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D, 0.0D, -1), new TargetPoint(target.dimension, target.posX, target.posY, target.posZ, References.PARTICLE_RENDER_RADIUS));
+			PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(target, world, 0, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - 0.25D, target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D, 0.0D, -1), target.dimension);
 		}
 		return true;
 	}
