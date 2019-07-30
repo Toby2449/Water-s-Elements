@@ -418,12 +418,12 @@ public class NatureSword extends ItemSword implements IHasModel
 	{
 		list.add(I18n.format("tooltip.NatureEnchant"));
 	    list.add(I18n.format("tooltip.EnchantNatureLevel") + " " + intToNumeral() + I18n.format("tooltip.ResetFormatting"));
+	    list.add(I18n.format("tooltip.NatureFormatting") + "+" + this.getAddedDamage() + " " + I18n.format("tooltip.MoreAttackDamage") + I18n.format("tooltip.ResetFormatting"));
 	    
 	    if(GuiScreen.isAltKeyDown()){
 	    	//list.remove(I18n.format("tooltip.PressAlt") + I18n.format("tooltip.ResetFormatting"));
 	    	list.add("");
-	    	list.add(I18n.format("tooltip.2xDamageWater"));
-	    	list.add(I18n.format("tooltip.NatureFormatting") + "+" + this.getAddedDamage() + " " + I18n.format("tooltip.MoreAttackDamage") + I18n.format("tooltip.ResetFormatting"));
+	    	list.add(I18n.format("tooltip.NatureFormatting") + "+" + Math.round(this.getAttackDamage() / 3) + I18n.format("tooltip.WaterDamageBoost"));
 	    	list.add(I18n.format("tooltip.NatureDuration") + this.getPosionDuration(false, false) + "-" + (this.getPosionDuration(false, false) + this.getPosionDuration(false, true) ) + "s" + I18n.format("tooltip.ResetFormatting"));
 	    	if(this.getEliagibleForAbility())
 	    	{

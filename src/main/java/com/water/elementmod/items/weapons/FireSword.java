@@ -299,12 +299,12 @@ public class FireSword extends ItemSword implements IHasModel
 	{
 		list.add(I18n.format("tooltip.FireEnchant"));
 	    list.add(I18n.format("tooltip.EnchantFireLevel") + " " + intToNumeral() + I18n.format("tooltip.ResetFormatting"));
+	    list.add(I18n.format("tooltip.FireFormatting") + "+" + this.getAddedDamage() + " " + I18n.format("tooltip.MoreAttackDamage") + I18n.format("tooltip.ResetFormatting"));
 	    
 	    if(GuiScreen.isAltKeyDown()){
 	    	//list.remove(I18n.format("tooltip.PressAlt") + I18n.format("tooltip.ResetFormatting"));
 	    	list.add("");
-	    	list.add(I18n.format("tooltip.2xDamageNature"));
-	    	list.add(I18n.format("tooltip.FireFormatting") + "+" + this.getAddedDamage() + " " + I18n.format("tooltip.MoreAttackDamage") + I18n.format("tooltip.ResetFormatting"));
+	    	list.add(I18n.format("tooltip.FireFormatting") + "+" + Math.round(this.getAttackDamage() / 3) + I18n.format("tooltip.NatureDamageBoost"));
 	    	list.add(I18n.format("tooltip.FireDuration") + this.getFireDuration(false, false) + "-" + (this.getFireDuration(false, false) + this.getFireDuration(false, true) ) + "s" + I18n.format("tooltip.ResetFormatting"));
 	    	if(this.getEliagibleForAbility())
 	    	{

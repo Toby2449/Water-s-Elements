@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 
 import com.water.elementmod.EMCore;
 import com.water.elementmod.EMCoreItems;
+import com.water.elementmod.entity.EntityFireZombie;
 import com.water.elementmod.network.PacketAbilityReadyData;
 import com.water.elementmod.network.PacketHandler;
 import com.water.elementmod.network.PacketParticleData;
@@ -399,12 +400,12 @@ public class WaterSword extends ItemSword implements IHasModel
 	{
 		list.add(I18n.format("tooltip.WaterEnchant"));
 	    list.add(I18n.format("tooltip.EnchantWaterLevel") + " " + intToNumeral() + I18n.format("tooltip.ResetFormatting"));
+	    list.add(I18n.format("tooltip.WaterFormatting") + "+" + this.getAddedDamage() + " " + I18n.format("tooltip.MoreAttackDamage") + I18n.format("tooltip.ResetFormatting"));
 	    
 	    if(GuiScreen.isAltKeyDown()){
 	    	//list.remove(I18n.format("tooltip.PressAlt") + I18n.format("tooltip.ResetFormatting"));
 	    	list.add("");
-	    	list.add(I18n.format("tooltip.2xDamageFire"));
-	    	list.add(I18n.format("tooltip.WaterFormatting") + "+" + this.getAddedDamage() + " " + I18n.format("tooltip.MoreAttackDamage") + I18n.format("tooltip.ResetFormatting"));
+	    	list.add(I18n.format("tooltip.WaterFormatting") + "+" + Math.round(this.getAttackDamage() / 3) + I18n.format("tooltip.FireDamageBoost"));
 	    	list.add(I18n.format("tooltip.WaterDuration") + this.getDrowndDuration(false, false) + "-" + (this.getDrowndDuration(false, false) + this.getDrowndDuration(false, true) ) + "s" + I18n.format("tooltip.ResetFormatting"));
 	    	if(getEliagibleForAbility())
 	    	{
@@ -423,10 +424,14 @@ public class WaterSword extends ItemSword implements IHasModel
 	@Override
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
 	{
+		if(target instanceof EntityFireZombie)
+		{
+			target.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), this.getAttackDamage() / 3);
+		}
 		target.extinguish();
 		setDrownding(target, getDrowndDuration(true, false));
 		stack.damageItem(1, attacker);
-		WaterParticleEffect(target, target.getEntityWorld());
+		WaterParticleEffect(target, target.world);
 	    return true;
 	}
 	

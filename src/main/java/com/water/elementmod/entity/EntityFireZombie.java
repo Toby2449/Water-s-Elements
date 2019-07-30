@@ -1,5 +1,7 @@
 package com.water.elementmod.entity;
 
+import com.water.elementmod.util.handlers.EMLootTableHandler;
+
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
@@ -12,13 +14,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class EntityFireZombie extends EntityZombie
 {
-
+	
 	public EntityFireZombie(World worldIn) 
 	{
 		super(worldIn);
@@ -43,6 +47,31 @@ public class EntityFireZombie extends EntityZombie
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0F);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23000000417232513D);
+	}
+	
+	public void onLivingUpdate()
+    {
+        if (this.world.isRemote)
+        {
+            for (int i = 0; i < 2; ++i)
+            {
+                this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height - 0.25D, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 0.0D);
+            }
+            
+            if(this.rand.nextDouble() > 0.1)
+            {
+            	this.world.spawnParticle(EnumParticleTypes.FLAME, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height - 0.25D, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 0.0D);
+            }
+        }
+
+        this.isJumping = false;
+        super.onLivingUpdate();
+    }
+	
+	@Override
+	protected ResourceLocation getLootTable()
+	{
+		return EMLootTableHandler.FIRE_ZOMBIE;
 	}
 	
 	@Override
