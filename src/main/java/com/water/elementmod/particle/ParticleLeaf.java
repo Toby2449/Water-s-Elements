@@ -38,7 +38,7 @@ public class ParticleLeaf extends Particle
         this.particleScale *= 0.55F;
         this.particleScale *= scale;
         this.particleScaleOverTime = this.particleScale;
-        i = particleMaxAge = 70 + rand.nextInt(15);
+        particleMaxAge = 65 + rand.nextInt(15);
         TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(EMConfig.MOD_ID, "particle/particles").toString());
         this.setParticleTexture(sprite);
     }
@@ -48,6 +48,7 @@ public class ParticleLeaf extends Particle
      */
     public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
     {
+    	float f = ((float)this.particleAge + partialTicks) / (float)this.particleMaxAge;
         super.renderParticle(buffer, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
     }
     
@@ -67,6 +68,11 @@ public class ParticleLeaf extends Particle
         this.motionX *= 0D;
         this.motionY *= 0.9800000190734863D;
         this.motionZ *= 0D;
+        
+        if (this.particleAge++ >= this.particleMaxAge)
+        {
+            this.setExpired();
+        }
     	
     	prevParticleAngle = particleAngle;
         particleAngle += (float)Math.PI * rotSpeed * 2.0F;

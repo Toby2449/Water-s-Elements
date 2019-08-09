@@ -36,9 +36,9 @@ public class EMCoreEntities
 	
 	public static void registerSpawns()
 	{
-		SpawnAllBiomesOverworldNoOcean(EntityFireZombie.class, 100, 1, 2, EnumCreatureType.MONSTER);
-		SpawnAllBiomesOverworldNoOcean(EntityWaterZombie.class, 100, 1, 2, EnumCreatureType.MONSTER);
-		SpawnAllBiomesOverworldNoOcean(EntityNatureZombie.class, 100, 1, 2, EnumCreatureType.MONSTER);
+		SpawnAllBiomesOverworldNoOcean(EntityFireZombie.class, 10, 1, 2, EnumCreatureType.MONSTER);
+		SpawnAllBiomesOverworldNoOcean(EntityWaterZombie.class, 10, 1, 2, EnumCreatureType.MONSTER);
+		SpawnAllBiomesOverworldNoOcean(EntityNatureZombie.class, 10, 1, 2, EnumCreatureType.MONSTER);
 	}
 	private static void registerEntity(int id, String name, Class<? extends Entity> entity, int range, int color1, int color2)
 	{

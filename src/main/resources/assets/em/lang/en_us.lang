@@ -23,6 +23,8 @@ container.extractor=Extractor
 container.infuser=Infuser
 
 entity.fire_zombie.name=Fire Zombie
+entity.water_zombie.name=Water Zombie
+entity.nature_zombie.name=Nature Zombie
 
 tooltip.Enchant=Element: 
 tooltip.ResetFormatting=§r

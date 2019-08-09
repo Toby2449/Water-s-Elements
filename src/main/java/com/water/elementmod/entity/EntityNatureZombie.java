@@ -69,12 +69,6 @@ public class EntityNatureZombie extends EntityZombie
 	}
 	
 	@Override
-	protected boolean shouldBurnInDay()
-    {
-        return false;
-    }
-	
-	@Override
 	public float getEyeHeight()
 	{
 		return 1.74F;
