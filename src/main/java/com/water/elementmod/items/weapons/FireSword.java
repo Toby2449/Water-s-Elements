@@ -11,7 +11,7 @@ import com.water.elementmod.EMCoreItems;
 import com.water.elementmod.network.PacketAbilityReadyData;
 import com.water.elementmod.network.PacketHandler;
 import com.water.elementmod.network.PacketParticleData;
-import com.water.elementmod.util.References;
+import com.water.elementmod.util.EMConfig;
 import com.water.elementmod.util.Utils;
 import com.water.elementmod.util.interfaces.IHasModel;
 

@@ -4,11 +4,13 @@ import com.water.elementmod.items.weapons.FireSword;
 import com.water.elementmod.items.weapons.NatureSword;
 import com.water.elementmod.items.weapons.WaterSword;
 import com.water.elementmod.network.PacketHandler;
+import com.water.elementmod.proxy.ClientProxy;
 import com.water.elementmod.proxy.CommonProxy;
 import com.water.elementmod.tabs.EMTab_Main;
 import com.water.elementmod.tabs.EMTab_Weapons;
-import com.water.elementmod.util.References;
+import com.water.elementmod.util.EMConfig;
 import com.water.elementmod.util.Utils;
+import com.water.elementmod.util.handlers.EMEventHandler;
 import com.water.elementmod.util.handlers.EMGuiHandler;
 import com.water.elementmod.util.handlers.EMRegistryHandler;
 import com.water.elementmod.util.handlers.EMSoundHandler;
@@ -23,24 +25,25 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
-@Mod(modid = References.MOD_ID, name = References.NAME, version = References.VERSION)
+@Mod(modid = EMConfig.MOD_ID, name = EMConfig.NAME, version = EMConfig.VERSION)
 public class EMCore 
 {
 	
 	public static final CreativeTabs TAB_MAIN = new EMTab_Main();
 	public static final CreativeTabs TAB_WEAPONS = new EMTab_Weapons();
 	
-	@Mod.Instance(References.MOD_ID)
+	@Mod.Instance(EMConfig.MOD_ID)
 	public static EMCore instance;
 	
-	@SidedProxy(clientSide = References.CLIENT_PROXY_CLASS, serverSide = References.COMMON_PROXY_CLASS)
+	@SidedProxy(clientSide = EMConfig.CLIENT_PROXY_CLASS, serverSide = EMConfig.COMMON_PROXY_CLASS)
 	public static CommonProxy proxy;
 	
 	@EventHandler
 	public static void PreInit(FMLPreInitializationEvent event)
 	{
 		EMRegistryHandler.otherRegistries();
-		PacketHandler.registerMessages(References.MOD_ID);
+		PacketHandler.registerMessages(EMConfig.MOD_ID);
+		ClientProxy.stitchEvent();
 		Utils.getLogger().info("Pre Initialize");
 	}
 	

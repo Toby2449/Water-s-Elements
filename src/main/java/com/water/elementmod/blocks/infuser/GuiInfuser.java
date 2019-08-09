@@ -1,7 +1,7 @@
 package com.water.elementmod.blocks.infuser;
 
 import com.water.elementmod.blocks.infuser.container.ContainerInfuser;
-import com.water.elementmod.util.References;
+import com.water.elementmod.util.EMConfig;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiInfuser extends GuiContainer
 {
-	private static final ResourceLocation TEXTURES = new ResourceLocation(References.MOD_ID + ":textures/gui/gui_infuser.png");
+	private static final ResourceLocation TEXTURES = new ResourceLocation(EMConfig.MOD_ID + ":textures/gui/gui_infuser.png");
 	private final InventoryPlayer player;
 	private final TileEntityInfuser tileentity;
 	

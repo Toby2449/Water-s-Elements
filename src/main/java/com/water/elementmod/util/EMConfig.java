@@ -1,6 +1,6 @@
 package com.water.elementmod.util;
 
-public class References {
+public class EMConfig {
 	
 	public static final String MOD_ID = "em";
 	public static final String NAME = "Element Mod";
@@ -8,9 +8,14 @@ public class References {
 	public static final String ACCEPTED_VERSIONS = "[1.12.2]";
 	public static final String CLIENT_PROXY_CLASS = "com.water.elementmod.proxy.ClientProxy";
 	public static final String COMMON_PROXY_CLASS = "com.water.elementmod.proxy.CommonProxy";
+	
+	//Blocks
 	public static final int SYNTHESIZER = 0;
 	public static final int EXTRACTOR = 1;
 	public static final int INFUSER = 2;
-	public static final int ENTITY_FIREZOMBIE = 120;
 	
+	//Entites
+	public static final int ENTITY_FIREZOMBIE = 120;
+	public static final int ENTITY_WATERZOMBIE = 121;
+	public static final int ENTITY_NATUREZOMBIE = 122;
 }

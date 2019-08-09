@@ -1,6 +1,6 @@
 package com.water.elementmod.util.handlers;
 
-import com.water.elementmod.util.References;
+import com.water.elementmod.util.EMConfig;
 import com.water.elementmod.util.Utils;
 
 import net.minecraft.util.ResourceLocation;
@@ -21,7 +21,7 @@ public class EMSoundHandler {
 	
 	public static SoundEvent registerSound(String name)
 	{
-		 ResourceLocation location = new ResourceLocation(References.MOD_ID, name);
+		 ResourceLocation location = new ResourceLocation(EMConfig.MOD_ID, name);
 		 SoundEvent event = new SoundEvent(location);
 		 event.setRegistryName(name);
 		 ForgeRegistries.SOUND_EVENTS.register(event);

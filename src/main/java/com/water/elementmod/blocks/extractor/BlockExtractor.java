@@ -5,7 +5,7 @@ import java.util.Random;
 import com.water.elementmod.EMCore;
 import com.water.elementmod.EMCoreBlocks;
 import com.water.elementmod.blocks.EMBlockBase;
-import com.water.elementmod.util.References;
+import com.water.elementmod.util.EMConfig;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
@@ -62,7 +62,7 @@ public class BlockExtractor extends EMBlockBase implements ITileEntityProvider
 	{
 		if(!worldIn.isRemote)
 		{
-			playerIn.openGui(EMCore.instance, References.EXTRACTOR, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			playerIn.openGui(EMCore.instance, EMConfig.EXTRACTOR, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		
 		return true;

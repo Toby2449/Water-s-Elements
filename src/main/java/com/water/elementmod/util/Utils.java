@@ -12,7 +12,7 @@ public class Utils {
 		if(logger == null)
 		{
 			
-			logger = LogManager.getFormatterLogger(References.MOD_ID);
+			logger = LogManager.getFormatterLogger(EMConfig.MOD_ID);
 			
 		}
 		return logger;

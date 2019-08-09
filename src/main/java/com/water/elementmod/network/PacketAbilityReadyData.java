@@ -2,7 +2,7 @@ package com.water.elementmod.network;
 
 import java.util.Random;
 
-import com.water.elementmod.util.References;
+import com.water.elementmod.util.EMConfig;
 import com.water.elementmod.util.Utils;
 
 import io.netty.buffer.ByteBuf;

@@ -8,11 +8,13 @@ import javax.annotation.Nullable;
 
 import com.water.elementmod.EMCore;
 import com.water.elementmod.EMCoreItems;
+import com.water.elementmod.entity.EntityFireZombie;
+import com.water.elementmod.entity.EntityWaterZombie;
 import com.water.elementmod.network.PacketAbilityReadyData;
 import com.water.elementmod.network.PacketCustomParticleData;
 import com.water.elementmod.network.PacketHandler;
 import com.water.elementmod.network.PacketParticleData;
-import com.water.elementmod.util.References;
+import com.water.elementmod.util.EMConfig;
 import com.water.elementmod.util.Utils;
 import com.water.elementmod.util.interfaces.IHasModel;
 
@@ -442,6 +444,10 @@ public class NatureSword extends ItemSword implements IHasModel
 	@Override
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
 	{
+		if(target instanceof EntityWaterZombie)
+		{
+			target.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), this.getAttackDamage() / 3);
+		}
 		this.superPoisonEntities.add(target);
 		this.superPoisonTime.add(this.getPosionDuration(true, false) * 25);
 		NatureParticleHitEffect(target, target.world);

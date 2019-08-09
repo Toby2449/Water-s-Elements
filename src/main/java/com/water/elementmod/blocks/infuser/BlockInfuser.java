@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import com.water.elementmod.EMCore;
 import com.water.elementmod.EMCoreBlocks;
 import com.water.elementmod.blocks.EMBlockBase;
-import com.water.elementmod.util.References;
+import com.water.elementmod.util.EMConfig;
 
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
@@ -110,7 +110,7 @@ public class BlockInfuser extends EMBlockBase implements ITileEntityProvider
 	{
 		if(!worldIn.isRemote)
 		{
-			playerIn.openGui(EMCore.instance, References.INFUSER, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			playerIn.openGui(EMCore.instance, EMConfig.INFUSER, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		
 		return true;

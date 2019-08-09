@@ -12,7 +12,7 @@ import com.water.elementmod.entity.EntityFireZombie;
 import com.water.elementmod.network.PacketAbilityReadyData;
 import com.water.elementmod.network.PacketHandler;
 import com.water.elementmod.network.PacketParticleData;
-import com.water.elementmod.util.References;
+import com.water.elementmod.util.EMConfig;
 import com.water.elementmod.util.interfaces.IHasModel;
 
 import net.minecraft.block.state.IBlockState;

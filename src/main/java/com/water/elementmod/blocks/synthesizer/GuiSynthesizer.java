@@ -1,7 +1,7 @@
 package com.water.elementmod.blocks.synthesizer;
 
 import com.water.elementmod.blocks.synthesizer.container.ContainerSynthesizer;
-import com.water.elementmod.util.References;
+import com.water.elementmod.util.EMConfig;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiSynthesizer extends GuiContainer
 {
-	private static final ResourceLocation TEXTURES = new ResourceLocation(References.MOD_ID + ":textures/gui/gui_synthesizer.png");
+	private static final ResourceLocation TEXTURES = new ResourceLocation(EMConfig.MOD_ID + ":textures/gui/gui_synthesizer.png");
 	private final InventoryPlayer player;
 	private final TileEntitySynthesizer tileentity;
 	

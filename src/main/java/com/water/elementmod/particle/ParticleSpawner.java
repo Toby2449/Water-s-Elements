@@ -46,6 +46,11 @@ public class ParticleSpawner
 				{
 					var21 = new ParticleSmallHeart(mc.world, par2, par4, par6, par8, par10, par12);
 				}
+				
+				else if (type == EnumCustomParticleTypes.LEAF)
+				{
+					var21 = new ParticleLeaf(mc.world, par2, par4, par6, par8, par10, par12);
+				}
 
 				mc.effectRenderer.addEffect(var21);
 				return var21;
