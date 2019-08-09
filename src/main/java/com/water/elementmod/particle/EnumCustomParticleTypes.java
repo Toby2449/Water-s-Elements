@@ -12,7 +12,8 @@ public enum EnumCustomParticleTypes
 	GREEN_POLLEN("green_pollen", 0, false),
 	DARKGREEN_POLLEN("darkgreen_pollen", 1, false),
 	SMALL_HEART("small_heart", 2, false),
-	LEAF("leaf", 3, false);
+	LEAF("leaf", 3, false),
+	LEAF_AURA("leaf_aura", 4, false);
 	
 	private final String particleName;
     private final int particleID;

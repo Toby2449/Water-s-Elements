@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ParticleLeaf extends Particle
+public class ParticleLeafAura extends Particle
 {
 	public static final ResourceLocation TEXTURE = new ResourceLocation(EMConfig.MOD_ID + ":textures/particle/particles.png"); 
 	float particleScaleOverTime;
@@ -24,22 +24,22 @@ public class ParticleLeaf extends Particle
 	private int i2;
 	private float rotSpeed = 0.0075F;
 	
-	protected ParticleLeaf(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double par8, double par10, double par12)
+	protected ParticleLeafAura(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double par8, double par10, double par12)
     {
         this(worldIn, xCoordIn, yCoordIn, zCoordIn, 1.0F, par8, par10, par12);
     }
 
-    protected ParticleLeaf(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, float scale, double par8, double par10, double par12)
+    protected ParticleLeafAura(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, float scale, double par8, double par10, double par12)
     {
     	super(worldIn, xCoordIn, yCoordIn, zCoordIn, 0.0D, 0.0D, 0.0D);
     	this.motionX *= 0D;
-        this.motionY = Math.random() * 0.01800000298023224D + 0.00900000149011612D;
+        this.motionY = Math.random() * 0.0400000298023224D + 0.02500000149011612D;
         this.motionZ *= 0D;
         this.particleScale *= 0.55F;
         this.particleScale *= scale;
         this.particleScaleOverTime = this.particleScale;
         particleAngle = rand.nextInt(360);
-        particleMaxAge = 65 + rand.nextInt(15);
+        particleMaxAge = 40 + rand.nextInt(15);
         TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(EMConfig.MOD_ID, "particle/particles").toString());
         this.setParticleTexture(sprite);
     }
@@ -65,7 +65,7 @@ public class ParticleLeaf extends Particle
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
         this.motionY -= (double)this.particleGravity;
-        this.move(this.motionX, -this.motionY, this.motionZ);
+        this.move(this.motionX, this.motionY, this.motionZ);
         this.motionX *= 0D;
         this.motionY *= 0.9800000190734863D;
         this.motionZ *= 0D;
@@ -84,7 +84,7 @@ public class ParticleLeaf extends Particle
         {
             public Particle createParticle(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_)
             {
-                return new ParticleLeaf(worldIn, xCoordIn, yCoordIn, zCoordIn, (float)xSpeedIn, (float)ySpeedIn, (float)zSpeedIn);
+                return new ParticleLeafAura(worldIn, xCoordIn, yCoordIn, zCoordIn, (float)xSpeedIn, (float)ySpeedIn, (float)zSpeedIn);
             }
         }
 }

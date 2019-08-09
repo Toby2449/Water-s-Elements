@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class PacketAbilityReadyData implements IMessage
+public class PacketAbilityReadyWaterData implements IMessage
 {
 
 	private boolean messageValid;
@@ -31,12 +31,12 @@ public class PacketAbilityReadyData implements IMessage
 	private Integer entID;
 	private World world;
 	
-	public PacketAbilityReadyData()
+	public PacketAbilityReadyWaterData()
 	{
 		this.messageValid = false;
 	}
 	
-	public PacketAbilityReadyData(Entity ent, World world)
+	public PacketAbilityReadyWaterData(Entity ent, World world)
 	{
 		this.ent = ent;
 		this.world = world;
@@ -64,18 +64,18 @@ public class PacketAbilityReadyData implements IMessage
 		buf.writeInt(ent.getEntityId());
 	}
 	
-	public static class Handler implements IMessageHandler<PacketAbilityReadyData, IMessage>
+	public static class Handler implements IMessageHandler<PacketAbilityReadyWaterData, IMessage>
 	{
 
 		@Override
-		public IMessage onMessage(PacketAbilityReadyData message, MessageContext ctx) {
+		public IMessage onMessage(PacketAbilityReadyWaterData message, MessageContext ctx) {
 			if(message.messageValid && ctx.side != Side.CLIENT)
 				return null;
 			FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> processMessage(message, ctx));
 			return null;
 		}
 		
-		void processMessage(PacketAbilityReadyData message, MessageContext ctx)
+		void processMessage(PacketAbilityReadyWaterData message, MessageContext ctx)
 		{
 			Entity ent = Minecraft.getMinecraft().world.getEntityByID(message.entID);
 
@@ -84,6 +84,12 @@ public class PacketAbilityReadyData implements IMessage
 			{
 				Random rand = new Random();
 				ent.world.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, ent.posX + (rand.nextDouble() - 0.5D) * (double)ent.width, ent.posY + rand.nextDouble() * (double)ent.height, ent.posZ + (rand.nextDouble() - 0.5D) * (double)ent.width, 0.0D, 0.0D, 0.0D);
+			}
+			
+			for(int countparticles = 0; countparticles <= 50; ++countparticles)
+			{
+				Random rand = new Random();
+				ent.world.spawnParticle(EnumParticleTypes.DRIP_WATER, ent.posX + (rand.nextDouble() - 0.5D) * (double)ent.width, ent.posY + rand.nextDouble() * (double)ent.height, ent.posZ + (rand.nextDouble() - 0.5D) * (double)ent.width, 0.0D, 0.0D, 0.0D);
 			}
 		}
 		

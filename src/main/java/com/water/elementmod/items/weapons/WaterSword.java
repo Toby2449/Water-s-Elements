@@ -9,7 +9,8 @@ import javax.annotation.Nullable;
 import com.water.elementmod.EMCore;
 import com.water.elementmod.EMCoreItems;
 import com.water.elementmod.entity.EntityFireZombie;
-import com.water.elementmod.network.PacketAbilityReadyData;
+import com.water.elementmod.network.PacketAbilityReadyFireData;
+import com.water.elementmod.network.PacketAbilityReadyWaterData;
 import com.water.elementmod.network.PacketHandler;
 import com.water.elementmod.network.PacketParticleData;
 import com.water.elementmod.util.EMConfig;
@@ -458,7 +459,7 @@ public class WaterSword extends ItemSword implements IHasModel
 				
 				if(playerAbilityCDRemaining == 0)
 				{
-					PacketHandler.INSTANCE.sendTo(new PacketAbilityReadyData(currentPlayer, par2World), (EntityPlayerMP) par3Entity);
+					PacketHandler.INSTANCE.sendTo(new PacketAbilityReadyWaterData(currentPlayer, par2World), (EntityPlayerMP) par3Entity);
 				}
 				
 				if(currentPlayer != null)

@@ -10,7 +10,8 @@ import com.water.elementmod.EMCore;
 import com.water.elementmod.EMCoreItems;
 import com.water.elementmod.entity.EntityFireZombie;
 import com.water.elementmod.entity.EntityWaterZombie;
-import com.water.elementmod.network.PacketAbilityReadyData;
+import com.water.elementmod.network.PacketAbilityReadyFireData;
+import com.water.elementmod.network.PacketAbilityReadyNatureData;
 import com.water.elementmod.network.PacketCustomParticleData;
 import com.water.elementmod.network.PacketHandler;
 import com.water.elementmod.network.PacketParticleData;
@@ -468,7 +469,7 @@ public class NatureSword extends ItemSword implements IHasModel
 				
 				if(playerAbilityCDRemaining == 0)
 				{
-					PacketHandler.INSTANCE.sendTo(new PacketAbilityReadyData(currentPlayer, par2World), (EntityPlayerMP) par3Entity);
+					PacketHandler.INSTANCE.sendTo(new PacketAbilityReadyNatureData(currentPlayer, par2World), (EntityPlayerMP) par3Entity);
 				}
 				
 				if(currentPlayer != null)
@@ -565,7 +566,7 @@ public class NatureSword extends ItemSword implements IHasModel
 				
 				if((Integer)this.abilityAoeTimers.get(i) > 0)
 				{
-					if((Integer)this.abilityAoeTimers.get(i) % 25 == 0)
+					if((Integer)this.abilityAoeTimers.get(i) % 5 == 0)
 					{
 						HealingAoeAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), this.getAbilityRadius(), par2World, par3Entity);
 					}
@@ -653,7 +654,7 @@ public class NatureSword extends ItemSword implements IHasModel
 				double finalX = x - 0.5D + deltaX;
 				double finalZ = z - 0.5D + deltaZ;
 			    
-				if(rand.nextDouble() < 0.5D) PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(ent, world, 1, finalX, y + 0.15D, finalZ, 0.0D, 0.0D, 0.0D, -1), ent.dimension);
+				if(rand.nextDouble() < 0.1D) PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(ent, world, 4, finalX, y + 0.15D, finalZ, 0.0D, 0.0D, 0.0D, -1), ent.dimension);
 			}
 		}
 	}
