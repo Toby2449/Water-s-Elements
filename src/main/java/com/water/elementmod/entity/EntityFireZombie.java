@@ -2,6 +2,7 @@ package com.water.elementmod.entity;
 
 import com.water.elementmod.util.handlers.EMLootTableHandler;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
@@ -66,6 +67,25 @@ public class EntityFireZombie extends EntityZombie
 
         this.isJumping = false;
         super.onLivingUpdate();
+    }
+	
+	@Override
+	public boolean attackEntityAsMob(Entity entityIn)
+    {
+        boolean flag = super.attackEntityAsMob(entityIn);
+
+        if (flag)
+        {
+            float f = this.world.getDifficultyForLocation(new BlockPos(this)).getAdditionalDifficulty();
+
+            if (this.getHeldItemMainhand().isEmpty() && this.isBurning() && this.rand.nextFloat() < f * 0.3F)
+            {
+                entityIn.setFire(2 * (int)f);
+            }
+        }
+        
+        entityIn.setFire(4);
+        return flag;
     }
 	
 	@Override

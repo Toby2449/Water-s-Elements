@@ -553,7 +553,7 @@ public class WaterSword extends ItemSword implements IHasModel
 		
 		List<EntityMob> listMobs = worldIn.<EntityMob>getEntitiesWithinAABB(EntityMob.class, e);
 		List<EntityPlayer> listPlayers = worldIn.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, e);
-
+		
 		// Get current mobs inside the player's ability aabb
         if (!listMobs.isEmpty())
         {

@@ -4,6 +4,8 @@ import com.water.elementmod.particle.EnumCustomParticleTypes;
 import com.water.elementmod.particle.ParticleSpawner;
 import com.water.elementmod.util.handlers.EMLootTableHandler;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
@@ -15,6 +17,8 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
@@ -60,6 +64,26 @@ public class EntityNatureZombie extends EntityZombie
         
         this.isJumping = false;
         super.onLivingUpdate();
+    }
+	
+	@Override
+	public boolean attackEntityAsMob(Entity entityIn)
+    {
+        boolean flag = super.attackEntityAsMob(entityIn);
+
+        if (flag)
+        {
+            float f = this.world.getDifficultyForLocation(new BlockPos(this)).getAdditionalDifficulty();
+
+            if (this.getHeldItemMainhand().isEmpty() && this.isBurning() && this.rand.nextFloat() < f * 0.3F)
+            {
+                entityIn.setFire(2 * (int)f);
+            }
+        }
+        
+        if (entityIn instanceof EntityLivingBase) ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(Potion.getPotionById(19), 80));
+        
+        return flag;
     }
 	
 	@Override

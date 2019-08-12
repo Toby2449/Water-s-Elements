@@ -522,10 +522,9 @@ public class NatureSword extends ItemSword implements IHasModel
 								}
 						    }
 							
-							//Random rand = new Random();
-							//par2World.spawnParticle(EnumParticleTypes.SPELL_WITCH, currentEnt.posX + (rand.nextDouble() - 0.5D) * (double)currentEnt.width, currentEnt.posY + rand.nextDouble() * (double)currentEnt.height - (double)currentEnt.getYOffset(), currentEnt.posZ + (rand.nextDouble() - 0.5D) * (double)currentEnt.width, 0.0D, 0.0D,0.0D);
 							NatureParticleEffect(currentEnt, par2World);
 							this.superPoisonTime.set(i, superPoisonTimeInstance - 1);
+							
 						}
 						else
 						{
@@ -558,7 +557,6 @@ public class NatureSword extends ItemSword implements IHasModel
 		            {
 		            	if(!ent.isPotionActive(MobEffects.REGENERATION)) 
 		            	{
-		            		System.out.println("yo");
 		            		ent.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 50, this.getRegenerationLevel()));
 		            	}
 		            }

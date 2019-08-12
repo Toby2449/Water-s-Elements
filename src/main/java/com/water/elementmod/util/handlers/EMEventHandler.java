@@ -15,7 +15,6 @@ public class EMEventHandler {
 	
 	@SubscribeEvent
 	public static void registerParticleMap(TextureStitchEvent.Pre event) {
-			System.out.println("nigger");
         	ResourceLocation flameRL = new ResourceLocation(EMConfig.MOD_ID, "particle/particles");
             event.getMap().registerSprite(flameRL);
 	}
