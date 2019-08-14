@@ -1,5 +1,11 @@
 package com.water.elementmod.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.water.elementmod.entity.EntityFireSkeleton;
+import com.water.elementmod.entity.EntityFireZombie;
+
 public class EMConfig {
 	
 	public static final String MOD_ID = "em";
@@ -18,4 +24,9 @@ public class EMConfig {
 	public static final int ENTITY_FIREZOMBIE = 120;
 	public static final int ENTITY_WATERZOMBIE = 121;
 	public static final int ENTITY_NATUREZOMBIE = 122;
+	
+	public static final int ENTITY_FIRESKELETON = 123;
+	public static final int ENTITY_WATERSKELETON = 124;
+	public static final int ENTITY_NATURESKELETON = 125;
+
 }

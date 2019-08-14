@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import com.water.elementmod.EMCore;
 import com.water.elementmod.EMCoreItems;
 import com.water.elementmod.entity.EntityFireZombie;
+import com.water.elementmod.entity.EntityWaterSkeleton;
 import com.water.elementmod.entity.EntityWaterZombie;
 import com.water.elementmod.network.PacketAbilityReadyFireData;
 import com.water.elementmod.network.PacketAbilityReadyNatureData;
@@ -445,7 +446,7 @@ public class NatureSword extends ItemSword implements IHasModel
 	@Override
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
 	{
-		if(target instanceof EntityWaterZombie)
+		if(target instanceof EntityWaterZombie || target instanceof EntityWaterSkeleton)
 		{
 			target.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), this.getAttackDamage() / 3);
 		}

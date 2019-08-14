@@ -8,6 +8,9 @@ import javax.annotation.Nullable;
 
 import com.water.elementmod.EMCore;
 import com.water.elementmod.EMCoreItems;
+import com.water.elementmod.entity.EntityNatureSkeleton;
+import com.water.elementmod.entity.EntityNatureZombie;
+import com.water.elementmod.entity.EntityWaterZombie;
 import com.water.elementmod.network.PacketAbilityReadyFireData;
 import com.water.elementmod.network.PacketHandler;
 import com.water.elementmod.network.PacketParticleData;
@@ -34,6 +37,7 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.server.SPacketParticles;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
@@ -320,6 +324,10 @@ public class FireSword extends ItemSword implements IHasModel
 	@Override
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
 	{
+		if(target instanceof EntityNatureZombie || target instanceof EntityNatureSkeleton)
+		{
+			target.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), this.getAttackDamage() / 3);
+		}
 		target.setFire(getFireDuration(true, false));
 		stack.damageItem(1, attacker);
 		FireParticleEffect(target, target.world);

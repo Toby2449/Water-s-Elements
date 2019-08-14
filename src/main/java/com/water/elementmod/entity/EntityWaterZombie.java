@@ -59,7 +59,7 @@ public class EntityWaterZombie extends EntityZombie
 	protected void applyEntityAttributes()
 	{
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0F);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0F);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23000000417232513D);
 	}
 	
@@ -93,14 +93,14 @@ public class EntityWaterZombie extends EntityZombie
 				{
 					if(!currentEnt.isDead)
 					{
-						if((Integer)this.drowndingTime.get(i) > 0) 
+						if((Integer)this.drowndingTime.get(i) > 0)
 						{
 							if ((Integer)this.drowndingTime.get(i) % 20 == 0)
 						    {
 								WaterParticleEffect(currentEnt, this.world);
 								currentEnt.attackEntityFrom(DamageSource.DROWN, 0.5F);
 						    }
-						
+							
 						    this.drowndingTime.set(i, drowndingTimeInstance - 1);
 						}
 					}

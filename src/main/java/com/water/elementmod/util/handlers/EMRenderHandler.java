@@ -1,10 +1,16 @@
 package com.water.elementmod.util.handlers;
 
+import com.water.elementmod.entity.EntityFireSkeleton;
 import com.water.elementmod.entity.EntityFireZombie;
+import com.water.elementmod.entity.EntityNatureSkeleton;
 import com.water.elementmod.entity.EntityNatureZombie;
+import com.water.elementmod.entity.EntityWaterSkeleton;
 import com.water.elementmod.entity.EntityWaterZombie;
+import com.water.elementmod.entity.render.RenderFireSkeleton;
 import com.water.elementmod.entity.render.RenderFireZombie;
+import com.water.elementmod.entity.render.RenderNatureSkeleton;
 import com.water.elementmod.entity.render.RenderNatureZombie;
+import com.water.elementmod.entity.render.RenderWaterSkeleton;
 import com.water.elementmod.entity.render.RenderWaterZombie;
 
 import net.minecraft.client.renderer.entity.Render;
@@ -38,6 +44,30 @@ public class EMRenderHandler
 			public Render<? super EntityNatureZombie> createRenderFor(RenderManager manager)
 			{
 				return new RenderNatureZombie(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireSkeleton.class, new IRenderFactory<EntityFireSkeleton>()
+		{
+			@Override
+			public Render<? super EntityFireSkeleton> createRenderFor(RenderManager manager)
+			{
+				return new RenderFireSkeleton(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityWaterSkeleton.class, new IRenderFactory<EntityWaterSkeleton>()
+		{
+			@Override
+			public Render<? super EntityWaterSkeleton> createRenderFor(RenderManager manager)
+			{
+				return new RenderWaterSkeleton(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityNatureSkeleton.class, new IRenderFactory<EntityNatureSkeleton>()
+		{
+			@Override
+			public Render<? super EntityNatureSkeleton> createRenderFor(RenderManager manager)
+			{
+				return new RenderNatureSkeleton(manager);
 			}
 		});
 	}

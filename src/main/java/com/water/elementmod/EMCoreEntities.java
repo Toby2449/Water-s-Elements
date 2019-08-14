@@ -4,8 +4,11 @@ import java.sql.Types;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import com.water.elementmod.entity.EntityFireSkeleton;
 import com.water.elementmod.entity.EntityFireZombie;
+import com.water.elementmod.entity.EntityNatureSkeleton;
 import com.water.elementmod.entity.EntityNatureZombie;
+import com.water.elementmod.entity.EntityWaterSkeleton;
 import com.water.elementmod.entity.EntityWaterZombie;
 import com.water.elementmod.util.EMConfig;
 
@@ -32,6 +35,9 @@ public class EMCoreEntities
 		registerEntity(EMConfig.ENTITY_FIREZOMBIE, "fire_zombie", EntityFireZombie.class, 100, 43433, 16736256);
 		registerEntity(EMConfig.ENTITY_WATERZOMBIE, "water_zombie", EntityWaterZombie.class, 100, 43433, 2578864);
 		registerEntity(EMConfig.ENTITY_NATUREZOMBIE, "nature_zombie", EntityNatureZombie.class, 100, 43433, 2457391);
+		registerEntity(EMConfig.ENTITY_FIRESKELETON, "fire_skeleton", EntityFireSkeleton.class, 100, 15263976, 16736256);
+		registerEntity(EMConfig.ENTITY_WATERSKELETON, "water_skeleton", EntityWaterSkeleton.class, 100, 15263976, 2578864);
+		registerEntity(EMConfig.ENTITY_NATURESKELETON, "nature_skeleton", EntityNatureSkeleton.class, 100, 15263976, 2457391);
 	}
 	
 	public static void registerSpawns()
@@ -39,7 +45,11 @@ public class EMCoreEntities
 		SpawnAllBiomesOverworldNoOcean(EntityFireZombie.class, 10, 1, 2, EnumCreatureType.MONSTER);
 		SpawnAllBiomesOverworldNoOcean(EntityWaterZombie.class, 10, 1, 2, EnumCreatureType.MONSTER);
 		SpawnAllBiomesOverworldNoOcean(EntityNatureZombie.class, 10, 1, 2, EnumCreatureType.MONSTER);
+		SpawnAllBiomesOverworldNoOcean(EntityFireSkeleton.class, 10, 1, 2, EnumCreatureType.MONSTER);
+		SpawnAllBiomesOverworldNoOcean(EntityWaterSkeleton.class, 10, 1, 2, EnumCreatureType.MONSTER);
+		SpawnAllBiomesOverworldNoOcean(EntityNatureSkeleton.class, 10, 1, 2, EnumCreatureType.MONSTER);
 	}
+	
 	private static void registerEntity(int id, String name, Class<? extends Entity> entity, int range, int color1, int color2)
 	{
 		EntityRegistry.registerModEntity(new ResourceLocation(EMConfig.MOD_ID + ":" + name), entity, name, id, EMCore.instance, range, 1, true, color1, color2);
