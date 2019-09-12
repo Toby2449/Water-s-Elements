@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "XXX",
+        "XCX",
+        "XXX"
+    ],
+    
+    "key":
+    {
+        "X":
+        {
+            "item": "em:item_ashes"
+        },
+        
+        "C":
+        {
+            "item": "minecraft:fire_charge"
+        }
+    },
+    
+    "result":
+    {
+        "item": "em:item_burning_ashes",
+        "count": 1
+    }
+}

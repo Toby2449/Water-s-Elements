@@ -104,11 +104,11 @@ public class NatureSword extends ItemSword implements IHasModel
 		
 	}
 	
-	@SideOnly(Side.CLIENT)
-	public boolean hasEffect(ItemStack par1ItemStack)
-	{
-		return true;
-	}
+	//@SideOnly(Side.CLIENT)
+	//public boolean hasEffect(ItemStack par1ItemStack)
+	//{
+	//	return true;
+	//}
 	
 	public int getAddedDamage() {
 		return (int)this.material.getAttackDamage() - (int)ToolMaterial.DIAMOND.getAttackDamage();

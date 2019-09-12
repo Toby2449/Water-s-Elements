@@ -38,6 +38,8 @@ import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
@@ -94,7 +96,7 @@ public class EntityNatureSkeleton extends AbstractElementalSkeleton
     @Override
     protected ResourceLocation getLootTable()
     {
-        return LootTableList.ENTITIES_SKELETON;
+        return EMLootTableHandler.NATURE_SKELETON;
     }
     
     @Override
@@ -139,27 +141,15 @@ public class EntityNatureSkeleton extends AbstractElementalSkeleton
             }
         }
     }
-
+    
     protected EntityArrow getArrow(float p_190726_1_)
     {
         ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
 
-        if (itemstack.getItem() == Items.SPECTRAL_ARROW)
-        {
-            EntitySpectralArrow entityspectralarrow = new EntitySpectralArrow(this.world, this);
-            entityspectralarrow.setEnchantmentEffectsFromEntity(this, p_190726_1_);
-            return entityspectralarrow;
-        }
-        else
-        {
-            EntityArrow entityarrow = super.getArrow(p_190726_1_);
+        EntityArrow entityarrow = super.getArrow(p_190726_1_);
 
-            if (itemstack.getItem() == Items.TIPPED_ARROW && entityarrow instanceof EntityTippedArrow)
-            {
-                ((EntityTippedArrow)entityarrow).setPotionEffect(itemstack);
-            }
+        entityarrow.setGlowing(true);
 
-            return entityarrow;
-        }
+        return entityarrow;
     }
 }

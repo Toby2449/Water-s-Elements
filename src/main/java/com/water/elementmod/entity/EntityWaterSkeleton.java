@@ -100,7 +100,7 @@ public class EntityWaterSkeleton extends AbstractElementalSkeleton
     @Override
     protected ResourceLocation getLootTable()
     {
-        return LootTableList.ENTITIES_SKELETON;
+        return EMLootTableHandler.WATER_SKELETON;
     }
     
     @Override

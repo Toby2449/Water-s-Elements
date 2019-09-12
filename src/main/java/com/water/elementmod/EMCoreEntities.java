@@ -42,12 +42,12 @@ public class EMCoreEntities
 	
 	public static void registerSpawns()
 	{
-		SpawnAllBiomesOverworldNoOcean(EntityFireZombie.class, 10, 1, 2, EnumCreatureType.MONSTER);
-		SpawnAllBiomesOverworldNoOcean(EntityWaterZombie.class, 10, 1, 2, EnumCreatureType.MONSTER);
-		SpawnAllBiomesOverworldNoOcean(EntityNatureZombie.class, 10, 1, 2, EnumCreatureType.MONSTER);
-		SpawnAllBiomesOverworldNoOcean(EntityFireSkeleton.class, 10, 1, 2, EnumCreatureType.MONSTER);
-		SpawnAllBiomesOverworldNoOcean(EntityWaterSkeleton.class, 10, 1, 2, EnumCreatureType.MONSTER);
-		SpawnAllBiomesOverworldNoOcean(EntityNatureSkeleton.class, 10, 1, 2, EnumCreatureType.MONSTER);
+		SpawnAllBiomesOverworldNoOcean(EntityFireZombie.class, 20, 1, 2, EnumCreatureType.MONSTER);
+		SpawnAllBiomesOverworldNoOcean(EntityWaterZombie.class, 20, 1, 2, EnumCreatureType.MONSTER);
+		SpawnAllBiomesOverworldNoOcean(EntityNatureZombie.class, 20, 1, 2, EnumCreatureType.MONSTER);
+		SpawnAllBiomesOverworldNoOcean(EntityFireSkeleton.class, 20, 1, 2, EnumCreatureType.MONSTER);
+		SpawnAllBiomesOverworldNoOcean(EntityWaterSkeleton.class, 20, 1, 2, EnumCreatureType.MONSTER);
+		SpawnAllBiomesOverworldNoOcean(EntityNatureSkeleton.class, 20, 1, 2, EnumCreatureType.MONSTER);
 	}
 	
 	private static void registerEntity(int id, String name, Class<? extends Entity> entity, int range, int color1, int color2)

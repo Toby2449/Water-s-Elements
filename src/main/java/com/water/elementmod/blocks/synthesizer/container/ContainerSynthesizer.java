@@ -1,5 +1,7 @@
 package com.water.elementmod.blocks.synthesizer.container;
 
+import com.water.elementmod.blocks.infuser.InfuserRecipes;
+import com.water.elementmod.blocks.infuser.TileEntityInfuser;
 import com.water.elementmod.blocks.synthesizer.SynthesizerRecipes;
 import com.water.elementmod.blocks.synthesizer.TileEntitySynthesizer;
 
@@ -101,33 +103,28 @@ public class ContainerSynthesizer extends Container
 			{		
 				Slot slot1 = (Slot)this.inventorySlots.get(index + 1);
 				
-				if(!SynthesizerRecipes.getInstance().getSynthesizerResult(stack1, slot1.getStack()).isEmpty())
-				{
-					if(!this.mergeItemStack(stack1, 0, 2, false)) 
-					{
-						return ItemStack.EMPTY;
-					}
-					else if(TileEntitySynthesizer.isItemFuel(stack1))
-					{
-						if(!this.mergeItemStack(stack1, 2, 3, false)) return ItemStack.EMPTY;
-					}
-					else if(TileEntitySynthesizer.isItemFuel(stack1))
-					{
-						if(!this.mergeItemStack(stack1, 2, 3, false)) return ItemStack.EMPTY;
-					}
-					else if(TileEntitySynthesizer.isItemFuel(stack1))
-					{
-						if(!this.mergeItemStack(stack1, 2, 3, false)) return ItemStack.EMPTY;
-					}
-					else if(index >= 4 && index < 31)
-					{
-						if(!this.mergeItemStack(stack1, 31, 40, false)) return ItemStack.EMPTY;
-					}
-					else if(index >= 31 && index < 40 && !this.mergeItemStack(stack1, 4, 31, false))
-					{
-						return ItemStack.EMPTY;
-					}
-				}
+				if (!SynthesizerRecipes.getInstance().getSynthesizerResult(stack1, slot1.getStack()).isEmpty())
+                {
+                    if (!this.mergeItemStack(stack1, 0, 2, false))
+                    {
+                        return ItemStack.EMPTY;
+                    }
+                }
+                else if (TileEntitySynthesizer.isItemFuel(stack1))
+                {
+                    if (!this.mergeItemStack(stack1, 2, 3, false))
+                    {
+                        return ItemStack.EMPTY;
+                    }
+                }
+				
+				else if (index >= 4 && index < 40)
+                {
+                    if (!this.mergeItemStack(stack1, 0, 2, false))
+                    {
+                        return ItemStack.EMPTY;
+                    }
+                }
 			} 
 			else if(!this.mergeItemStack(stack1, 4, 40, false)) 
 			{

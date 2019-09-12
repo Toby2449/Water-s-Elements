@@ -24,9 +24,8 @@ public class SynthesizerRecipes
 	
 	private SynthesizerRecipes() 
 	{
-		addSynthesizerRecipe(new ItemStack(EMCoreItems.FIRESMPL), new ItemStack(EMCoreItems.FIRESMPL), new ItemStack(Items.QUARTZ));
-		addSynthesizerRecipe(new ItemStack(EMCoreItems.NATURESMPL), new ItemStack(EMCoreItems.NATURESMPL), new ItemStack(Items.QUARTZ));
-		addSynthesizerRecipe(new ItemStack(EMCoreItems.WATERDRP), new ItemStack(EMCoreItems.WATERDRP), new ItemStack(Items.QUARTZ));
+		addSynthesizerRecipe(new ItemStack(EMCoreItems.LARGE_DRPS), new ItemStack(EMCoreItems.LARGE_DRPS), new ItemStack(EMCoreItems.PERPETUAL_DRP));
+		addSynthesizerRecipe(new ItemStack(EMCoreItems.EMBERS), new ItemStack(EMCoreItems.EMBERS), new ItemStack(EMCoreItems.ETERNAL_FIRE));
 	}
 
 	

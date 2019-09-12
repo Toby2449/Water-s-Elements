@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "XXX",
+        "XXX",
+        "XXX"
+    ],
+    
+    "key":
+    {
+        "X":
+        {
+            "item": "em:item_micro_droplets"
+        }
+    },
+    
+    "result":
+    {
+        "item": "em:item_small_droplets",
+        "count": 1
+    }
+}

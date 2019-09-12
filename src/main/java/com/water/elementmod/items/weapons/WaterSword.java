@@ -104,12 +104,11 @@ public class WaterSword extends ItemSword implements IHasModel
 		
 	}
 	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean hasEffect(ItemStack par1ItemStack)
-	{
-		return true;
-	}
+	//@SideOnly(Side.CLIENT)
+	//public boolean hasEffect(ItemStack par1ItemStack)
+	//{
+	//	return true;
+	//}
 	
 	public int getAddedDamage() {
 		return (int)this.material.getAttackDamage() - (int)ToolMaterial.DIAMOND.getAttackDamage();

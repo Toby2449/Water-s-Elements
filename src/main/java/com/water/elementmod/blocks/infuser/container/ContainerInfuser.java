@@ -11,6 +11,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -23,7 +25,7 @@ public class ContainerInfuser extends Container
 	{
 		this.tileentity = tileentity;
 		
-		this.addSlotToContainer(new Slot(tileentity, 0, 12, 32)); // input 1
+		this.addSlotToContainer(new SlotInfuserSword(tileentity, 0, 12, 32)); // input 1
 		this.addSlotToContainer(new Slot(tileentity, 1, 55, 32)); // input 2
 		this.addSlotToContainer(new SlotInfuserFuel(tileentity, 2, 139, 10)); // fuel
 		this.addSlotToContainer(new SlotInfuserOutput(player.player, tileentity, 3, 101, 32)); // output
@@ -103,51 +105,50 @@ public class ContainerInfuser extends Container
 			}
 			else if(index != 2 && index != 1 && index != 0) 
 			{		
-				Slot slot1 = (Slot)this.inventorySlots.get(index + 1);
+				Slot slot1 = (Slot)this.inventorySlots.get(index);
 				
-				if(!SynthesizerRecipes.getInstance().getSynthesizerResult(stack1, slot1.getStack()).isEmpty())
-				{
-					if(!this.mergeItemStack(stack1, 0, 2, false)) 
-					{
-						return ItemStack.EMPTY;
-					}
-					else if(TileEntitySynthesizer.isItemFuel(stack1))
-					{
-						if(!this.mergeItemStack(stack1, 2, 3, false)) return ItemStack.EMPTY;
-					}
-					else if(TileEntitySynthesizer.isItemFuel(stack1))
-					{
-						if(!this.mergeItemStack(stack1, 2, 3, false)) return ItemStack.EMPTY;
-					}
-					else if(TileEntitySynthesizer.isItemFuel(stack1))
-					{
-						if(!this.mergeItemStack(stack1, 2, 3, false)) return ItemStack.EMPTY;
-					}
-					else if(index >= 4 && index < 31)
-					{
-						if(!this.mergeItemStack(stack1, 31, 40, false)) return ItemStack.EMPTY;
-					}
-					else if(index >= 31 && index < 40 && !this.mergeItemStack(stack1, 4, 31, false))
-					{
-						return ItemStack.EMPTY;
-					}
-				}
+				if (!InfuserRecipes.getInstance().getInfuserResult(stack1, slot1.getStack()).isEmpty())
+                {
+                    if (!this.mergeItemStack(stack1, 0, 2, false))
+                    {
+                        return ItemStack.EMPTY;
+                    }
+                }
+                else if (TileEntityInfuser.isItemFuel(stack1))
+                {
+                    if (!this.mergeItemStack(stack1, 2, 3, false))
+                    {
+                        return ItemStack.EMPTY;
+                    }
+                }
+				
+				else if (index >= 4 && index < 40)
+                {
+                    if (!this.mergeItemStack(stack1, 0, 2, false))
+                    {
+                        return ItemStack.EMPTY;
+                    }
+                }
 			} 
 			else if(!this.mergeItemStack(stack1, 4, 40, false)) 
 			{
 				return ItemStack.EMPTY;
 			}
-			if(stack1.isEmpty())
-			{
-				slot.putStack(ItemStack.EMPTY);
-			}
-			else
-			{
-				slot.onSlotChanged();
+			if (stack1.isEmpty())
+            {
+                slot.putStack(ItemStack.EMPTY);
+            }
+            else
+            {
+                slot.onSlotChanged();
+            }
 
-			}
-			if(stack1.getCount() == stack.getCount()) return ItemStack.EMPTY;
-			slot.onTake(playerIn, stack1);
+            if (stack1.getCount() == stack.getCount())
+            {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTake(playerIn, stack1);
 		}
 		return stack;
 	}

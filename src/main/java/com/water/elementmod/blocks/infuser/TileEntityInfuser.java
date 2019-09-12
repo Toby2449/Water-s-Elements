@@ -179,7 +179,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 	{
 		if(inventory.getField(4) == 0) return false;
 		if(inventory.getField(4) == 1) return true;
-		return false; // just incase
+		return true; // just incase
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -203,7 +203,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 			if(map.get(Enchantments.FIRE_ASPECT) != null)
 			{
 				this.setField(4, 0);
-			} 
+			}
 			else
 			{
 				this.setField(4, 1);
@@ -257,15 +257,15 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 		if(flag2 != this.isCooking())
 		{
 			flag1 = true;
-			if(this.inventory.get(1).getItem() == EMCoreItems.FIRESMPL) 
+			if(this.inventory.get(1).getItem() == EMCoreItems.FIRESMPL_Z) 
 			{
 				BlockInfuser.setState(this.isCooking(), 0, this.world, this.pos);
 			}
-			else if(this.inventory.get(1).getItem() == EMCoreItems.WATERDRP) 
+			else if(this.inventory.get(1).getItem() == EMCoreItems.PERPETUAL_DRP) 
 			{
 				BlockInfuser.setState(this.isCooking(), 1, this.world, this.pos);
 			}
-			else if(this.inventory.get(1).getItem() == EMCoreItems.NATURESMPL) 
+			else if(this.inventory.get(1).getItem() == EMCoreItems.NATURESMPL_Z) 
 			{
 				BlockInfuser.setState(this.isCooking(), 2, this.world, this.pos);
 			}
@@ -278,7 +278,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 	
 	public int getCookTime(ItemStack input1, ItemStack input2)
 	{
-		return 800;
+		return 1200;
 	}
 	
 	private boolean canSmelt() 
@@ -324,9 +324,9 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 			EnchantmentHelper.setEnchantments(map, result);
 			if(output.isEmpty()) this.inventory.set(3, result.copy());
 			
-			if(input2.getItem() == EMCoreItems.FIRESMPL) this.world.playSound((EntityPlayer)null, this.getPos(), SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 1.0F, this.world.rand.nextFloat() * 0.7F + 0.3F);
-			if(input2.getItem() == EMCoreItems.WATERDRP) this.world.playSound((EntityPlayer)null, this.getPos(), SoundEvents.BLOCK_WATER_AMBIENT, SoundCategory.BLOCKS, 1.0F, this.world.rand.nextFloat() + 0.5F);
-			if(input2.getItem() == EMCoreItems.NATURESMPL) this.world.playSound((EntityPlayer)null, this.getPos(), EMSoundHandler.NATURE_LEAVES, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+			if(input2.getItem() == EMCoreItems.ETERNAL_FIRE) this.world.playSound((EntityPlayer)null, this.getPos(), SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 1.0F, this.world.rand.nextFloat() * 0.7F + 0.3F);
+			if(input2.getItem() == EMCoreItems.PERPETUAL_DRP) this.world.playSound((EntityPlayer)null, this.getPos(), SoundEvents.BLOCK_WATER_AMBIENT, SoundCategory.BLOCKS, 1.0F, this.world.rand.nextFloat() + 0.5F);
+			if(input2.getItem() == EMCoreItems.NATURESMPL_Z) this.world.playSound((EntityPlayer)null, this.getPos(), EMSoundHandler.NATURE_LEAVES, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
 			this.world.playSound((EntityPlayer)null, this.getPos(), SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, this.world.rand.nextFloat() * 0.1F + 0.9F);
 			
 			input1.shrink(1);
@@ -343,7 +343,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 			Item item = fuel.getItem();
 
 			
-			if (item == EMCoreItems.VOIDSING) return 800;
+			if (item == EMCoreItems.VOIDSING) return 1200;
 
 			return GameRegistry.getFuelValue(fuel);
 		}

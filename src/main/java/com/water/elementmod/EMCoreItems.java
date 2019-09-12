@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.water.elementmod.items.EMItemBase;
 import com.water.elementmod.items.EMShinyItemBase;
+import com.water.elementmod.items.arrow.ItemNatureArrow;
 import com.water.elementmod.items.weapons.FireSword;
 import com.water.elementmod.items.weapons.NatureSword;
 import com.water.elementmod.items.weapons.WaterSword;
@@ -94,13 +95,25 @@ public class EMCoreItems
 	public static final Item VOIDSING = new EMShinyItemBase("item_void_singularity", 1);
 	public static final Item VOIDCRY = new EMShinyItemBase("item_void_crystal", 16);
 	
-	public static final Item FIRESMPL = new EMItemBase("item_fire_sample", 64); // 1.5/0.5x damage to nature
-	public static final Item WATERDRP = new EMItemBase("item_water_drop", 64); // 1.5/0.5x damage to fire
-	public static final Item NATURESMPL = new EMItemBase("item_nature_sample", 64); // 1.5/0.5x damage to water
+	public static final Item FIRESMPL_Z = new EMItemBase("item_zombieheart_fire", 64);
+	public static final Item WATERSMPL_Z = new EMItemBase("item_zombieheart_water", 64);
+	public static final Item NATURESMPL_Z = new EMItemBase("item_zombieheart_nature", 64);
+	public static final Item FIRESMPL_S = new EMItemBase("item_skeletonfemur_fire", 64);
+	public static final Item WATERSMPL_S = new EMItemBase("item_skeletonfemur_water", 64);
+	public static final Item NATURESMPL_S = new EMItemBase("item_skeletonfemur_nature", 64);
 	
-	
-	public static final Item EMBERS = new EMItemBase("item_scolding_embers", 64);
-	public static final Item MICRO_DRPS = new EMItemBase("item_micro_droplets", 64);
 	public static final Item THRIVING_CELLS = new EMItemBase("item_thriving_cells", 64);
+	
+	public static final Item ASHES = new EMItemBase("item_ashes", 64);
+	public static final Item BURNING_ASHES = new EMItemBase("item_burning_ashes", 64);
+	public static final Item EMBERS = new EMItemBase("item_scolding_embers", 64);
+	public static final Item ETERNAL_FIRE = new EMShinyItemBase("item_eternal_fire", 1);
+	
+	public static final Item MICRO_DRPS = new EMItemBase("item_micro_droplets", 64);
+	public static final Item SMALL_DRPS = new EMItemBase("item_small_droplets", 64);
+	public static final Item LARGE_DRPS = new EMItemBase("item_large_droplets", 64);
+	public static final Item PERPETUAL_DRP = new EMShinyItemBase("item_perpetual_droplet", 1);
+	
+	public static final Item NATURE_ARROW = new ItemNatureArrow("item_nature_arrow", 64);
 
 }

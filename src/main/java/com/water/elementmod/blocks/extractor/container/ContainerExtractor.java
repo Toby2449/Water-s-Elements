@@ -9,6 +9,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -100,25 +102,40 @@ public class ContainerExtractor extends Container
 			{		
 				Slot slot1 = (Slot)this.inventorySlots.get(index);
 				
-				if(ExtractorRecipes.getInstance().getExtractorResult(stack1) != ItemStack.EMPTY)
+				if (!ExtractorRecipes.getInstance().getExtractorResult(stack1).isEmpty())
+                {
+                    if (!this.mergeItemStack(stack1, 0, 1, false))
+                    {
+                        return ItemStack.EMPTY;
+                    }
+                }
+                else if (TileEntityExtractor.isItemFuel(stack1))
+                {
+                    if (!this.mergeItemStack(stack1, 1, 2, false))
+                    {
+                        return ItemStack.EMPTY;
+                    }
+                }
+				
+				if(!this.mergeItemStack(stack1, 0, 1, false)) 
 				{
-					if(!this.mergeItemStack(stack1, 0, 1, false)) 
-					{
-						return ItemStack.EMPTY;
-					}
-					else if(TileEntityExtractor.isItemFuel(stack1))
-					{
-						if(!this.mergeItemStack(stack1, 1, 2, false)) return ItemStack.EMPTY;
-					}
-					else if(index >= 3 && index < 31)
-					{
-						if(!this.mergeItemStack(stack1, 30, 39, false)) return ItemStack.EMPTY;
-					}
-					else if(index >= 30 && index < 39 && !this.mergeItemStack(stack1, 3, 30, false))
-					{
-						return ItemStack.EMPTY;
-					}
+					return ItemStack.EMPTY;
 				}
+				else if(TileEntityExtractor.isItemFuel(stack1))
+				{
+					if(!this.mergeItemStack(stack1, 1, 2, false)) return ItemStack.EMPTY;
+				}
+				else if (index >= 3 && index < 30)
+                {
+                    if (!this.mergeItemStack(stack1, 30, 39, false))
+                    {
+                        return ItemStack.EMPTY;
+                    }
+                }
+                else if (index >= 30 && index < 39 && !this.mergeItemStack(stack1, 3, 30, false))
+                {
+                    return ItemStack.EMPTY;
+                }
 			} 
 			else if(!this.mergeItemStack(stack1, 3, 39, false)) 
 			{

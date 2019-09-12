@@ -26,7 +26,12 @@ public class ExtractorRecipes
 	private ExtractorRecipes() 
 	{
 		// input, output, success percentage
-		addExtractorRecipe(new ItemStack(EMCoreItems.FIRESMPL), new ItemStack(EMCoreItems.EMBERS), 70);
+		addExtractorRecipe(new ItemStack(EMCoreItems.FIRESMPL_Z), new ItemStack(EMCoreItems.EMBERS), 70);
+		addExtractorRecipe(new ItemStack(EMCoreItems.WATERSMPL_Z), new ItemStack(EMCoreItems.MICRO_DRPS), 70);
+		addExtractorRecipe(new ItemStack(EMCoreItems.NATURESMPL_Z), new ItemStack(EMCoreItems.THRIVING_CELLS), 70);
+		addExtractorRecipe(new ItemStack(EMCoreItems.FIRESMPL_S), new ItemStack(EMCoreItems.EMBERS), 70);
+		addExtractorRecipe(new ItemStack(EMCoreItems.WATERSMPL_S), new ItemStack(EMCoreItems.MICRO_DRPS), 70);
+		addExtractorRecipe(new ItemStack(EMCoreItems.NATURESMPL_S), new ItemStack(EMCoreItems.THRIVING_CELLS), 70);
 	}
 
 	

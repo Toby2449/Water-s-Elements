@@ -100,7 +100,7 @@ public class EntityFireSkeleton extends AbstractElementalSkeleton
     @Override
     protected ResourceLocation getLootTable()
     {
-        return LootTableList.ENTITIES_SKELETON;
+        return EMLootTableHandler.FIRE_SKELETON;
     }
     
     @Override
@@ -150,22 +150,10 @@ public class EntityFireSkeleton extends AbstractElementalSkeleton
     {
         ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
 
-        if (itemstack.getItem() == Items.SPECTRAL_ARROW)
-        {
-            EntitySpectralArrow entityspectralarrow = new EntitySpectralArrow(this.world, this);
-            entityspectralarrow.setEnchantmentEffectsFromEntity(this, p_190726_1_);
-            return entityspectralarrow;
-        }
-        else
-        {
-            EntityArrow entityarrow = super.getArrow(p_190726_1_);
+        EntityArrow entityarrow = super.getArrow(p_190726_1_);
 
-            if (itemstack.getItem() == Items.TIPPED_ARROW && entityarrow instanceof EntityTippedArrow)
-            {
-                ((EntityTippedArrow)entityarrow).setPotionEffect(itemstack);
-            }
+        entityarrow.setFire(10);
 
-            return entityarrow;
-        }
+        return entityarrow;
     }
 }
