@@ -5,13 +5,16 @@ import java.util.List;
 
 import com.water.elementmod.items.EMItemBase;
 import com.water.elementmod.items.EMShinyItemBase;
+import com.water.elementmod.items.arrow.ItemFireArrow;
 import com.water.elementmod.items.arrow.ItemNatureArrow;
+import com.water.elementmod.items.arrow.ItemWaterArrow;
 import com.water.elementmod.items.weapons.FireSword;
 import com.water.elementmod.items.weapons.NatureSword;
 import com.water.elementmod.items.weapons.WaterSword;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemSword;
 import net.minecraftforge.common.util.EnumHelper;
 
@@ -102,7 +105,10 @@ public class EMCoreItems
 	public static final Item WATERSMPL_S = new EMItemBase("item_skeletonfemur_water", 64);
 	public static final Item NATURESMPL_S = new EMItemBase("item_skeletonfemur_nature", 64);
 	
+	public static final Item VARIOUS_ORGANISMS = new EMItemBase("item_various_micro_organisms", 64);
 	public static final Item THRIVING_CELLS = new EMItemBase("item_thriving_cells", 64);
+	public static final Item RECONSTRUCTED_TISSUE = new EMItemBase("item_reconstructed_tissue", 64);
+	public static final Item NATURE_ESSENCE = new EMShinyItemBase("item_nature_essence", 1);
 	
 	public static final Item ASHES = new EMItemBase("item_ashes", 64);
 	public static final Item BURNING_ASHES = new EMItemBase("item_burning_ashes", 64);
@@ -115,5 +121,7 @@ public class EMCoreItems
 	public static final Item PERPETUAL_DRP = new EMShinyItemBase("item_perpetual_droplet", 1);
 	
 	public static final Item NATURE_ARROW = new ItemNatureArrow("item_nature_arrow", 64);
-
+	public static final Item WATER_ARROW = new ItemWaterArrow("item_water_arrow", 64);
+	public static final Item FIRE_ARROW = new ItemFireArrow("item_fire_arrow", 64);
+	
 }

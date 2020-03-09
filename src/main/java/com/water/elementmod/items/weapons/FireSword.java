@@ -450,6 +450,7 @@ public class FireSword extends ItemSword implements IHasModel
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn)
     {
+		if(!this.getEliagibleForAbility()) return new ActionResult<ItemStack>(EnumActionResult.FAIL, player.getHeldItem(handIn));
 		for(int i = 0; i < this.abilityPlayers.size(); i++)
 		{
 			EntityPlayer entityPlayer = (EntityPlayer)this.abilityPlayers.get(i);

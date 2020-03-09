@@ -4,6 +4,8 @@ import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
+import com.water.elementmod.entity.arrow.EntityFireArrow;
+import com.water.elementmod.entity.arrow.EntityWaterArrow;
 import com.water.elementmod.util.handlers.EMLootTableHandler;
 
 import net.minecraft.entity.Entity;
@@ -150,22 +152,8 @@ public class EntityWaterSkeleton extends AbstractElementalSkeleton
     {
         ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
 
-        if (itemstack.getItem() == Items.SPECTRAL_ARROW)
-        {
-            EntitySpectralArrow entityspectralarrow = new EntitySpectralArrow(this.world, this);
-            entityspectralarrow.setEnchantmentEffectsFromEntity(this, p_190726_1_);
-            return entityspectralarrow;
-        }
-        else
-        {
-            EntityArrow entityarrow = super.getArrow(p_190726_1_);
-
-            if (itemstack.getItem() == Items.TIPPED_ARROW && entityarrow instanceof EntityTippedArrow)
-            {
-                ((EntityTippedArrow)entityarrow).setPotionEffect(itemstack);
-            }
-
-            return entityarrow;
-        }
+        EntityArrow entityarrow = new EntityWaterArrow(this.world, this);
+        
+        return entityarrow;
     }
 }

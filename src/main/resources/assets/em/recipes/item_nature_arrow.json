@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "AAA",
+        "ACA",
+        "AAA"
+    ],
+    
+    "key":
+    {
+        "C":
+        {
+            "item": "em:item_thriving_cells"
+        },
+        
+        "A":
+        {
+            "item": "minecraft:arrow"
+        }
+    },
+    
+    "result":
+    {
+        "item": "em:item_nature_arrow",
+        "count": 8
+    }
+}

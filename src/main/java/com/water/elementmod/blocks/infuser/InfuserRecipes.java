@@ -47,16 +47,16 @@ public class InfuserRecipes
 		addInfuserItemRecipe(EMCoreItems.WATER_SWORD8, new ItemStack(EMCoreItems.PERPETUAL_DRP), EMCoreItems.WATER_SWORD9);
 		addInfuserItemRecipe(EMCoreItems.WATER_SWORD9, new ItemStack(EMCoreItems.PERPETUAL_DRP), EMCoreItems.WATER_SWORD10);
 		
-		addInfuserItemRecipe(Items.DIAMOND_SWORD, new ItemStack(EMCoreItems.NATURESMPL_Z), EMCoreItems.NATURE_SWORD1);
-		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD1, new ItemStack(EMCoreItems.NATURESMPL_Z), EMCoreItems.NATURE_SWORD2);
-		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD2, new ItemStack(EMCoreItems.NATURESMPL_Z), EMCoreItems.NATURE_SWORD3);
-		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD3, new ItemStack(EMCoreItems.NATURESMPL_Z), EMCoreItems.NATURE_SWORD4);
-		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD4, new ItemStack(EMCoreItems.NATURESMPL_Z), EMCoreItems.NATURE_SWORD5);
-		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD5, new ItemStack(EMCoreItems.NATURESMPL_Z), EMCoreItems.NATURE_SWORD6);
-		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD6, new ItemStack(EMCoreItems.NATURESMPL_Z), EMCoreItems.NATURE_SWORD7);
-		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD7, new ItemStack(EMCoreItems.NATURESMPL_Z), EMCoreItems.NATURE_SWORD8);
-		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD8, new ItemStack(EMCoreItems.NATURESMPL_Z), EMCoreItems.NATURE_SWORD9);
-		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD9, new ItemStack(EMCoreItems.NATURESMPL_Z), EMCoreItems.NATURE_SWORD10);
+		addInfuserItemRecipe(Items.DIAMOND_SWORD, new ItemStack(EMCoreItems.NATURE_ESSENCE), EMCoreItems.NATURE_SWORD1);
+		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD1, new ItemStack(EMCoreItems.NATURE_ESSENCE), EMCoreItems.NATURE_SWORD2);
+		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD2, new ItemStack(EMCoreItems.NATURE_ESSENCE), EMCoreItems.NATURE_SWORD3);
+		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD3, new ItemStack(EMCoreItems.NATURE_ESSENCE), EMCoreItems.NATURE_SWORD4);
+		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD4, new ItemStack(EMCoreItems.NATURE_ESSENCE), EMCoreItems.NATURE_SWORD5);
+		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD5, new ItemStack(EMCoreItems.NATURE_ESSENCE), EMCoreItems.NATURE_SWORD6);
+		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD6, new ItemStack(EMCoreItems.NATURE_ESSENCE), EMCoreItems.NATURE_SWORD7);
+		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD7, new ItemStack(EMCoreItems.NATURE_ESSENCE), EMCoreItems.NATURE_SWORD8);
+		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD8, new ItemStack(EMCoreItems.NATURE_ESSENCE), EMCoreItems.NATURE_SWORD9);
+		addInfuserItemRecipe(EMCoreItems.NATURE_SWORD9, new ItemStack(EMCoreItems.NATURE_ESSENCE), EMCoreItems.NATURE_SWORD10);
 	}
 	
 	public void addInfuserItemRecipe(Item input, ItemStack stack, Item result)

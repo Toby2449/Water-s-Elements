@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "AAA",
+        "AWA",
+        "AAA"
+    ],
+    
+    "key":
+    {
+        "W":
+        {
+            "item": "em:item_small_droplets"
+        },
+        
+        "A":
+        {
+            "item": "minecraft:arrow"
+        }
+    },
+    
+    "result":
+    {
+        "item": "em:item_water_arrow",
+        "count": 8
+    }
+}

@@ -10,6 +10,9 @@ import com.water.elementmod.entity.EntityNatureSkeleton;
 import com.water.elementmod.entity.EntityNatureZombie;
 import com.water.elementmod.entity.EntityWaterSkeleton;
 import com.water.elementmod.entity.EntityWaterZombie;
+import com.water.elementmod.entity.arrow.EntityFireArrow;
+import com.water.elementmod.entity.arrow.EntityNatureArrow;
+import com.water.elementmod.entity.arrow.EntityWaterArrow;
 import com.water.elementmod.util.EMConfig;
 
 import net.minecraft.entity.Entity;
@@ -38,6 +41,10 @@ public class EMCoreEntities
 		registerEntity(EMConfig.ENTITY_FIRESKELETON, "fire_skeleton", EntityFireSkeleton.class, 100, 15263976, 16736256);
 		registerEntity(EMConfig.ENTITY_WATERSKELETON, "water_skeleton", EntityWaterSkeleton.class, 100, 15263976, 2578864);
 		registerEntity(EMConfig.ENTITY_NATURESKELETON, "nature_skeleton", EntityNatureSkeleton.class, 100, 15263976, 2457391);
+		
+		registerArrow("nature_arrow", EntityNatureArrow.class, EMConfig.ENTITY_NATUREARROW);
+		registerArrow("water_arrow", EntityWaterArrow.class, EMConfig.ENTITY_WATERARROW);
+		registerArrow("fire_arrow", EntityFireArrow.class, EMConfig.ENTITY_FIREARROW);
 	}
 	
 	public static void registerSpawns()
@@ -75,5 +82,10 @@ public class EMCoreEntities
         }
         
     }
+	
+	private static void registerArrow(String name, Class<? extends Entity> entity, int id)
+	{
+		EntityRegistry.registerModEntity(new ResourceLocation(EMConfig.MOD_ID + ":" + name), entity, name, id, EMCore.instance, 64, 20, true);
+	}
 
 }

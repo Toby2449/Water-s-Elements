@@ -26,6 +26,7 @@ public class SynthesizerRecipes
 	{
 		addSynthesizerRecipe(new ItemStack(EMCoreItems.LARGE_DRPS), new ItemStack(EMCoreItems.LARGE_DRPS), new ItemStack(EMCoreItems.PERPETUAL_DRP));
 		addSynthesizerRecipe(new ItemStack(EMCoreItems.EMBERS), new ItemStack(EMCoreItems.EMBERS), new ItemStack(EMCoreItems.ETERNAL_FIRE));
+		addSynthesizerRecipe(new ItemStack(EMCoreItems.RECONSTRUCTED_TISSUE), new ItemStack(EMCoreItems.RECONSTRUCTED_TISSUE), new ItemStack(EMCoreItems.NATURE_ESSENCE));
 	}
 
 	

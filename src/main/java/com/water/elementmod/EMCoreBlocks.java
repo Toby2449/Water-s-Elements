@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.water.elementmod.blocks.EMBlockBase;
-import com.water.elementmod.blocks.EMBlockUnbreakableIce;
 import com.water.elementmod.blocks.EMOreBase;
 import com.water.elementmod.blocks.extractor.BlockExtractor;
 import com.water.elementmod.blocks.infuser.BlockInfuser;
@@ -25,6 +24,5 @@ public class EMCoreBlocks
 	public static final Block SYNTHESIZER = new BlockSynthesizer("synthesizer", Material.ROCK, SoundType.STONE, 11.0f, 24.0f, "pickaxe", 1, 0.0f, 15);
 	public static final Block EXTRACTOR = new BlockExtractor("extractor", Material.ROCK, SoundType.STONE, 11.0f, 24.0f, "pickaxe", 1, 0.0f, 15);
 	public static final Block INFUSER = new BlockInfuser("infuser", Material.ROCK, SoundType.STONE, 11.0f, 24.0f, "pickaxe", 1, 0.0f, 0);
-	public static final Block ICECUBE_BLOCK = new EMBlockUnbreakableIce("icecube", Material.ICE, SoundType.GLASS, 10000.0f, 10000.0f, "pickaxe", 1, 0.0f, 0);
 	
 }

@@ -6,6 +6,12 @@ import com.water.elementmod.entity.EntityNatureSkeleton;
 import com.water.elementmod.entity.EntityNatureZombie;
 import com.water.elementmod.entity.EntityWaterSkeleton;
 import com.water.elementmod.entity.EntityWaterZombie;
+import com.water.elementmod.entity.arrow.EntityFireArrow;
+import com.water.elementmod.entity.arrow.EntityNatureArrow;
+import com.water.elementmod.entity.arrow.EntityWaterArrow;
+import com.water.elementmod.entity.arrow.RenderFireArrow;
+import com.water.elementmod.entity.arrow.RenderNatureArrow;
+import com.water.elementmod.entity.arrow.RenderWaterArrow;
 import com.water.elementmod.entity.render.RenderFireSkeleton;
 import com.water.elementmod.entity.render.RenderFireZombie;
 import com.water.elementmod.entity.render.RenderNatureSkeleton;
@@ -68,6 +74,30 @@ public class EMRenderHandler
 			public Render<? super EntityNatureSkeleton> createRenderFor(RenderManager manager)
 			{
 				return new RenderNatureSkeleton(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityNatureArrow.class, new IRenderFactory<EntityNatureArrow>()
+		{
+			@Override
+			public Render<? super EntityNatureArrow> createRenderFor(RenderManager manager)
+			{
+				return new RenderNatureArrow(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityWaterArrow.class, new IRenderFactory<EntityWaterArrow>()
+		{
+			@Override
+			public Render<? super EntityWaterArrow> createRenderFor(RenderManager manager)
+			{
+				return new RenderWaterArrow(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireArrow.class, new IRenderFactory<EntityFireArrow>()
+		{
+			@Override
+			public Render<? super EntityFireArrow> createRenderFor(RenderManager manager)
+			{
+				return new RenderFireArrow(manager);
 			}
 		});
 	}

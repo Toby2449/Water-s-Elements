@@ -4,6 +4,7 @@ import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
+import com.water.elementmod.entity.arrow.EntityFireArrow;
 import com.water.elementmod.util.handlers.EMLootTableHandler;
 
 import net.minecraft.entity.Entity;
@@ -150,9 +151,7 @@ public class EntityFireSkeleton extends AbstractElementalSkeleton
     {
         ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
 
-        EntityArrow entityarrow = super.getArrow(p_190726_1_);
-
-        entityarrow.setFire(10);
+        EntityArrow entityarrow = new EntityFireArrow(this.world, this);;
 
         return entityarrow;
     }

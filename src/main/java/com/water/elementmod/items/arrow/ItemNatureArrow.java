@@ -9,6 +9,7 @@ import com.water.elementmod.util.interfaces.IHasModel;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -21,7 +22,7 @@ public class ItemNatureArrow extends ItemArrow implements IHasModel
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		maxStackSize = StackSize;
-		setCreativeTab(CreativeTabs.COMBAT);
+		setCreativeTab(EMCore.TAB_WEAPONS);
 		
 		EMCoreItems.ITEMS.add(this);
 	}

@@ -3,9 +3,9 @@
     
     "pattern":
     [
-        "IRI",
-        "ECE",
-        "IRI"
+        "ORO",
+        "RCR",
+        "ORO"
     ],
     
     "key":
@@ -15,19 +15,14 @@
             "item": "em:item_void_crystal"
         },
         
-        "E":
-        {
-            "item": "em:item_void_essence"
-        },
-        
         "R":
         {
             "item": "minecraft:redstone"
         },
         
-        "I":
+        "O":
         {
-            "item": "minecraft:iron_ingot"
+            "item": "minecraft:obsidian"
         }
     },
     

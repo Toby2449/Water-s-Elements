@@ -26,10 +26,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockExtractor extends EMBlockBase implements ITileEntityProvider
 {
@@ -101,6 +104,49 @@ public class BlockExtractor extends EMBlockBase implements ITileEntityProvider
 			worldIn.setTileEntity(pos, tileentity);
 		}
 	}
+	
+	@SideOnly(Side.CLIENT)
+    @SuppressWarnings("incomplete-switch")
+	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
+    {
+        if ((Boolean)stateIn.getValue(ACTIVE))
+        {
+            EnumFacing enumfacing = (EnumFacing)stateIn.getValue(FACING);
+            double d0 = (double)pos.getX() + 0.5D;
+            double d1 = (double)pos.getY() + (rand.nextDouble() + 4.0D) / 16.0D;
+            double d2 = (double)pos.getZ() + 0.5D;
+            double d3 = 0.52D;
+            double d4 = rand.nextDouble() * 0.6D - 0.3D;
+
+            switch (enumfacing)
+            {
+                case WEST:
+                	for(int i = 0; i < 3; i++)
+                	{
+                		worldIn.spawnParticle(EnumParticleTypes.PORTAL, d0 - 0.52D, d1, d2 + d4, (rand.nextDouble() - 0.5D) * 2.0D, -rand.nextDouble(), (rand.nextDouble() - 0.5D));
+            		}
+                    break;
+                case EAST:
+                	for(int i = 0; i < 3; i++)
+                	{
+                		worldIn.spawnParticle(EnumParticleTypes.PORTAL, d0 + 0.52D, d1, d2 + d4, (rand.nextDouble() - 0.5D) * 2.0D, -rand.nextDouble(), (rand.nextDouble() - 0.5D));
+                	}
+                    break;
+                case NORTH:
+                	for(int i = 0; i < 3; i++)
+                	{
+                		worldIn.spawnParticle(EnumParticleTypes.PORTAL, d0 + d4, d1, d2 - 0.52D, (rand.nextDouble() - 0.5D) * 2.0D, -rand.nextDouble(), (rand.nextDouble() - 0.5D));
+                	}
+                    break;
+                case SOUTH:
+                	for(int i = 0; i < 3; i++)
+                	{
+                		worldIn.spawnParticle(EnumParticleTypes.PORTAL, d0 + d4, d1, d2 + 0.52D, (rand.nextDouble() - 0.5D) * 2.0D, -rand.nextDouble(), (rand.nextDouble() - 0.5D));
+                	}
+                	break;
+            }
+        }
+    }
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) 

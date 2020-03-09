@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "AAA",
+        "AFA",
+        "AAA"
+    ],
+    
+    "key":
+    {
+        "F":
+        {
+            "item": "em:item_burning_ashes"
+        },
+        
+        "A":
+        {
+            "item": "minecraft:arrow"
+        }
+    },
+    
+    "result":
+    {
+        "item": "em:item_fire_arrow",
+        "count": 8
+    }
+}

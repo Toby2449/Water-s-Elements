@@ -4,6 +4,8 @@ import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
+import com.water.elementmod.entity.arrow.EntityFireArrow;
+import com.water.elementmod.entity.arrow.EntityNatureArrow;
 import com.water.elementmod.particle.EnumCustomParticleTypes;
 import com.water.elementmod.particle.ParticleSpawner;
 import com.water.elementmod.util.handlers.EMLootTableHandler;
@@ -146,9 +148,7 @@ public class EntityNatureSkeleton extends AbstractElementalSkeleton
     {
         ItemStack itemstack = this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
 
-        EntityArrow entityarrow = super.getArrow(p_190726_1_);
-
-        entityarrow.setGlowing(true);
+        EntityArrow entityarrow = new EntityNatureArrow(this.world, this);
 
         return entityarrow;
     }

@@ -9,9 +9,12 @@ item.item_skeletonfemur_nature.name=§2Skeleton Femur§r
 item.item_ashes.name=§6Ashes§r
 item.item_burning_ashes.name=§6Glowing Ashes§r
 item.item_scolding_embers.name=§6Scolding Embers§r
-item.item_eternal_fire.name=§6Eternal Fire§r
+item.item_eternal_fire.name=§6§lEternal Fire§r
 
+item.item_various_micro_organisms.name=§2Various Micro Organisms§r
 item.item_thriving_cells.name=§2Thriving Cells§r
+item.item_reconstructed_tissue.name=§2Reconstructed Tissue§r
+item.item_nature_essence.name=§2§lNature Essence§r
 
 item.item_micro_droplets.name=§9Micro Water Droplets§r
 item.item_small_droplets.name=§9Small Water Droplets§r
@@ -21,6 +24,10 @@ item.item_perpetual_droplet.name=§9§lPerpetual Water Drops§r
 item.item_void_essence.name=§5§oVoid Essence§r
 item.item_void_singularity.name=§5§lVoid Singularity§r
 item.item_void_crystal.name=§5§lVoid Crystal§r
+
+item.item_fire_arrow.name=§6Fire Arrow§r
+item.item_water_arrow.name=§9Water Arrow§r
+item.item_nature_arrow.name=§2Nature Arrow§r
 
 itemGroup.em_main=WateR's Elements Essentials
 itemGroup.em_weapons=WateR's Elements Weapons
@@ -37,6 +44,10 @@ container.infuser=Infuser
 entity.fire_zombie.name=Fire Zombie
 entity.water_zombie.name=Water Zombie
 entity.nature_zombie.name=Nature Zombie
+
+entity.fire_skeleton.name=Fire Skeleton
+entity.water_skeleton.name=Water Skeleton
+entity.nature_skeleton.name=Nature Skeleton
 
 tooltip.Enchant=Element: 
 tooltip.ResetFormatting=§r

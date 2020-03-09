@@ -2,8 +2,8 @@
    "parent": "block/orientable",
    "textures": {
        "particle": "em:blocks/synthesizer_front_on",
-	   "up": "em:blocks/synthesizer_top",
-	   "down": "em:blocks/synthesizer_bottom",
+	   "up": "em:blocks/synthesizer_top_on",
+	   "down": "em:blocks/synthesizer_side",
 	   "north": "em:blocks/synthesizer_front_on",
 	   "south": "em:blocks/synthesizer_side",
 	   "west": "em:blocks/synthesizer_side",

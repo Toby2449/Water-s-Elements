@@ -28,5 +28,9 @@ public class EMConfig {
 	public static final int ENTITY_FIRESKELETON = 123;
 	public static final int ENTITY_WATERSKELETON = 124;
 	public static final int ENTITY_NATURESKELETON = 125;
+	
+	public static final int ENTITY_NATUREARROW = 126;
+	public static final int ENTITY_WATERARROW = 127;
+	public static final int ENTITY_FIREARROW = 128;
 
 }
