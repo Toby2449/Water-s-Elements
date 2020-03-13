@@ -8,4 +8,4 @@ Requirements for reporting an issue/bug (Choose one or more of the following)
 * How to reproduce the issue
 * Message me or somethin
 
-https://docs.google.com/forms/d/e/1FAIpQLSdgv0oiMUcjwhE1dhSbqJv3b0nOvxwftMNsdbgS_P6EdWBrPQ/viewform
+Report bug form: https://docs.google.com/forms/d/e/1FAIpQLSdgv0oiMUcjwhE1dhSbqJv3b0nOvxwftMNsdbgS_P6EdWBrPQ/viewform
