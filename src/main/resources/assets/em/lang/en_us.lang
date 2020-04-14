@@ -14,7 +14,8 @@ item.item_eternal_fire.name=§6§lEternal Fire§r
 item.item_various_micro_organisms.name=§2Various Micro Organisms§r
 item.item_thriving_cells.name=§2Thriving Cells§r
 item.item_reconstructed_tissue.name=§2Reconstructed Tissue§r
-item.item_nature_essence.name=§2§lNature Essence§r
+item.item_heart_of_the_wild.name=§2§lHeart of the Wild§r
+item.item_nature_essence.name=§2Nature Essence§r
 
 item.item_micro_droplets.name=§9Micro Water Droplets§r
 item.item_small_droplets.name=§9Small Water Droplets§r
@@ -81,6 +82,20 @@ tooltip.NatureAbilityDuration=§2§o§lAura Duration:
 tooltip.NatureAbilityRadius=§2§o§lAura Radius: 
 tooltip.NatureAbilityCDDuration=§2§o§lAbility Cooldown: 
 tooltip.NatureRegenerationLevel=§2§o§lRegeneration Level: 
+
+tooltip.HotW_Description=§2§oThe power that this item contains makes it impossible to destroy.§r
+
+item.item_fire_chestplate.name=§6Fire Battle Breastplate§r
+item.item_water_robe.name=§9Water Silk Robe§r
+item.item_leaf_armor.name=§2Leaf Hide Armor§r
+item.item_void_helmet.name=§5Helmet of the Corrupted Void§r
+
+
+message.em.natureboss.fight_initiate=My crystals will protect me! Prepare to get overtaken by the forest.
+
+
+
+
 
 
 item.fire_sword1.name=Diamond Sword

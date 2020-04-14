@@ -1,5 +1,10 @@
 package com.water.elementmod;
 
+import com.water.elementmod.events.EventDrownDebuff;
+import com.water.elementmod.events.EventFireSwordAbility;
+import com.water.elementmod.events.EventNatureSwordAbility;
+import com.water.elementmod.events.EventSuperPoison;
+import com.water.elementmod.events.EventWaterSwordAbility;
 import com.water.elementmod.items.weapons.FireSword;
 import com.water.elementmod.items.weapons.NatureSword;
 import com.water.elementmod.items.weapons.WaterSword;
@@ -10,7 +15,7 @@ import com.water.elementmod.tabs.EMTab_Main;
 import com.water.elementmod.tabs.EMTab_Weapons;
 import com.water.elementmod.util.EMConfig;
 import com.water.elementmod.util.Utils;
-import com.water.elementmod.util.handlers.EMEventHandler;
+import com.water.elementmod.util.VersionChecker;
 import com.water.elementmod.util.handlers.EMGuiHandler;
 import com.water.elementmod.util.handlers.EMRegistryHandler;
 import com.water.elementmod.util.handlers.EMSoundHandler;
@@ -28,7 +33,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 @Mod(modid = EMConfig.MOD_ID, name = EMConfig.NAME, version = EMConfig.VERSION)
 public class EMCore 
 {
-	
 	public static final CreativeTabs TAB_MAIN = new EMTab_Main();
 	public static final CreativeTabs TAB_WEAPONS = new EMTab_Weapons();
 	
@@ -43,25 +47,26 @@ public class EMCore
 	{
 		EMRegistryHandler.otherRegistries();
 		PacketHandler.registerMessages(EMConfig.MOD_ID);
-		ClientProxy.stitchEvent();
-		Utils.getLogger().info("Pre Initialize");
+		Utils.getLogger().info("Pre Initialized");
 	}
 	
 	@EventHandler
 	public static void Init(FMLInitializationEvent event)
 	{
 		NetworkRegistry.INSTANCE.registerGuiHandler(EMCore.instance, new EMGuiHandler());
-		MinecraftForge.EVENT_BUS.register(FireSword.class);
-		MinecraftForge.EVENT_BUS.register(WaterSword.class);
-		MinecraftForge.EVENT_BUS.register(NatureSword.class);
+		MinecraftForge.EVENT_BUS.register(new EventWaterSwordAbility());
+		MinecraftForge.EVENT_BUS.register(new EventNatureSwordAbility());
+		MinecraftForge.EVENT_BUS.register(new EventFireSwordAbility());
+		MinecraftForge.EVENT_BUS.register(new EventSuperPoison());
+		MinecraftForge.EVENT_BUS.register(new EventDrownDebuff());
 		EMSoundHandler.init();
-		Utils.getLogger().info("Initialize");
+		Utils.getLogger().info("Initialized");
 	}
 	
 	@EventHandler
 	public static void PostInit(FMLPostInitializationEvent event)
 	{
-		Utils.getLogger().info("Post Initialize");
+		Utils.getLogger().info("Post Initialized");
 	}
 	
 }

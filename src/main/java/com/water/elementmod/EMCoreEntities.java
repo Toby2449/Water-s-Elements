@@ -4,15 +4,19 @@ import java.sql.Types;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import com.water.elementmod.entity.EntityFireSkeleton;
-import com.water.elementmod.entity.EntityFireZombie;
-import com.water.elementmod.entity.EntityNatureSkeleton;
-import com.water.elementmod.entity.EntityNatureZombie;
-import com.water.elementmod.entity.EntityWaterSkeleton;
-import com.water.elementmod.entity.EntityWaterZombie;
-import com.water.elementmod.entity.arrow.EntityFireArrow;
-import com.water.elementmod.entity.arrow.EntityNatureArrow;
-import com.water.elementmod.entity.arrow.EntityWaterArrow;
+import com.water.elementmod.entity.boss.EntityPhotoSynthesizerCrystal;
+import com.water.elementmod.entity.boss.EntityNatureBoss;
+import com.water.elementmod.entity.boss.EntityNatureBossMinion;
+import com.water.elementmod.entity.monster.EntityFireSkeleton;
+import com.water.elementmod.entity.monster.EntityFireZombie;
+import com.water.elementmod.entity.monster.EntityNatureSkeleton;
+import com.water.elementmod.entity.monster.EntityNatureZombie;
+import com.water.elementmod.entity.monster.EntityWaterSkeleton;
+import com.water.elementmod.entity.monster.EntityWaterZombie;
+import com.water.elementmod.entity.projectile.EntityFireArrow;
+import com.water.elementmod.entity.projectile.EntityNatureArrow;
+import com.water.elementmod.entity.projectile.EntityPoisonBall;
+import com.water.elementmod.entity.projectile.EntityWaterArrow;
 import com.water.elementmod.util.EMConfig;
 
 import net.minecraft.entity.Entity;
@@ -41,10 +45,15 @@ public class EMCoreEntities
 		registerEntity(EMConfig.ENTITY_FIRESKELETON, "fire_skeleton", EntityFireSkeleton.class, 100, 15263976, 16736256);
 		registerEntity(EMConfig.ENTITY_WATERSKELETON, "water_skeleton", EntityWaterSkeleton.class, 100, 15263976, 2578864);
 		registerEntity(EMConfig.ENTITY_NATURESKELETON, "nature_skeleton", EntityNatureSkeleton.class, 100, 15263976, 2457391);
+		registerEntity(EMConfig.ENTITY_NATURE_BOSS, "nature_boss", EntityNatureBoss.class, 100, 15263976, 2457391);
+		registerEntity(EMConfig.ENTITY_PHOTOSYNCRYSTAL, "photo_synthetic_crystal", EntityPhotoSynthesizerCrystal.class, 100, 15263976, 2457391);
+		registerEntity(EMConfig.ENTITY_NATURE_BOSS_MINION, "nature_boss_minion", EntityNatureBossMinion.class, 100, 15263976, 2457391);
 		
 		registerArrow("nature_arrow", EntityNatureArrow.class, EMConfig.ENTITY_NATUREARROW);
 		registerArrow("water_arrow", EntityWaterArrow.class, EMConfig.ENTITY_WATERARROW);
 		registerArrow("fire_arrow", EntityFireArrow.class, EMConfig.ENTITY_FIREARROW);
+		
+		registerArrow("poison_ball", EntityPoisonBall.class, EMConfig.ENTITY_POISONBALL);
 	}
 	
 	public static void registerSpawns()

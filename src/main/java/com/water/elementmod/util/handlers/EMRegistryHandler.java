@@ -5,22 +5,28 @@ import java.rmi.registry.Registry;
 import com.water.elementmod.EMCoreBlocks;
 import com.water.elementmod.EMCoreEntities;
 import com.water.elementmod.EMCoreItems;
+import com.water.elementmod.gen.WorldGenCustomStructures;
 import com.water.elementmod.gen.WorldGenOres;
 import com.water.elementmod.util.EMConfig;
 import com.water.elementmod.util.Utils;
 import com.water.elementmod.util.interfaces.IHasModel;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod.EventBusSubscriber(modid = EMConfig.MOD_ID)
-public class EMRegistryHandler 
+public class EMRegistryHandler
 {
 	// Items
 	@SubscribeEvent
@@ -38,8 +44,11 @@ public class EMRegistryHandler
 	}
 	
 	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public static void onModelRegister(ModelRegistryEvent event)
 	{
+		EMRenderHandler.registerEntityRenders();
+		
 		for(Item item : EMCoreItems.ITEMS)
 		{
 			if(item instanceof IHasModel)
@@ -59,10 +68,10 @@ public class EMRegistryHandler
 	
 	public static void otherRegistries()
 	{
-		//GameRegistry.registerWorldGenerator(new WorldGenOres(), 3);
+		GameRegistry.registerWorldGenerator(new WorldGenOres(), 3);
+		GameRegistry.registerWorldGenerator(new WorldGenCustomStructures(), 0);
 		EMCoreEntities.registerEntities();
 		EMCoreEntities.registerSpawns();
-		EMRenderHandler.registerEntityRenders();
 		Utils.getLogger().info("World gens intialized");
 	}
 }

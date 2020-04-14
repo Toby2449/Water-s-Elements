@@ -3,14 +3,14 @@ package com.water.elementmod.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.water.elementmod.entity.EntityFireSkeleton;
-import com.water.elementmod.entity.EntityFireZombie;
+import com.water.elementmod.entity.monster.EntityFireSkeleton;
+import com.water.elementmod.entity.monster.EntityFireZombie;
 
 public class EMConfig {
 	
 	public static final String MOD_ID = "em";
 	public static final String NAME = "Element Mod";
-	public static final String VERSION = "0.1u5";
+	public static final String VERSION = "Beta v0.5u1";
 	public static final String ACCEPTED_VERSIONS = "[1.12.2]";
 	public static final String CLIENT_PROXY_CLASS = "com.water.elementmod.proxy.ClientProxy";
 	public static final String COMMON_PROXY_CLASS = "com.water.elementmod.proxy.CommonProxy";
@@ -32,5 +32,10 @@ public class EMConfig {
 	public static final int ENTITY_NATUREARROW = 126;
 	public static final int ENTITY_WATERARROW = 127;
 	public static final int ENTITY_FIREARROW = 128;
-
+	
+	public static final int ENTITY_NATURE_BOSS = 129;
+	public static final int ENTITY_POISONBALL = 130;
+	public static final int ENTITY_PHOTOSYNCRYSTAL = 131;
+	public static final int ENTITY_NATURE_BOSS_MINION = 132;
+	
 }

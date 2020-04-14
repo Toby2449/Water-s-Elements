@@ -8,9 +8,10 @@ import javax.annotation.Nullable;
 
 import com.water.elementmod.EMCore;
 import com.water.elementmod.EMCoreItems;
-import com.water.elementmod.entity.EntityNatureSkeleton;
-import com.water.elementmod.entity.EntityNatureZombie;
-import com.water.elementmod.entity.EntityWaterZombie;
+import com.water.elementmod.entity.monster.EntityNatureSkeleton;
+import com.water.elementmod.entity.monster.EntityNatureZombie;
+import com.water.elementmod.entity.monster.EntityWaterZombie;
+import com.water.elementmod.events.EventFireSwordAbility;
 import com.water.elementmod.network.PacketAbilityReadyFireData;
 import com.water.elementmod.network.PacketHandler;
 import com.water.elementmod.network.PacketParticleData;
@@ -54,11 +55,11 @@ public class FireSword extends ItemSword implements IHasModel
 	private int level;
 	private int abilityCD = 10;
 	private ToolMaterial material;
+	
+	//For animation
 	private List abilityTimer = new ArrayList();
 	private List abilityPlayers = new ArrayList();
 	private List abilityPlayerCD = new ArrayList();
-	private List abilityAoePoints = new ArrayList();
-	private List abilityAoeTimers = new ArrayList();
 	
 	public FireSword(String name, Integer level, ToolMaterial material) 
 	{
@@ -322,20 +323,7 @@ public class FireSword extends ItemSword implements IHasModel
 	}
 	
 	@Override
-	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
-	{
-		if(target instanceof EntityNatureZombie || target instanceof EntityNatureSkeleton)
-		{
-			target.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), this.getAttackDamage() / 3);
-		}
-		target.setFire(getFireDuration(true, false));
-		stack.damageItem(1, attacker);
-		FireParticleEffect(target, target.world);
-	    return true;
-	}
-	
-	@Override
-	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) 
+	public void onUpdate(ItemStack currentSword, World par2World, Entity par3Entity, int par4, boolean par5) 
 	{
 		if(!par2World.isRemote)
 		{
@@ -344,14 +332,11 @@ public class FireSword extends ItemSword implements IHasModel
 				int playerAbilityRemaining = (Integer)this.abilityTimer.get(i);
 				int playerAbilityRemainingCD = (Integer)this.abilityPlayerCD.get(i);
 				EntityLivingBase currentPlayer = (EntityLivingBase)this.abilityPlayers.get(i);
-				if(playerAbilityRemaining != 0)
-				{
-					if(playerAbilityRemaining % 4 == 0) spawnTrailNode(currentPlayer.posX, currentPlayer.posY, currentPlayer.posZ, playerAbilityRemaining);
-				}
 				
 				if(playerAbilityRemainingCD == 0)
 				{
-					PacketHandler.INSTANCE.sendTo(new PacketAbilityReadyFireData(currentPlayer, par2World), (EntityPlayerMP) par3Entity);
+					//currentSword.setItemDamage(1);
+					System.out.println(currentSword.getItemDamage());
 				}
 				
 				if(currentPlayer != null)
@@ -384,76 +369,31 @@ public class FireSword extends ItemSword implements IHasModel
 					}
 				}
 			}
-			
-			for(int i = 0; i < this.abilityAoePoints.size(); i++)
-			{
-				int CircleTimer = (Integer)this.abilityAoeTimers.get(i);
-				ArrayList pos = (ArrayList)this.abilityAoePoints.get(i);
-				
-				AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - 0.5D, (double)pos.get(1) - 0.5D, (double)pos.get(2) - 0.5D, (double)pos.get(0) + 1.0D, (double)pos.get(1) + 1.0D, (double)pos.get(2) + 1.0D);
-				List<EntityMob> AABBMob = par2World.<EntityMob>getEntitiesWithinAABB(EntityMob.class, AoePoint);
-				List<EntityAnimal> AABBAnimal = par2World.<EntityAnimal>getEntitiesWithinAABB(EntityAnimal.class, AoePoint);
-				List<EntityPlayer> AABBPlayer = par2World.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
-				if (!AABBMob.isEmpty())
-		        {
-		            for (EntityMob ent : AABBMob)
-		            {
-		            
-		            	ent.setFire(this.getFireDuration(true, false) / 2);
-		            
-		            }
-		        }
-				
-				if (!AABBAnimal.isEmpty())
-		        {
-		            for (EntityAnimal ent : AABBAnimal)
-		            {
-		            
-		            	ent.setFire(this.getFireDuration(true, false) / 2);
-		            
-		            }
-		        }
-				
-				if (!AABBPlayer.isEmpty())
-		        {
-		            for (EntityPlayer ent : AABBPlayer)
-		            {
-		            	if(ent != par3Entity)
-		            	{
-		            		ent.setFire(this.getFireDuration(true, false) / 2);
-		            	}
-		            }
-		        }
-				
-				if((Integer)this.abilityAoeTimers.get(i) > 0)
-				{
-					if((Integer)this.abilityAoeTimers.get(i) % 4 == 0)
-					{
-						FireRingAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 1, par2World, par3Entity);
-					}
-					
-					if((Integer)this.abilityAoeTimers.get(i) % 16 == 0)
-					{
-						FireSpitAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), par2World, par3Entity);
-					}
-					this.abilityAoeTimers.set(i, CircleTimer - 1);
-				}
-				else
-				{
-					this.abilityAoePoints.remove(i);
-					this.abilityAoeTimers.remove(i);
-				}
-			}
 		}
+	}
+	
+	@Override
+	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
+	{
+		if(target instanceof EntityNatureZombie || target instanceof EntityNatureSkeleton)
+		{
+			target.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), this.getAttackDamage() / 3);
+		}
+		target.setFire(getFireDuration(true, false));
+		stack.damageItem(1, attacker);
+		FireParticleEffect(target, target.world);
+	    return true;
 	}
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn)
     {
 		if(!this.getEliagibleForAbility()) return new ActionResult<ItemStack>(EnumActionResult.FAIL, player.getHeldItem(handIn));
-		for(int i = 0; i < this.abilityPlayers.size(); i++)
+		EventFireSwordAbility.playerActivateAbility(worldIn, player, this.getAbilityDuration(), this.getAbilityCooldown());
+		
+		for(int i = 0; i < abilityPlayers.size(); i++)
 		{
-			EntityPlayer entityPlayer = (EntityPlayer)this.abilityPlayers.get(i);
+			EntityPlayer entityPlayer = (EntityPlayer)abilityPlayers.get(i);
 			
 			if(entityPlayer == player)
 			{
@@ -461,47 +401,12 @@ public class FireSword extends ItemSword implements IHasModel
 			}
 		}
 		
-		activateAbility(player, this.getAbilityDuration());
-		
-		player.addPotionEffect(new PotionEffect(MobEffects.SPEED, this.getAbilityDuration() * 20, 1));
-		player.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, this.getAbilityDuration() * 20, 1));
+		abilityPlayers.add(player);
+		abilityTimer.add(this.getAbilityDuration() * 20);
+		abilityPlayerCD.add(this.getAbilityCooldown() * 20);
 		
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
     }
-	
-	public void activateAbility(EntityPlayer player, Integer time)
-	{
-		this.abilityPlayers.add(player);
-		this.abilityTimer.add(time * 20);
-		this.abilityPlayerCD.add(this.getAbilityCooldown() * 20);
-	}
-	
-	public void spawnTrailNode(double x, double y, double z, Integer time)
-	{
-		List pos = new ArrayList();
-		pos.add(x);
-		pos.add(y);
-		pos.add(z);
-		this.abilityAoePoints.add(pos);
-		this.abilityAoeTimers.add(time);
-	}
-	
-	public void FireRingAnimation(double x, double y, double z, double radius, World world, Entity ent)
-	{
-		Random rand = new Random();
-		for(double r = 0.6D; r <= radius; r += 0.45D)
-		{
-			for(float i = 0.0F; i < 360.0F; i += 150.0F)
-			{
-				double deltaX = Math.cos(Math.toRadians(i))*r + rand.nextDouble();
-				double deltaZ = -Math.sin(Math.toRadians(i))*r + rand.nextDouble();
-				double finalX = x - 0.5D + deltaX;
-				double finalZ = z - 0.5D + deltaZ;
-			    
-				PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(ent, world, 26, finalX, y + 0.15D, finalZ, 0.0D, 0.0D, 0.0D, -1), ent.dimension);
-			}
-		}
-	}
 	
 	public void FireParticleEffect(EntityLivingBase target, World world)
 	{
@@ -517,11 +422,6 @@ public class FireSword extends ItemSword implements IHasModel
 			PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 27, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - 0.25D, target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D, 0.0D, -1), target.dimension);
 	    }
     }
-	
-	public void FireSpitAnimation(double x, double y, double z, World world, Entity ent)
-	{
-		PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(ent, world, 27, x, y + 0.15D, z, 0.0D, 0.0D, 0.0D, -1), ent.dimension);
-	}
 	
 	@Override
 	public void registerModels()

@@ -17,6 +17,6 @@ public class EMTab_Main extends CreativeTabs
 	@Override
 	public ItemStack getTabIconItem() 
 	{
-		return new ItemStack(EMCoreItems.FIRESMPL_Z);
+		return new ItemStack(EMCoreItems.ETERNAL_FIRE);
 	}
 }

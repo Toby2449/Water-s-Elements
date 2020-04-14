@@ -257,7 +257,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 		if(flag2 != this.isCooking())
 		{
 			flag1 = true;
-			if(this.inventory.get(1).getItem() == EMCoreItems.FIRESMPL_Z) 
+			if(this.inventory.get(1).getItem() == EMCoreItems.ETERNAL_FIRE) 
 			{
 				BlockInfuser.setState(this.isCooking(), 0, this.world, this.pos);
 			}
@@ -265,7 +265,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 			{
 				BlockInfuser.setState(this.isCooking(), 1, this.world, this.pos);
 			}
-			else if(this.inventory.get(1).getItem() == EMCoreItems.NATURESMPL_Z) 
+			else if(this.inventory.get(1).getItem() == EMCoreItems.NATURE_ESSENCE) 
 			{
 				BlockInfuser.setState(this.isCooking(), 2, this.world, this.pos);
 			}

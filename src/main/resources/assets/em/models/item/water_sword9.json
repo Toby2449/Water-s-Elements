@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "em:items/diamond_watersword_1"
+        "layer0": "em:items/water_diamond_sword_2"
     }
 }

@@ -231,13 +231,26 @@ public class TileEntitySynthesizer extends TileEntity implements ITickable, IInv
 		else 
 		{
 			ItemStack result = SynthesizerRecipes.getInstance().getSynthesizerResult((ItemStack)this.inventory.get(0), (ItemStack)this.inventory.get(1));	
-			if(result.isEmpty()) return false;
-			else
+			if(!result.isEmpty())
 			{
 				ItemStack output = (ItemStack)this.inventory.get(3);
 				if(output.isEmpty()) return true;
 				if(!output.isItemEqual(result)) return false;
 				int res = output.getCount() + result.getCount();
+				return res <= getInventoryStackLimit() && res <= output.getMaxStackSize();
+			}
+			
+			ItemStack result2 = SynthesizerRecipes.getInstance().getSynthesizerResult((ItemStack)this.inventory.get(1), (ItemStack)this.inventory.get(0));
+			if(result2.isEmpty()) 
+			{
+				return false;
+			}
+			else
+			{
+				ItemStack output = (ItemStack)this.inventory.get(3);
+				if(output.isEmpty()) return true;
+				if(!output.isItemEqual(result2)) return false;
+				int res = output.getCount() + result2.getCount();
 				return res <= getInventoryStackLimit() && res <= output.getMaxStackSize();
 			}
 		}
@@ -251,13 +264,45 @@ public class TileEntitySynthesizer extends TileEntity implements ITickable, IInv
 			ItemStack input1 = (ItemStack)this.inventory.get(0);
 			ItemStack input2 = (ItemStack)this.inventory.get(1);
 			ItemStack result = SynthesizerRecipes.getInstance().getSynthesizerResult(input1, input2);
+			ItemStack result2 = SynthesizerRecipes.getInstance().getSynthesizerResult(input2, input1);
 			ItemStack output = (ItemStack)this.inventory.get(3);
 			
-			if(output.isEmpty()) this.inventory.set(3, result.copy());
-			else if(output.getItem() == result.getItem()) output.grow(result.getCount());
+			if(!result.isEmpty())
+			{
+				if(output.isEmpty()) this.inventory.set(3, result.copy());
+				else if(output.getItem() == result.getItem()) output.grow(result.getCount());
+			}
+			else
+			{
+				if(output.isEmpty()) this.inventory.set(3, result2.copy());
+				else if(output.getItem() == result2.getItem()) output.grow(result2.getCount());
+			}
 			
-			input1.shrink(1);
-			input2.shrink(1);
+			if(input1.getItem() == EMCoreItems.HEART_OF_THE_WILD)
+			{
+				input1.setItemDamage(input1.getItemDamage() + 1);
+			}
+			else if (input1.getItemDamage() == input1.getMaxDamage())
+			{
+				input1.shrink(1);
+			}
+			else
+			{
+				input1.shrink(1);
+			}
+			
+			if(input2.getItem() == EMCoreItems.HEART_OF_THE_WILD)
+			{
+				input2.setItemDamage(input2.getItemDamage() + 1);
+			}
+			else if (input2.getItemDamage() == input2.getMaxDamage())
+			{
+				input2.shrink(1);
+			}
+			else
+			{
+				input2.shrink(1);
+			}
 		}
 		
 	}

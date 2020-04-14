@@ -2,7 +2,7 @@ package com.water.elementmod.items.arrow;
 
 import com.water.elementmod.EMCore;
 import com.water.elementmod.EMCoreItems;
-import com.water.elementmod.entity.arrow.EntityNatureArrow;
+import com.water.elementmod.entity.projectile.EntityNatureArrow;
 import com.water.elementmod.util.Utils;
 import com.water.elementmod.util.interfaces.IHasModel;
 

@@ -26,9 +26,16 @@ public class SynthesizerRecipes
 	{
 		addSynthesizerRecipe(new ItemStack(EMCoreItems.LARGE_DRPS), new ItemStack(EMCoreItems.LARGE_DRPS), new ItemStack(EMCoreItems.PERPETUAL_DRP));
 		addSynthesizerRecipe(new ItemStack(EMCoreItems.EMBERS), new ItemStack(EMCoreItems.EMBERS), new ItemStack(EMCoreItems.ETERNAL_FIRE));
-		addSynthesizerRecipe(new ItemStack(EMCoreItems.RECONSTRUCTED_TISSUE), new ItemStack(EMCoreItems.RECONSTRUCTED_TISSUE), new ItemStack(EMCoreItems.NATURE_ESSENCE));
+		
+		addSynthesizerRecipe(new ItemStack(EMCoreItems.RECONSTRUCTED_TISSUE), new ItemStack(EMCoreItems.HEART_OF_THE_WILD), new ItemStack(EMCoreItems.NATURE_ESSENCE));
+		addSynthesizerRecipe(new ItemStack(EMCoreItems.HEART_OF_THE_WILD), new ItemStack(EMCoreItems.RECONSTRUCTED_TISSUE), new ItemStack(EMCoreItems.NATURE_ESSENCE));
+		for(int i = 0; i <= 30; i++)
+		{
+			addSynthesizerRecipe(new ItemStack(EMCoreItems.RECONSTRUCTED_TISSUE), new ItemStack(EMCoreItems.HEART_OF_THE_WILD, 1, i), new ItemStack(EMCoreItems.NATURE_ESSENCE));
+			addSynthesizerRecipe(new ItemStack(EMCoreItems.HEART_OF_THE_WILD, 1, i), new ItemStack(EMCoreItems.RECONSTRUCTED_TISSUE), new ItemStack(EMCoreItems.NATURE_ESSENCE));
+		}
 	}
-
+	
 	
 	public void addSynthesizerRecipe(ItemStack input1, ItemStack input2, ItemStack result) 
 	{

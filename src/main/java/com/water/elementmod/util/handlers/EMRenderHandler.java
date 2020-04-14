@@ -1,29 +1,40 @@
 package com.water.elementmod.util.handlers;
 
-import com.water.elementmod.entity.EntityFireSkeleton;
-import com.water.elementmod.entity.EntityFireZombie;
-import com.water.elementmod.entity.EntityNatureSkeleton;
-import com.water.elementmod.entity.EntityNatureZombie;
-import com.water.elementmod.entity.EntityWaterSkeleton;
-import com.water.elementmod.entity.EntityWaterZombie;
-import com.water.elementmod.entity.arrow.EntityFireArrow;
-import com.water.elementmod.entity.arrow.EntityNatureArrow;
-import com.water.elementmod.entity.arrow.EntityWaterArrow;
-import com.water.elementmod.entity.arrow.RenderFireArrow;
-import com.water.elementmod.entity.arrow.RenderNatureArrow;
-import com.water.elementmod.entity.arrow.RenderWaterArrow;
-import com.water.elementmod.entity.render.RenderFireSkeleton;
-import com.water.elementmod.entity.render.RenderFireZombie;
-import com.water.elementmod.entity.render.RenderNatureSkeleton;
-import com.water.elementmod.entity.render.RenderNatureZombie;
-import com.water.elementmod.entity.render.RenderWaterSkeleton;
-import com.water.elementmod.entity.render.RenderWaterZombie;
+import com.water.elementmod.entity.boss.EntityPhotoSynthesizerCrystal;
+import com.water.elementmod.entity.boss.EntityNatureBoss;
+import com.water.elementmod.entity.boss.EntityNatureBossMinion;
+import com.water.elementmod.entity.monster.EntityFireSkeleton;
+import com.water.elementmod.entity.monster.EntityFireZombie;
+import com.water.elementmod.entity.monster.EntityNatureSkeleton;
+import com.water.elementmod.entity.monster.EntityNatureZombie;
+import com.water.elementmod.entity.monster.EntityWaterSkeleton;
+import com.water.elementmod.entity.monster.EntityWaterZombie;
+import com.water.elementmod.entity.projectile.EntityFireArrow;
+import com.water.elementmod.entity.projectile.EntityNatureArrow;
+import com.water.elementmod.entity.projectile.EntityPoisonBall;
+import com.water.elementmod.entity.projectile.EntityWaterArrow;
+import com.water.elementmod.entity.render.boss.RenderPhotoSynthesizerCrystal;
+import com.water.elementmod.entity.render.boss.RenderNatureBoss;
+import com.water.elementmod.entity.render.boss.RenderNatureBossMinion;
+import com.water.elementmod.entity.render.monster.RenderFireSkeleton;
+import com.water.elementmod.entity.render.monster.RenderFireZombie;
+import com.water.elementmod.entity.render.monster.RenderNatureSkeleton;
+import com.water.elementmod.entity.render.monster.RenderNatureZombie;
+import com.water.elementmod.entity.render.monster.RenderWaterSkeleton;
+import com.water.elementmod.entity.render.monster.RenderWaterZombie;
+import com.water.elementmod.entity.render.projectile.RenderFireArrow;
+import com.water.elementmod.entity.render.projectile.RenderNatureArrow;
+import com.water.elementmod.entity.render.projectile.RenderPoisonBall;
+import com.water.elementmod.entity.render.projectile.RenderWaterArrow;
 
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class EMRenderHandler
 {
 	public static void registerEntityRenders()
@@ -98,6 +109,41 @@ public class EMRenderHandler
 			public Render<? super EntityFireArrow> createRenderFor(RenderManager manager)
 			{
 				return new RenderFireArrow(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityNatureBoss.class, new IRenderFactory<EntityNatureBoss>()
+		{
+			@Override
+			public Render<? super EntityNatureBoss> createRenderFor(RenderManager manager)
+			{
+				return new RenderNatureBoss(manager);
+			}
+		});
+		
+		RenderingRegistry.registerEntityRenderingHandler(EntityPoisonBall.class, new IRenderFactory<EntityPoisonBall>()
+		{
+			@Override
+			public Render<? super EntityPoisonBall> createRenderFor(RenderManager manager)
+			{
+				return new RenderPoisonBall(manager);
+			}
+		});
+		
+		RenderingRegistry.registerEntityRenderingHandler(EntityPhotoSynthesizerCrystal.class, new IRenderFactory<EntityPhotoSynthesizerCrystal>()
+		{
+			@Override
+			public Render<? super EntityPhotoSynthesizerCrystal> createRenderFor(RenderManager manager)
+			{
+				return new RenderPhotoSynthesizerCrystal(manager);
+			}
+		});
+		
+		RenderingRegistry.registerEntityRenderingHandler(EntityNatureBossMinion.class, new IRenderFactory<EntityNatureBossMinion>()
+		{
+			@Override
+			public Render<? super EntityNatureBossMinion> createRenderFor(RenderManager manager)
+			{
+				return new RenderNatureBossMinion(manager);
 			}
 		});
 	}

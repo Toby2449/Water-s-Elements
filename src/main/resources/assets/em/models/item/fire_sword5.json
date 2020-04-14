@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "em:items/big_diamond_sword1"
+        "layer0": "em:items/fire_diamond_sword_2"
     }
 }

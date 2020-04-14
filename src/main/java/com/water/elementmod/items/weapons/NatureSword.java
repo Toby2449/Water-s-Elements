@@ -8,9 +8,11 @@ import javax.annotation.Nullable;
 
 import com.water.elementmod.EMCore;
 import com.water.elementmod.EMCoreItems;
-import com.water.elementmod.entity.EntityFireZombie;
-import com.water.elementmod.entity.EntityWaterSkeleton;
-import com.water.elementmod.entity.EntityWaterZombie;
+import com.water.elementmod.entity.monster.EntityFireZombie;
+import com.water.elementmod.entity.monster.EntityWaterSkeleton;
+import com.water.elementmod.entity.monster.EntityWaterZombie;
+import com.water.elementmod.events.EventNatureSwordAbility;
+import com.water.elementmod.events.EventSuperPoison;
 import com.water.elementmod.network.PacketAbilityReadyFireData;
 import com.water.elementmod.network.PacketAbilityReadyNatureData;
 import com.water.elementmod.network.PacketCustomParticleData;
@@ -53,13 +55,6 @@ public class NatureSword extends ItemSword implements IHasModel
 {
 	private int level;
 	private ToolMaterial material;
-	private List superPoisonTime = new ArrayList();
-	private List superPoisonEntities = new ArrayList();
-	private List abilityTimer = new ArrayList();
-	private List abilityPlayers = new ArrayList();
-	private List abilityPlayerCD = new ArrayList();
-	private List abilityAoePoints = new ArrayList();
-	private List abilityAoeTimers = new ArrayList();
 	
 	public NatureSword(String name, Integer level, ToolMaterial material) 
 	{
@@ -103,12 +98,6 @@ public class NatureSword extends ItemSword implements IHasModel
 		return "??";
 		
 	}
-	
-	//@SideOnly(Side.CLIENT)
-	//public boolean hasEffect(ItemStack par1ItemStack)
-	//{
-	//	return true;
-	//}
 	
 	public int getAddedDamage() {
 		return (int)this.material.getAttackDamage() - (int)ToolMaterial.DIAMOND.getAttackDamage();
@@ -264,7 +253,7 @@ public class NatureSword extends ItemSword implements IHasModel
 				i = 17;
 				return i;
 			case 10:
-				i = 5;
+				i = 20;
 				return i;
 		}
 		return i;
@@ -450,185 +439,18 @@ public class NatureSword extends ItemSword implements IHasModel
 		{
 			target.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), this.getAttackDamage() / 3);
 		}
-		this.superPoisonEntities.add(target);
-		this.superPoisonTime.add(this.getPosionDuration(true, false) * 25);
+		EventSuperPoison.playerHitEntity(target, this.getPosionDuration(true, false));
 		NatureParticleHitEffect(target, target.world);
 		stack.damageItem(1, attacker);
 	    return true;
 	}
 	
 	@Override
-	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) 
-	{
-		if(!par2World.isRemote)
-		{
-			for(int i = 0; i < this.abilityPlayers.size(); i++)
-			{
-				int playerAbilityRemaining = (Integer)this.abilityTimer.get(i);
-				int playerAbilityCDRemaining = (Integer)this.abilityPlayerCD.get(i);
-				EntityPlayer currentPlayer = (EntityPlayer) this.abilityPlayers.get(i);
-				
-				if(playerAbilityCDRemaining == 0)
-				{
-					PacketHandler.INSTANCE.sendTo(new PacketAbilityReadyNatureData(currentPlayer, par2World), (EntityPlayerMP) par3Entity);
-				}
-				
-				if(currentPlayer != null)
-				{
-					if(!currentPlayer.isDead)
-					{
-						if((Integer)this.abilityTimer.get(i) > 0)
-						{
-							LesserNatureParticleEffect(currentPlayer, par2World);
-							this.abilityTimer.set(i, playerAbilityRemaining - 1);
-						}
-						else
-						{
-							if((Integer)this.abilityPlayerCD.get(i) > 0)
-							{
-								this.abilityPlayerCD.set(i, playerAbilityCDRemaining - 1);
-							}
-							else
-							{
-								this.abilityTimer.remove(i);
-								this.abilityPlayers.remove(i);
-								this.abilityPlayerCD.remove(i);
-							}
-						}
-					}
-					else
-					{
-						this.abilityTimer.remove(i);
-						this.abilityPlayers.remove(i);
-						this.abilityPlayerCD.remove(i);
-					}
-				}
-			}
-			
-			for(int i = 0; i < this.superPoisonEntities.size(); i++)
-			{
-				int superPoisonTimeInstance = (Integer)this.superPoisonTime.get(i);
-				EntityLivingBase currentEnt = (EntityLivingBase) this.superPoisonEntities.get(i);
-				if(currentEnt != null)
-				{
-					if(!currentEnt.isDead)
-					{
-						if((Integer)this.superPoisonTime.get(i) > 0) 
-						{
-							if ((Integer)this.superPoisonTime.get(i) % 25 == 0)
-						    {
-								if(currentEnt.getHealth() > 0.5)
-								{
-									currentEnt.attackEntityFrom(DamageSource.MAGIC, 0.5F);
-								}
-						    }
-							
-							NatureParticleEffect(currentEnt, par2World);
-							this.superPoisonTime.set(i, superPoisonTimeInstance - 1);
-							
-						}
-						else
-						{
-							this.superPoisonTime.remove(i);
-							this.superPoisonEntities.remove(i);
-						}
-					}
-					else
-					{
-						this.superPoisonTime.remove(i);
-						this.superPoisonEntities.remove(i);
-					}
-				}
-				
-				i++;
-			}
-			
-			for(int i = 0; i < this.abilityAoePoints.size(); i++)
-			{
-				int CircleTimer = (Integer)this.abilityAoeTimers.get(i);
-				ArrayList pos = (ArrayList)this.abilityAoePoints.get(i);
-				if((Integer)this.abilityTimer.get(i) == (this.getAbilityDuration() * 20) - 1) HealingAoeAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), this.getAbilityRadius(), par2World, par3Entity);
-				
-				AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - this.getAbilityRadius(), (double)pos.get(1) - 0.5D, (double)pos.get(2) - this.getAbilityRadius(), (double)pos.get(0) + this.getAbilityRadius(), (double)pos.get(1) + 4.0D, (double)pos.get(2) + this.getAbilityRadius());
-				List<EntityPlayer> AABBPlayer = par2World.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
-				
-				if (!AABBPlayer.isEmpty())
-		        {
-		            for (EntityPlayer ent : AABBPlayer)
-		            {
-		            	if(!ent.isPotionActive(MobEffects.REGENERATION)) 
-		            	{
-		            		ent.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 50, this.getRegenerationLevel()));
-		            	}
-		            }
-		        }
-				
-				if((Integer)this.abilityAoeTimers.get(i) > 0)
-				{
-					if((Integer)this.abilityAoeTimers.get(i) % 5 == 0)
-					{
-						HealingAoeAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), this.getAbilityRadius(), par2World, par3Entity);
-					}
-					if((Integer)this.abilityAoeTimers.get(i) % 5 == 0)
-					{
-						HeartParticleSpawner((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), this.getAbilityRadius(), par2World, par3Entity);
-					}
-					this.abilityAoeTimers.set(i, CircleTimer - 1);
-				}
-				else
-				{
-					this.abilityAoePoints.remove(i);
-					this.abilityAoeTimers.remove(i);
-				}
-			}
-		}
-		
-	}
-	
-	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn)
     {
 		if(!this.getEliagibleForAbility()) return new ActionResult<ItemStack>(EnumActionResult.FAIL, player.getHeldItem(handIn));
-		
-		Vec3d playerpos = player.getPositionVector();
-		
-		// Checks if the player is still on cooldown
-		for(int i = 0; i < this.abilityPlayers.size(); i++)
-		{
-			EntityPlayer playercheck = (EntityPlayer) this.abilityPlayers.get(i);
-			
-			// If player is in the table, return fail
-			if(playercheck == player)
-			{
-				return new ActionResult<ItemStack>(EnumActionResult.FAIL, player.getHeldItem(handIn));	
-			}
-		}
-		
-		// Add the player to table so they can activate the ability
-		this.abilityTimer.add(this.getAbilityDuration() * 20);
-		this.abilityPlayers.add(player);
-		this.abilityPlayerCD.add(this.getAbilityCooldown() * 20);
-
-		List pos = new ArrayList();
-		pos.add(player.posX);
-		pos.add(player.posY);
-		pos.add(player.posZ);
-		this.abilityAoePoints.add(pos);
-		this.abilityAoeTimers.add(this.getAbilityDuration() * 20);
-		
+		EventNatureSwordAbility.playerActivateAbility(worldIn, player, this.getAbilityRadius(), this.getAbilityDuration(), this.getAbilityCooldown(), this.getRegenerationLevel());
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
-	}
-	
-	public void NatureParticleEffect(EntityLivingBase target, World world)
-	{
-		Random rand = new Random();
-		PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 15, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - 0.25D, target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 1.47D, 0.09D, 1), target.dimension);
-	}
-	
-	public void LesserNatureParticleEffect(EntityLivingBase target, World world)
-	{
-		Random rand = new Random();
-		PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 21, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - 0.25D, target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 1.47D, 0.09D, 1), target.dimension);
 	}
 	
 	public boolean NatureParticleHitEffect(EntityLivingBase target, World world)
@@ -639,40 +461,6 @@ public class NatureSword extends ItemSword implements IHasModel
 			PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(target, world, 0, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - 0.25D, target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D, 0.0D, -1), target.dimension);
 		}
 		return true;
-	}
-	
-	public void HealingAoeAnimation(double x, double y, double z, double radius, World world, Entity ent)
-	{
-		Random rand = new Random();
-		for(double r = 0.6D; r <= radius; r += 0.2D)
-		{
-			for(float i = 0.0F; i < 360.0F; i += 15.0F)
-			{
-				double deltaX = Math.cos(Math.toRadians(i))*r + rand.nextDouble();
-				double deltaZ = -Math.sin(Math.toRadians(i))*r + rand.nextDouble();
-				double finalX = x - 0.5D + deltaX;
-				double finalZ = z - 0.5D + deltaZ;
-			    
-				if(rand.nextDouble() < 0.1D) PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(ent, world, 4, finalX, y + 0.15D, finalZ, 0.0D, 0.0D, 0.0D, -1), ent.dimension);
-			}
-		}
-	}
-	
-	public void HeartParticleSpawner(double x, double y, double z, double radius, World world, Entity ent)
-	{
-		Random rand = new Random();
-		for(double r = 0.6D; r <= radius; r += 0.2D)
-		{
-			for(float i = 0.0F; i < 360.0F; i += 15.0F)
-			{
-				double deltaX = Math.cos(Math.toRadians(i))*r + rand.nextDouble();
-				double deltaZ = -Math.sin(Math.toRadians(i))*r + rand.nextDouble();
-				double finalX = x - 0.5D + deltaX;
-				double finalZ = z - 0.5D + deltaZ;
-			    
-				if(rand.nextDouble() < 0.005D) PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(ent, world, 2, finalX, y + 0.15D, finalZ, 0.0D, 0.0D, 0.0D, -1), ent.dimension);
-			}
-		}
 	}
 	
 	@Override
