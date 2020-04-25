@@ -6,6 +6,7 @@ import com.water.elementmod.entity.boss.EntityNatureBossMinion;
 import com.water.elementmod.entity.monster.EntityFireSkeleton;
 import com.water.elementmod.entity.monster.EntityFireZombie;
 import com.water.elementmod.entity.monster.EntityNatureSkeleton;
+import com.water.elementmod.entity.monster.EntityNatureStalker;
 import com.water.elementmod.entity.monster.EntityNatureZombie;
 import com.water.elementmod.entity.monster.EntityWaterSkeleton;
 import com.water.elementmod.entity.monster.EntityWaterZombie;
@@ -19,6 +20,7 @@ import com.water.elementmod.entity.render.boss.RenderNatureBossMinion;
 import com.water.elementmod.entity.render.monster.RenderFireSkeleton;
 import com.water.elementmod.entity.render.monster.RenderFireZombie;
 import com.water.elementmod.entity.render.monster.RenderNatureSkeleton;
+import com.water.elementmod.entity.render.monster.RenderNatureStalker;
 import com.water.elementmod.entity.render.monster.RenderNatureZombie;
 import com.water.elementmod.entity.render.monster.RenderWaterSkeleton;
 import com.water.elementmod.entity.render.monster.RenderWaterZombie;
@@ -144,6 +146,15 @@ public class EMRenderHandler
 			public Render<? super EntityNatureBossMinion> createRenderFor(RenderManager manager)
 			{
 				return new RenderNatureBossMinion(manager);
+			}
+		});
+		
+		RenderingRegistry.registerEntityRenderingHandler(EntityNatureStalker.class, new IRenderFactory<EntityNatureStalker>()
+		{
+			@Override
+			public Render<? super EntityNatureStalker> createRenderFor(RenderManager manager)
+			{
+				return new RenderNatureStalker(manager);
 			}
 		});
 	}

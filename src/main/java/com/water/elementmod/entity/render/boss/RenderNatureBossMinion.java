@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderNatureBossMinion extends RenderLiving<EntityNatureBossMinion>
 {
-	public static final ResourceLocation TEXTURE = new ResourceLocation(EMConfig.MOD_ID + ":textures/entity/nature_tree.png"); 
+	public static final ResourceLocation TEXTURE = new ResourceLocation(EMConfig.MOD_ID + ":textures/entity/nature_boss.png"); 
 	
 	public RenderNatureBossMinion(RenderManager manager) 
 	{

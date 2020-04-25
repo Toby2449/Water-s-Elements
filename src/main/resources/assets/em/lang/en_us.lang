@@ -50,6 +50,8 @@ entity.fire_skeleton.name=Fire Skeleton
 entity.water_skeleton.name=Water Skeleton
 entity.nature_skeleton.name=Nature Skeleton
 
+entity.nature_boss.name=Ivus, Elder of Nature
+
 tooltip.Enchant=Element: 
 tooltip.ResetFormatting=§r
 tooltip.PressAlt=§7§oHold §lALT§r §7§ofor stats...

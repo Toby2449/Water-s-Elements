@@ -1,11 +1,12 @@
 package com.water.elementmod.gen;
 
 import java.util.Map;
-import java.util.Random;
 import java.util.Map.Entry;
+import java.util.Random;
 
-import com.water.elementmod.entity.boss.EntityPhotoSynthesizerCrystal;
 import com.water.elementmod.entity.boss.EntityNatureBoss;
+import com.water.elementmod.entity.boss.EntityPhotoSynthesizerCrystal;
+import com.water.elementmod.entity.monster.EntityNatureStalker;
 import com.water.elementmod.util.EMConfig;
 import com.water.elementmod.util.handlers.EMLootTableHandler;
 import com.water.elementmod.util.interfaces.IStructure;
@@ -21,7 +22,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraft.world.gen.structure.template.Template;
 import net.minecraft.world.gen.structure.template.TemplateManager;
-import net.minecraft.world.storage.loot.LootTableList;
 
 public class WorldGenNArena extends WorldGenerator implements IStructure
 {
@@ -44,22 +44,18 @@ public class WorldGenNArena extends WorldGenerator implements IStructure
 		
 		if(template != null)
 		{
+			for(int k = pos.getX(); k < (pos.getX() + template.getSize().getX()); k++)
+			{
+				for(int j = pos.getZ(); j < (pos.getZ() + template.getSize().getZ()); j++)
+				{
+					replaceAirAndLiquidDownwards(template, world, Blocks.STONE.getDefaultState(), k, pos.getY(), j);
+				}
+			}
 			IBlockState state = world.getBlockState(pos);
 			world.notifyBlockUpdate(pos, state, state, 3);
 			template.getDataBlocks(pos, settings);
 			template.addBlocksToWorldChunk(world, pos, settings);
-			
-			for(int y = pos.getY(); y < pos.getY(); y--)
-			{
-				BlockPos pos2 = new BlockPos(pos.getX(), y, pos.getZ());
-				if (world.isAirBlock(pos2))
-	            {
-					world.setBlockState(pos2, Blocks.COBBLESTONE.getDefaultState(), 2);
-	            }
-			}
-			
 			Map<BlockPos, String> map = template.getDataBlocks(pos, settings);
-			
 			for (Entry<BlockPos, String> entry : map.entrySet())
 			{
 				if("chest1".equals(entry.getValue()))
@@ -98,6 +94,36 @@ public class WorldGenNArena extends WorldGenerator implements IStructure
 					}
 				}
 				
+				if("stalker_group_small".equals(entry.getValue()))
+				{
+					BlockPos blockpos = entry.getKey();
+					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
+					int randnum = new Random().nextInt(1);
+					System.out.println(randnum);
+					for(int i = 1 + randnum; i > 0; i--)
+					{
+						EntityNatureStalker stalker = new EntityNatureStalker(world);
+						stalker.enablePersistence();
+						stalker.setPosition(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
+						world.spawnEntity(stalker);
+					}
+				}
+				
+				if("stalker_group_large".equals(entry.getValue()))
+				{
+					BlockPos blockpos = entry.getKey();
+					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
+					int randnum = new Random().nextInt(2);
+					System.out.println(randnum);
+					for(int i = 2 + randnum; i > 0; i--)
+					{
+						EntityNatureStalker stalker = new EntityNatureStalker(world);
+						stalker.enablePersistence();
+						stalker.setPosition(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
+						world.spawnEntity(stalker);
+					}
+				}
+				
 				if("crystal_location".equals(entry.getValue()))
 				{
 					BlockPos blockpos = entry.getKey();
@@ -105,7 +131,7 @@ public class WorldGenNArena extends WorldGenerator implements IStructure
 					EntityPhotoSynthesizerCrystal crystal = new EntityPhotoSynthesizerCrystal(world);
 					crystal.enablePersistence();
 					crystal.setPosition(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
-		            world.spawnEntity(crystal);
+					world.spawnEntity(crystal);
 				}
 				
 				if("boss_spawn".equals(entry.getValue()))
@@ -120,4 +146,14 @@ public class WorldGenNArena extends WorldGenerator implements IStructure
 			}
 		}
 	}
+	
+	protected static void replaceAirAndLiquidDownwards(Template template, World worldIn, IBlockState blockstateIn, int x, int y, int z)
+    {
+
+        while ((worldIn.isAirBlock(new BlockPos(x, y, z)) || worldIn.getBlockState(new BlockPos(x, y, z)).getMaterial().isLiquid()) && y > 1)
+        {
+            worldIn.setBlockState(new BlockPos(x, y, z), blockstateIn, 2);
+            --y;
+        }
+    }
 }

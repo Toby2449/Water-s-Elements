@@ -37,5 +37,6 @@ public class EMConfig {
 	public static final int ENTITY_POISONBALL = 130;
 	public static final int ENTITY_PHOTOSYNCRYSTAL = 131;
 	public static final int ENTITY_NATURE_BOSS_MINION = 132;
+	public static final int ENTITY_NATURE_STALKER = 133;
 	
 }

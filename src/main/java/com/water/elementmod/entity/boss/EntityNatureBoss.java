@@ -302,7 +302,18 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
 		        }
 		        if(this.getInvulState() == true)
 	        	{
-	        		this.heal(0.1F);
+		        	if(this.world.getDifficulty() == EnumDifficulty.EASY)
+	        		{
+		        		this.heal(0.1F);
+	        		}
+	        		else if(this.world.getDifficulty() == EnumDifficulty.NORMAL)
+	        		{
+	        			this.heal(0.15F);
+	        		}
+	        		else if(this.world.getDifficulty() == EnumDifficulty.HARD)
+	        		{
+	        			this.heal(0.2F);
+	        		}
 	        	}
 	    	}
     	}
