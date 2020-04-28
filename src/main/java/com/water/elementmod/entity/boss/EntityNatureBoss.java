@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import com.google.common.base.Predicates;
 import com.water.elementmod.EMCoreItems;
 import com.water.elementmod.entity.ai.EntityAIMeleeCollide;
+import com.water.elementmod.entity.friendly.EntityAlyx;
 import com.water.elementmod.entity.monster.EntityWaterSkeleton;
 import com.water.elementmod.entity.projectile.EntityFireArrow;
 import com.water.elementmod.entity.projectile.EntityPoisonBall;
@@ -64,6 +65,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.math.BlockPos;
@@ -85,6 +87,7 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
     private final EntityAIAttackMelee aiMeleeAttack = new EntityAIAttackMelee(this, 1.5D, false);
 	private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName(), BossInfo.Color.GREEN, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
 	private int crystals_alive;
+	private boolean fightActive = false;
 	private boolean minions_spawned;
 	private BlockPos spawn_location;
 	private int ticks_existed_after_vunerable;
@@ -96,7 +99,7 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
 	public EntityNatureBoss(World worldIn) 
 	{
 		super(worldIn);
-		this.setSpawnLocation(null);
+		this.setSpawnLocation(this.getPosition());
 		this.setSize(1.5F, 5.0F);
 	}
 	
@@ -130,6 +133,7 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(300.0F);
+		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(7.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.14000001192092896D);
 	}
 	
@@ -207,6 +211,7 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
 	    	this.placeDoor();
 	    	this.minions_spawned = false;
 	    	this.world.playBroadcastSound(1023, new BlockPos(this), 0);
+	    	this.fightActive = true;
 	    	return super.processInteract(player, hand);
     	}
     	return false;
@@ -216,6 +221,7 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
 	public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) 
 	{
 		this.throwPoisonBall(target);
+		this.world.playSound((EntityPlayer)null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.AMBIENT, 2.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 	}
 	
     @Override
@@ -304,23 +310,78 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
 	        	{
 		        	if(this.world.getDifficulty() == EnumDifficulty.EASY)
 	        		{
-		        		this.heal(0.1F);
+		        		this.heal(0.01F);
 	        		}
 	        		else if(this.world.getDifficulty() == EnumDifficulty.NORMAL)
 	        		{
-	        			this.heal(0.15F);
+	        			this.heal(0.025F);
 	        		}
 	        		else if(this.world.getDifficulty() == EnumDifficulty.HARD)
 	        		{
-	        			this.heal(0.2F);
+	        			this.heal(0.035F);
 	        		}
 	        	}
 	    	}
+	        
+	        // If nobodies in the arena
+	        if(this.isFightActivated() && this.fightActive)
+	        {
+	        	List<EntityPlayer> players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		        
+	        	if(players.size() <= 0)
+	        	{
+	        		this.fightActive = false;
+	        		this.resetFight();
+	        	}
+	        }
+	        
+	        if(!this.isFightActivated())
+	        {
+	        	this.setHealth(this.getMaxHealth());
+	        }
     	}
 		
 		this.ticksExisted++;
         
         this.bossInfo.setPercent(this.getHealth() / this.getMaxHealth());
+    }
+    
+    public void resetFight()
+    {
+    	this.setFightState(false);
+    	this.setInvulState(true);
+    	this.openDoor();
+    	
+    	List<EntityPhotoSynthesizerCrystal> list = this.world.<EntityPhotoSynthesizerCrystal>getEntitiesWithinAABB(EntityPhotoSynthesizerCrystal.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+    	
+    	if(!list.isEmpty())
+    	{
+	    	for (EntityPhotoSynthesizerCrystal entity : list)
+	        {
+	        	entity.setDead();
+	        }
+    	}
+    	
+    	List<EntityNatureBossMinion> list1 = this.world.<EntityNatureBossMinion>getEntitiesWithinAABB(EntityNatureBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+    	
+    	if(!list1.isEmpty())
+    	{
+	    	for (EntityNatureBossMinion entity : list1)
+	        {
+	    		entity.setDead();
+	        }
+    	}
+    	
+    	if(this.crystal_locations.size() >= 0)
+		{
+        	for(int l = 0; l < this.crystal_locations.size(); l++) 
+        	{
+	        	ArrayList position = (ArrayList) this.crystal_locations.get(l);
+	        	
+	        	EntityPhotoSynthesizerCrystal entitylg = new EntityPhotoSynthesizerCrystal(this.world, (double)position.get(0), (double)position.get(1) + 1.0D, (double)position.get(2));
+	            this.world.spawnEntity(entitylg);
+        	}
+		}
     }
 	
 	@Override
@@ -445,17 +506,9 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
 
         this.openDoor();
         
-        for(int l = 0; this.crystal_locations.size() > 0; l++) 
-    	{
-    		this.crystal_locations.remove(l);
-    	}
+        this.crystal_locations.clear();
         
-        List<EntityNatureBossMinion> list = this.world.<EntityNatureBossMinion>getEntitiesWithinAABB(EntityNatureBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
-        
-        for (EntityNatureBossMinion entity : list)
-        {
-        	entity.isDead = true;
-        }
+        spawnAlyx();
     }
     
     @Override
@@ -513,6 +566,18 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
 	    	this.world.setBlockToAir(doorpos.add(0, -1, 0));
 	    	this.world.setBlockToAir(doorpos.add(-1, -1, 0));
     	}
+    }
+    
+    public void spawnAlyx()
+    {
+    	BlockPos pos1 = this.getSpawnLocation();
+    	BlockPos pos2 = this.getSpawnLocation().add(0, 0, -14);
+    	
+    	System.out.println(pos1);
+    	System.out.println(this.getSpawnLocation().add(0, 0, -14));
+    	
+    	EntityAlyx alyx = new EntityAlyx(this.world, pos1.getX(), pos1.getY(), pos1.getZ(), pos2.getX(), pos2.getY(), pos2.getZ());
+        this.world.spawnEntity(alyx);
     }
     
     public boolean getInvulState()

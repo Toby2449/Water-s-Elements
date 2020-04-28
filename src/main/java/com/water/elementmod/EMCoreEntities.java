@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import com.water.elementmod.entity.boss.EntityPhotoSynthesizerCrystal;
+import com.water.elementmod.entity.friendly.EntityAlyx;
 import com.water.elementmod.entity.boss.EntityNatureBoss;
 import com.water.elementmod.entity.boss.EntityNatureBossMinion;
 import com.water.elementmod.entity.monster.EntityFireSkeleton;
@@ -50,6 +51,7 @@ public class EMCoreEntities
 		registerEntity(EMConfig.ENTITY_PHOTOSYNCRYSTAL, "photo_synthetic_crystal", EntityPhotoSynthesizerCrystal.class, 100, 15263976, 2457391);
 		registerEntity(EMConfig.ENTITY_NATURE_BOSS_MINION, "nature_boss_minion", EntityNatureBossMinion.class, 100, 15263976, 2457391);
 		registerEntity(EMConfig.ENTITY_NATURE_STALKER, "nature_stalker", EntityNatureStalker.class, 100, 3877140, 880148);
+		registerEntity(EMConfig.ENTITY_ALYX, "em_alyx", EntityAlyx.class, 100, 3877140, 880148);
 		
 		registerArrow("nature_arrow", EntityNatureArrow.class, EMConfig.ENTITY_NATUREARROW);
 		registerArrow("water_arrow", EntityWaterArrow.class, EMConfig.ENTITY_WATERARROW);

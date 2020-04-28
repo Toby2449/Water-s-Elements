@@ -10,6 +10,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityIronGolem;
+import net.minecraft.util.math.MathHelper;
 
 public class ModelNatureStalker extends ModelBase
 {
@@ -103,8 +104,17 @@ public class ModelNatureStalker extends ModelBase
         this.L_leg.rotateAngleX = (this.triangleWave(limbSwing, 13.0F) * limbSwingAmount) - 0.2618F;
         this.R_leg.rotateAngleX = -(this.triangleWave(limbSwing, 13.0F) * limbSwingAmount) - 0.2618F;
         
-        this.L_arm.rotateAngleX = -1.5F * this.triangleWave(limbSwing, 13.0F) * limbSwingAmount;
-        this.R_arm.rotateAngleX = 1.5F * this.triangleWave(limbSwing, 13.0F) * limbSwingAmount;
+        float f = MathHelper.sin(this.swingProgress * (float)Math.PI);
+        float f1 = MathHelper.sin((1.0F - (1.0F - this.swingProgress) * (1.0F - this.swingProgress)) * (float)Math.PI);
+        this.R_arm.rotateAngleZ = 0.0F;
+        this.L_arm.rotateAngleZ = 0.0F;
+        this.R_arm.rotateAngleY = -(0.1F - f * 0.6F);
+        this.L_arm.rotateAngleY = 0.1F - f * 0.6F;
+        float f2 = (float)Math.PI / (180F);
+        this.R_arm.rotateAngleX += f * 1.2F - f1 * 0.4F;
+        this.L_arm.rotateAngleX += f * 1.2F - f1 * 0.4F;
+        this.R_arm.rotateAngleX = -2.0F + 1.75F * this.triangleWave((float)this.swingProgress, 10.0F);
+        this.L_arm.rotateAngleX = -2.0F + 1.75F * this.triangleWave((float)this.swingProgress, 10.0F);
     }
 	
 	private float triangleWave(float p_78172_1_, float p_78172_2_)

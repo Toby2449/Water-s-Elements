@@ -1,6 +1,7 @@
 package com.water.elementmod.util.handlers;
 
 import com.water.elementmod.entity.boss.EntityPhotoSynthesizerCrystal;
+import com.water.elementmod.entity.friendly.EntityAlyx;
 import com.water.elementmod.entity.boss.EntityNatureBoss;
 import com.water.elementmod.entity.boss.EntityNatureBossMinion;
 import com.water.elementmod.entity.monster.EntityFireSkeleton;
@@ -15,6 +16,7 @@ import com.water.elementmod.entity.projectile.EntityNatureArrow;
 import com.water.elementmod.entity.projectile.EntityPoisonBall;
 import com.water.elementmod.entity.projectile.EntityWaterArrow;
 import com.water.elementmod.entity.render.boss.RenderPhotoSynthesizerCrystal;
+import com.water.elementmod.entity.render.friendly.RenderAlyx;
 import com.water.elementmod.entity.render.boss.RenderNatureBoss;
 import com.water.elementmod.entity.render.boss.RenderNatureBossMinion;
 import com.water.elementmod.entity.render.monster.RenderFireSkeleton;
@@ -155,6 +157,15 @@ public class EMRenderHandler
 			public Render<? super EntityNatureStalker> createRenderFor(RenderManager manager)
 			{
 				return new RenderNatureStalker(manager);
+			}
+		});
+		
+		RenderingRegistry.registerEntityRenderingHandler(EntityAlyx.class, new IRenderFactory<EntityAlyx>()
+		{
+			@Override
+			public Render<? super EntityAlyx> createRenderFor(RenderManager manager)
+			{
+				return new RenderAlyx(manager);
 			}
 		});
 	}

@@ -10,6 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeForest;
+import net.minecraft.world.biome.BiomeHell;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.WorldGenerator;
@@ -20,6 +21,7 @@ import scala.actors.threadpool.Arrays;
 public class WorldGenCustomStructures implements IWorldGenerator
 {
 	public static final WorldGenNArena N_ARENA = new WorldGenNArena();
+	public static final WorldGenFArena F_ARENA = new WorldGenFArena();
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) 
@@ -32,18 +34,18 @@ public class WorldGenCustomStructures implements IWorldGenerator
 			
 		case 0: // Over world
 			
-			generatorStructure(N_ARENA, world, random, chunkX, chunkZ, 200, Blocks.GRASS, 0, -4, 0, BiomeForest.class);
+			generatorStructureOverworld(N_ARENA, world, random, chunkX, chunkZ, 200, Blocks.GRASS, 0, -4, 0, BiomeForest.class);
 			
 			break;
 			
 		case -1: // Nether
-			
+			generatorStructureNether(F_ARENA, world, random, chunkX, chunkZ, 200, Blocks.LAVA, 0, 5, 0, BiomeHell.class); //  was 2
 			break;
 			
 		}
 	}
 	
-	private void generatorStructure(WorldGenerator generator, World world, Random random, int chunkX, int chunkZ, int chance, Block topBlock, int skewX, int skewY, int skewZ, Class<?>... classes)
+	private void generatorStructureOverworld(WorldGenerator generator, World world, Random random, int chunkX, int chunkZ, int chance, Block topBlock, int skewX, int skewY, int skewZ, Class<?>... classes)
 	{
 		ArrayList<Class<?>> classesList = new ArrayList<Class<?>>(Arrays.asList(classes));
 		
@@ -64,6 +66,31 @@ public class WorldGenCustomStructures implements IWorldGenerator
 					{
 						generator.generate(world, random, pos);
 					}
+				}
+			}
+		}
+	}
+	
+	private void generatorStructureNether(WorldGenerator generator, World world, Random random, int chunkX, int chunkZ, int chance, Block topBlock, int skewX, int skewY, int skewZ, Class<?>... classes)
+	{
+		ArrayList<Class<?>> classesList = new ArrayList<Class<?>>(Arrays.asList(classes));
+		
+		int x = (chunkX * 16) + random.nextInt(15);
+		int z = (chunkZ * 16) + random.nextInt(15);
+		int y = 30;
+		BlockPos pos = new BlockPos(x + skewX, y + skewY, z + skewZ);
+		
+		Class<?> biome = world.provider.getBiomeForCoords(pos).getClass();
+		
+		Block block = world.getBlockState(new BlockPos(x, y, z)).getBlock();
+		
+		if(block == topBlock) // Make the structure only generate on lava
+		{
+			if(classesList.contains(biome))
+			{
+				if(random.nextInt(chance) == 0)
+				{
+					generator.generate(world, random, pos);
 				}
 			}
 		}

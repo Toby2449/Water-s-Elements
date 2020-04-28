@@ -39,4 +39,6 @@ public class EMConfig {
 	public static final int ENTITY_NATURE_BOSS_MINION = 132;
 	public static final int ENTITY_NATURE_STALKER = 133;
 	
+	public static final int ENTITY_ALYX = 134;
+	
 }
