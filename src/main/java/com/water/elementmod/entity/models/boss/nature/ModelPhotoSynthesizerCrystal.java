@@ -1,4 +1,4 @@
-package com.water.elementmod.entity.models.boss;
+package com.water.elementmod.entity.models.boss.nature;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;

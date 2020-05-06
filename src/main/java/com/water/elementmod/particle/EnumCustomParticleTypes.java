@@ -13,7 +13,8 @@ public enum EnumCustomParticleTypes
 	DARKGREEN_POLLEN("darkgreen_pollen", 1, false),
 	SMALL_HEART("small_heart", 2, false),
 	LEAF("leaf", 3, false),
-	LEAF_AURA("leaf_aura", 4, false);
+	LEAF_AURA("leaf_aura", 4, false),
+	LAVA("lava_fall", 5, false);
 	
 	private final String particleName;
     private final int particleID;

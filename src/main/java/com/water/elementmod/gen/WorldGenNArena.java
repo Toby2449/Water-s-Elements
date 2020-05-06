@@ -4,8 +4,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import com.water.elementmod.entity.boss.EntityNatureBoss;
-import com.water.elementmod.entity.boss.EntityPhotoSynthesizerCrystal;
+import com.water.elementmod.entity.boss.nature.EntityNatureBoss;
+import com.water.elementmod.entity.boss.nature.EntityPhotoSynthesizerCrystal;
 import com.water.elementmod.entity.monster.EntityNatureStalker;
 import com.water.elementmod.util.EMConfig;
 import com.water.elementmod.util.handlers.EMLootTableHandler;

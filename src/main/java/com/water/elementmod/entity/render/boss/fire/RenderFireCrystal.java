@@ -1,27 +1,26 @@
-package com.water.elementmod.entity.render.boss;
+package com.water.elementmod.entity.render.boss.fire;
 
-import com.water.elementmod.entity.boss.EntityPhotoSynthesizerCrystal;
-import com.water.elementmod.entity.models.boss.ModelPhotoSynthesizerCrystal;
+import com.water.elementmod.entity.boss.fire.EntityFireCrystal;
+import com.water.elementmod.entity.boss.nature.EntityNatureBoss;
+import com.water.elementmod.entity.boss.nature.EntityPhotoSynthesizerCrystal;
+import com.water.elementmod.entity.models.boss.fire.ModelFireCrystal;
+import com.water.elementmod.entity.models.boss.nature.ModelPhotoSynthesizerCrystal;
 import com.water.elementmod.util.EMConfig;
 
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelEnderCrystal;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderDragon;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
-public class RenderPhotoSynthesizerCrystal extends Render<EntityPhotoSynthesizerCrystal>
+public class RenderFireCrystal extends Render<EntityFireCrystal>
 {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(EMConfig.MOD_ID + ":textures/entity/photo_syn_crystal.png");
-    private final ModelBase model = new ModelPhotoSynthesizerCrystal(0.0F);
-
-    public RenderPhotoSynthesizerCrystal(RenderManager renderManagerIn)
+    private static final ResourceLocation TEXTURE = new ResourceLocation(EMConfig.MOD_ID + ":textures/entity/fire_crystal.png");
+    private final ModelBase model = new ModelFireCrystal(0.0F);
+    
+    public RenderFireCrystal(RenderManager renderManagerIn)
     {
         super(renderManagerIn);
         this.shadowSize = 0.5F;
@@ -30,7 +29,7 @@ public class RenderPhotoSynthesizerCrystal extends Render<EntityPhotoSynthesizer
     /**
      * Renders the desired {@code T} type Entity.
      */
-    public void doRender(EntityPhotoSynthesizerCrystal entity, double x, double y, double z, float entityYaw, float partialTicks)
+    public void doRender(EntityFireCrystal entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
         float f = (float)entity.innerRotation + partialTicks;
         GlStateManager.pushMatrix();
@@ -54,7 +53,7 @@ public class RenderPhotoSynthesizerCrystal extends Render<EntityPhotoSynthesizer
         }
 
         GlStateManager.popMatrix();
-
+        
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
 
@@ -62,12 +61,12 @@ public class RenderPhotoSynthesizerCrystal extends Render<EntityPhotoSynthesizer
      * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
      */
     @Override
-    protected ResourceLocation getEntityTexture(EntityPhotoSynthesizerCrystal entity)
+    protected ResourceLocation getEntityTexture(EntityFireCrystal entity)
     {
         return TEXTURE;
     }
 
-    public boolean shouldRender(EntityPhotoSynthesizerCrystal livingEntity, ICamera camera, double camX, double camY, double camZ)
+    public boolean shouldRender(EntityFireCrystal livingEntity, ICamera camera, double camX, double camY, double camZ)
     {
         return super.shouldRender(livingEntity, camera, camX, camY, camZ);
     }

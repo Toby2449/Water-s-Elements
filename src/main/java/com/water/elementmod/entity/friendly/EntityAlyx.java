@@ -56,10 +56,8 @@ public class EntityAlyx extends EntityCreature
 	protected void initEntityAI()
     {
 		this.tasks.addTask(0, new EntityAISwimming(this));
-		this.tasks.addTask(1, new EntityAIMoveTo(this, 1.0D, 1000.0F, 0, 4, 0));
         this.tasks.addTask(2, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(3, new EntityAILookIdle(this));
-        this.targetTasks.addTask(1, new EntityAIMoveTo(this, 1.0D, 1000.0F, 0, 4, 0));
     }
 	
 	@Override

@@ -1,9 +1,13 @@
 package com.water.elementmod.util.handlers;
 
-import com.water.elementmod.entity.boss.EntityPhotoSynthesizerCrystal;
+import com.water.elementmod.entity.boss.fire.EntityFireBoss;
+import com.water.elementmod.entity.boss.fire.EntityFireBossMini;
+import com.water.elementmod.entity.boss.fire.EntityFireCrystal;
+import com.water.elementmod.entity.boss.fire.EntityFireGuardian;
+import com.water.elementmod.entity.boss.nature.EntityNatureBoss;
+import com.water.elementmod.entity.boss.nature.EntityNatureBossMinion;
+import com.water.elementmod.entity.boss.nature.EntityPhotoSynthesizerCrystal;
 import com.water.elementmod.entity.friendly.EntityAlyx;
-import com.water.elementmod.entity.boss.EntityNatureBoss;
-import com.water.elementmod.entity.boss.EntityNatureBossMinion;
 import com.water.elementmod.entity.monster.EntityFireSkeleton;
 import com.water.elementmod.entity.monster.EntityFireZombie;
 import com.water.elementmod.entity.monster.EntityNatureSkeleton;
@@ -15,10 +19,14 @@ import com.water.elementmod.entity.projectile.EntityFireArrow;
 import com.water.elementmod.entity.projectile.EntityNatureArrow;
 import com.water.elementmod.entity.projectile.EntityPoisonBall;
 import com.water.elementmod.entity.projectile.EntityWaterArrow;
-import com.water.elementmod.entity.render.boss.RenderPhotoSynthesizerCrystal;
+import com.water.elementmod.entity.render.boss.fire.RenderFireBoss;
+import com.water.elementmod.entity.render.boss.fire.RenderFireBossMini;
+import com.water.elementmod.entity.render.boss.fire.RenderFireCrystal;
+import com.water.elementmod.entity.render.boss.fire.RenderFireGuardian;
+import com.water.elementmod.entity.render.boss.nature.RenderNatureBoss;
+import com.water.elementmod.entity.render.boss.nature.RenderNatureBossMinion;
+import com.water.elementmod.entity.render.boss.nature.RenderPhotoSynthesizerCrystal;
 import com.water.elementmod.entity.render.friendly.RenderAlyx;
-import com.water.elementmod.entity.render.boss.RenderNatureBoss;
-import com.water.elementmod.entity.render.boss.RenderNatureBossMinion;
 import com.water.elementmod.entity.render.monster.RenderFireSkeleton;
 import com.water.elementmod.entity.render.monster.RenderFireZombie;
 import com.water.elementmod.entity.render.monster.RenderNatureSkeleton;
@@ -166,6 +174,41 @@ public class EMRenderHandler
 			public Render<? super EntityAlyx> createRenderFor(RenderManager manager)
 			{
 				return new RenderAlyx(manager);
+			}
+		});
+		
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireBoss.class, new IRenderFactory<EntityFireBoss>()
+		{
+			@Override
+			public Render<? super EntityFireBoss> createRenderFor(RenderManager manager)
+			{
+				return new RenderFireBoss(manager);
+			}
+		});
+		
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireCrystal.class, new IRenderFactory<EntityFireCrystal>()
+		{
+			@Override
+			public Render<? super EntityFireCrystal> createRenderFor(RenderManager manager)
+			{
+				return new RenderFireCrystal(manager);
+			}
+		});
+		
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireBossMini.class, new IRenderFactory<EntityFireBossMini>()
+		{
+			@Override
+			public Render<? super EntityFireBossMini> createRenderFor(RenderManager manager)
+			{
+				return new RenderFireBossMini(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireGuardian.class, new IRenderFactory<EntityFireGuardian>()
+		{
+			@Override
+			public Render<? super EntityFireGuardian> createRenderFor(RenderManager manager)
+			{
+				return new RenderFireGuardian(manager);
 			}
 		});
 	}

@@ -1,13 +1,15 @@
 package com.water.elementmod;
 
-import java.sql.Types;
 import java.util.Collection;
-import java.util.LinkedList;
 
-import com.water.elementmod.entity.boss.EntityPhotoSynthesizerCrystal;
+import com.water.elementmod.entity.boss.fire.EntityFireBoss;
+import com.water.elementmod.entity.boss.fire.EntityFireBossMini;
+import com.water.elementmod.entity.boss.fire.EntityFireCrystal;
+import com.water.elementmod.entity.boss.fire.EntityFireGuardian;
+import com.water.elementmod.entity.boss.nature.EntityNatureBoss;
+import com.water.elementmod.entity.boss.nature.EntityNatureBossMinion;
+import com.water.elementmod.entity.boss.nature.EntityPhotoSynthesizerCrystal;
 import com.water.elementmod.entity.friendly.EntityAlyx;
-import com.water.elementmod.entity.boss.EntityNatureBoss;
-import com.water.elementmod.entity.boss.EntityNatureBossMinion;
 import com.water.elementmod.entity.monster.EntityFireSkeleton;
 import com.water.elementmod.entity.monster.EntityFireZombie;
 import com.water.elementmod.entity.monster.EntityNatureSkeleton;
@@ -30,10 +32,6 @@ import net.minecraft.world.biome.BiomeEnd;
 import net.minecraft.world.biome.BiomeHell;
 import net.minecraft.world.biome.BiomeOcean;
 import net.minecraft.world.biome.BiomeVoid;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeDictionary.Type;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
@@ -52,6 +50,10 @@ public class EMCoreEntities
 		registerEntity(EMConfig.ENTITY_NATURE_BOSS_MINION, "nature_boss_minion", EntityNatureBossMinion.class, 100, 15263976, 2457391);
 		registerEntity(EMConfig.ENTITY_NATURE_STALKER, "nature_stalker", EntityNatureStalker.class, 100, 3877140, 880148);
 		registerEntity(EMConfig.ENTITY_ALYX, "em_alyx", EntityAlyx.class, 100, 3877140, 880148);
+		registerEntity(EMConfig.ENTITY_FIRE_BOSS, "fire_boss", EntityFireBoss.class, 100, 16738048, 16711680);
+		registerEntity(EMConfig.ENTITY_FIRE_CRYSTAL, "fire_crystal", EntityFireCrystal.class, 100, 16738048, 16711680);
+		registerEntity(EMConfig.ENTITY_FIRE_BOSS_MINI, "fire_boss_mini", EntityFireBossMini.class, 100, 16738048, 16711680);
+		registerEntity(EMConfig.ENTITY_FIRE_GUARDIAN, "fire_guardian", EntityFireGuardian.class, 100, 16738048, 16711680);
 		
 		registerArrow("nature_arrow", EntityNatureArrow.class, EMConfig.ENTITY_NATUREARROW);
 		registerArrow("water_arrow", EntityWaterArrow.class, EMConfig.ENTITY_WATERARROW);

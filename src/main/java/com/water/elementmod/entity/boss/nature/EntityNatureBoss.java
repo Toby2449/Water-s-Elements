@@ -1,4 +1,4 @@
-package com.water.elementmod.entity.boss;
+package com.water.elementmod.entity.boss.nature;
 
 import java.util.ArrayList;
 import java.util.List;

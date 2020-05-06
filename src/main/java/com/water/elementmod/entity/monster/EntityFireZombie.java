@@ -28,6 +28,7 @@ public class EntityFireZombie extends EntityZombie
 	{
 		super(worldIn);
 		this.setSize(0.6F, 1.95F);
+		this.isImmuneToFire = true;
 	}
 	
 	@Override

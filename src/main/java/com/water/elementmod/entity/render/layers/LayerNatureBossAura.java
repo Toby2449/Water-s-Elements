@@ -1,8 +1,8 @@
 package com.water.elementmod.entity.render.layers;
 
-import com.water.elementmod.entity.boss.EntityNatureBoss;
-import com.water.elementmod.entity.models.boss.ModelNatureBoss;
-import com.water.elementmod.entity.render.boss.RenderNatureBoss;
+import com.water.elementmod.entity.boss.nature.EntityNatureBoss;
+import com.water.elementmod.entity.models.boss.nature.ModelNatureBoss;
+import com.water.elementmod.entity.render.boss.nature.RenderNatureBoss;
 import com.water.elementmod.util.EMConfig;
 
 import net.minecraft.client.Minecraft;

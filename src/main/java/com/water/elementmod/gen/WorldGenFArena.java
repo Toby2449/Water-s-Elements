@@ -4,19 +4,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import com.water.elementmod.entity.boss.EntityNatureBoss;
-import com.water.elementmod.entity.boss.EntityPhotoSynthesizerCrystal;
-import com.water.elementmod.entity.monster.EntityNatureStalker;
+import com.water.elementmod.entity.boss.fire.EntityFireBoss;
+import com.water.elementmod.entity.boss.fire.EntityFireCrystal;
 import com.water.elementmod.util.EMConfig;
-import com.water.elementmod.util.handlers.EMLootTableHandler;
 import com.water.elementmod.util.interfaces.IStructure;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -72,8 +67,8 @@ public class WorldGenFArena extends WorldGenerator implements IStructure
 			}
 			
 			Map<BlockPos, String> map = template.getDataBlocks(pos, settings);
-//			for (Entry<BlockPos, String> entry : map.entrySet())
-//			{
+			for (Entry<BlockPos, String> entry : map.entrySet())
+			{
 //				if("chest1".equals(entry.getValue()))
 //				{
 //					BlockPos blockpos = entry.getKey();
@@ -139,27 +134,27 @@ public class WorldGenFArena extends WorldGenerator implements IStructure
 //						world.spawnEntity(stalker);
 //					}
 //				}
-//				
-//				if("crystal_location".equals(entry.getValue()))
-//				{
-//					BlockPos blockpos = entry.getKey();
-//					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
-//					EntityPhotoSynthesizerCrystal crystal = new EntityPhotoSynthesizerCrystal(world);
-//					crystal.enablePersistence();
-//					crystal.setPosition(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
-//					world.spawnEntity(crystal);
-//				}
-//				
-//				if("boss_spawn".equals(entry.getValue()))
-//				{
-//					BlockPos blockpos = entry.getKey();
-//					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
-//					EntityNatureBoss boss = new EntityNatureBoss(world, blockpos);
-//					boss.enablePersistence();
-//					boss.setPosition(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
-//		            world.spawnEntity(boss);
-//				}
-//			}
+				
+				if("crystal_location".equals(entry.getValue()))
+				{
+					BlockPos blockpos = entry.getKey();
+					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
+					EntityFireCrystal crystal = new EntityFireCrystal(world);
+					crystal.enablePersistence();
+					crystal.setPosition(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
+					world.spawnEntity(crystal);
+				}
+				
+				if("boss_spawn".equals(entry.getValue()))
+				{
+					BlockPos blockpos = entry.getKey();
+					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
+					EntityFireBoss boss = new EntityFireBoss(world, blockpos);
+					boss.enablePersistence();
+					boss.setPosition(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
+		            world.spawnEntity(boss);
+				}
+			}
 		}
 	}
 	

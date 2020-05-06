@@ -17,7 +17,10 @@ public class EMEventHandler {
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public static void registerParticleMap(TextureStitchEvent.Pre event) {
-        	ResourceLocation flameRL = new ResourceLocation(EMConfig.MOD_ID, "particle/particles");
-            event.getMap().registerSprite(flameRL);
+        	ResourceLocation lava = new ResourceLocation(EMConfig.MOD_ID, "particle/lava");
+            event.getMap().registerSprite(lava);
+            
+            ResourceLocation leaf = new ResourceLocation(EMConfig.MOD_ID, "particle/leaf");
+            event.getMap().registerSprite(leaf);
 	}
 }

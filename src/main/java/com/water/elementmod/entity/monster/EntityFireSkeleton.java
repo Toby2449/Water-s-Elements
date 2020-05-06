@@ -55,6 +55,7 @@ public class EntityFireSkeleton extends AbstractElementalSkeleton
 	public EntityFireSkeleton(World worldIn)
     {
         super(worldIn);
+        this.isImmuneToFire = true;
     }
 	
 	public static void registerFixesSkeleton(DataFixer fixer)

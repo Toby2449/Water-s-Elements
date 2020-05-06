@@ -18,7 +18,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ParticleLeaf extends Particle
 {
-	public static final ResourceLocation TEXTURE = new ResourceLocation(EMConfig.MOD_ID + ":textures/particle/particles.png"); 
 	float particleScaleOverTime;
 	private int i;
 	private int i2;
@@ -40,7 +39,7 @@ public class ParticleLeaf extends Particle
         this.particleScaleOverTime = this.particleScale;
         particleAngle = rand.nextInt(360);
         particleMaxAge = 65 + rand.nextInt(15);
-        TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(EMConfig.MOD_ID, "particle/particles").toString());
+        TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(EMConfig.MOD_ID, "particle/leaf").toString());
         this.setParticleTexture(sprite);
     }
     

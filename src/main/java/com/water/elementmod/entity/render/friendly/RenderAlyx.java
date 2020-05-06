@@ -1,7 +1,7 @@
 package com.water.elementmod.entity.render.friendly;
 
 import com.water.elementmod.entity.friendly.EntityAlyx;
-import com.water.elementmod.entity.models.boss.ModelNatureBoss;
+import com.water.elementmod.entity.models.boss.nature.ModelNatureBoss;
 import com.water.elementmod.entity.models.friendly.ModelAlyx;
 import com.water.elementmod.entity.models.monster.ModelNatureStalker;
 import com.water.elementmod.entity.monster.EntityNatureStalker;

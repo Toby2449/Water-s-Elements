@@ -1,8 +1,8 @@
-package com.water.elementmod.entity.render.boss;
+package com.water.elementmod.entity.render.boss.nature;
 
-import com.water.elementmod.entity.boss.EntityNatureBoss;
-import com.water.elementmod.entity.boss.EntityNatureBossMinion;
-import com.water.elementmod.entity.models.boss.ModelNatureBoss;
+import com.water.elementmod.entity.boss.nature.EntityNatureBoss;
+import com.water.elementmod.entity.boss.nature.EntityNatureBossMinion;
+import com.water.elementmod.entity.models.boss.nature.ModelNatureBoss;
 import com.water.elementmod.entity.models.monster.ModelFireSkeleton;
 import com.water.elementmod.entity.models.monster.ModelFireZombie;
 import com.water.elementmod.entity.monster.EntityFireSkeleton;

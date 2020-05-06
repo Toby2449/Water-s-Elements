@@ -2,7 +2,7 @@ package com.water.elementmod.entity.models.monster;
 
 import org.lwjgl.opengl.GL11;
 
-import com.water.elementmod.entity.boss.EntityNatureBoss;
+import com.water.elementmod.entity.boss.nature.EntityNatureBoss;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
