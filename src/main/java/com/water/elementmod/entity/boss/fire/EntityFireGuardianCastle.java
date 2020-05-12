@@ -45,40 +45,29 @@ import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
 
-public class EntityFireGuardian extends EntityMob
+public class EntityFireGuardianCastle extends EntityMob
 {
-	private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
-	private BlockPos destination = null;
-	private final double ARENA_SIZE_X = 50.0D;
-	private final double ARENA_SIZE_Y = 11.0D;
-	private final double ARENA_SIZE_Z = 40.0D;
-	private int explodeTime = 1350; // 32 seconds
-	
-	public EntityFireGuardian(World worldIn) 
+	public EntityFireGuardianCastle(World worldIn) 
 	{
 		super(worldIn);
 		this.isImmuneToFire = true;
 		this.setSize(0.7F, 2.25F);
-	}
-	
-	public EntityFireGuardian(World worldIn, double gotoX, double gotoY, double gotoZ) 
-	{
-		super(worldIn);
-		this.isImmuneToFire = true;
-		this.setSize(0.7F, 2.25F);
-		this.destination = new BlockPos(gotoX, gotoY, gotoZ);
 	}
 	
 	public static void registerFixesBoss(DataFixer fixer)
     {
-        EntityLiving.registerFixesMob(fixer, EntityFireGuardian.class);
+        EntityLiving.registerFixesMob(fixer, EntityFireGuardianCastle.class);
     }
 	
 	@Override
 	protected void initEntityAI()
     {
-        this.tasks.addTask(2, new EntityAIWatchClosest(this, EntityFireBoss.class, 20.0F));
+		this.tasks.addTask(0, new EntityAIAttackMelee(this, 0.55D, false));
+		this.tasks.addTask(1, new EntityAIWander(this, 0.45D));
+        this.tasks.addTask(2, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(3, new EntityAILookIdle(this));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
+        this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false, new Class[0]));
     }
 	
 	@Override
@@ -86,10 +75,9 @@ public class EntityFireGuardian extends EntityMob
 	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(40.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(115.0F);
-		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.325D);
-		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(99999999999F);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(25.0F);
+		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.55D);
 	}
 	
 	@Override
@@ -102,30 +90,12 @@ public class EntityFireGuardian extends EntityMob
 	public void writeEntityToNBT(NBTTagCompound compound)
     {
         super.writeEntityToNBT(compound);
-        compound.setIntArray("Destination", new int[] {this.destination.getX(), this.destination.getY(), this.destination.getZ()});
     }
 	
 	@Override
 	public void readEntityFromNBT(NBTTagCompound compound)
     {
         super.readEntityFromNBT(compound);
-        int[] pos = compound.getIntArray("Destination");
-        BlockPos blockpos = new BlockPos(pos[0], pos[1], pos[2]);
-        this.destination = blockpos;
-        if (this.hasCustomName())
-        {
-            this.bossInfo.setName(this.getDisplayName());
-        }
-    }
-	
-	/**
-     * Sets the custom name tag for this entity
-     */
-	@Override
-    public void setCustomNameTag(String name)
-    {
-        super.setCustomNameTag(name);
-        this.bossInfo.setName(this.getDisplayName());
     }
 	
     @Override
@@ -143,41 +113,14 @@ public class EntityFireGuardian extends EntityMob
             	ParticleSpawner.spawnParticle(EnumCustomParticleTypes.LAVA, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + 1.25D, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 0.0D);
             }
         }
-    	
-    	if(!this.world.isRemote)
-    	{
-    		boolean bossInRadius = false;
-        	List<EntityFireBoss> list = this.world.<EntityFireBoss>getEntitiesWithinAABB(EntityFireBoss.class, this.getEntityBoundingBox().grow(1.5D, 11, 1.5D));
-	        
-        	for (EntityFireBoss guardians : list)
-	        {
-        		bossInRadius = true;
-	        }
-        	
-	    	if(this.ticksExisted >= this.explodeTime || bossInRadius)
-	    	{
-	    		List<EntityPlayer> list1 = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
-		        
-	    		for (EntityPlayer player : list1)
-		        {
-	    			player.attackEntityFrom(DamageSource.causeMobDamage(this), 999999999999999F); // KILL EVERYONE >:D
-		        }
-	    	}
-    	}
 		
 		this.ticksExisted++;
-		this.bossInfo.setPercent(this.getHealth() / this.getMaxHealth());
     }
 	
 	@Override
 	protected void updateAITasks()
     {
 		super.updateAITasks();
-		
-		if(this.destination != null)
-		{
-			this.tasks.addTask(0, new EntityAIMoveTo(this, 0.325D, 50, destination.getX(), destination.getY(), destination.getZ()));
-    	}
     }
 	
 	@Override
@@ -185,28 +128,6 @@ public class EntityFireGuardian extends EntityMob
 	{
 		return 1.975F;
 	}
-	
-	/**
-     * Add the given player to the list of players tracking this entity. For instance, a player may track a boss in
-     * order to view its associated boss bar.
-     */
-	@Override
-    public void addTrackingPlayer(EntityPlayerMP player)
-    {
-        super.addTrackingPlayer(player);
-        this.bossInfo.addPlayer(player);
-    }
-
-    /**
-     * Removes the given player from the list of players tracking this entity. See {@link Entity#addTrackingPlayer} for
-     * more information on tracking.
-     */
-	@Override
-    public void removeTrackingPlayer(EntityPlayerMP player)
-    {
-        super.removeTrackingPlayer(player);
-        this.bossInfo.removePlayer(player);
-    }
 	
 	@Override
 	protected SoundEvent getAmbientSound()
@@ -245,12 +166,6 @@ public class EntityFireGuardian extends EntityMob
     public void onDeath(DamageSource cause)
     {
         super.onDeath(cause);
-    }
-    
-    @Override
-    protected int getExperiencePoints(EntityPlayer player)
-    {
-    	return 0;
     }
     
     /**

@@ -1,6 +1,9 @@
 package com.water.elementmod.entity.friendly;
 
+import java.util.List;
+
 import com.water.elementmod.entity.ai.EntityAIMoveTo;
+import com.water.elementmod.entity.boss.fire.EntityFireBossMinion;
 import com.water.elementmod.entity.projectile.EntityFireArrow;
 import com.water.elementmod.particle.EnumCustomParticleTypes;
 import com.water.elementmod.particle.ParticleSpawner;
@@ -23,12 +26,18 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.datafix.DataFixer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 public class EntityAlyx extends EntityCreature
 {
+	private BlockPos destination = null;
+	private boolean spoken = false;
+	
 	public EntityAlyx(World worldIn) 
 	{
 		super(worldIn);
@@ -36,15 +45,12 @@ public class EntityAlyx extends EntityCreature
 		this.setCustomNameTag("Aylx");
 	}
 	
-	public EntityAlyx(World worldIn, double x, double y, double z, double goToX, double goToY, double goToZ) 
+	public EntityAlyx(World worldIn, double gotoX, double gotoY, double gotoZ) 
 	{
 		super(worldIn);
 		this.setSize(0.7F, 1.875F);
 		this.setCustomNameTag("Aylx");
-		System.out.println(x + " " +y + " " +z);
-		System.out.println(goToX + " " +goToY + " " +goToZ);
-		this.setPosition(x, y, z);
-		this.move(MoverType.PLAYER, goToX, goToY, goToZ);
+		this.destination = new BlockPos(gotoX, gotoY, gotoZ);
 	}
 	
 	public static void registerFixesAlyx(DataFixer fixer)
@@ -66,18 +72,13 @@ public class EntityAlyx extends EntityCreature
         super.entityInit();
     }
 	
-	public void moveEntityTo(double x, double y, double z) {
-
-	this.getNavigator().tryMoveToXYZ(x, y, z, 0.2D);
-
-    }
-	
 	@Override
 	protected void applyEntityAttributes()
 	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0F);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.2000000417232513D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);
+		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(999999999999999D);
 	}
 	
 	@Override
@@ -90,30 +91,63 @@ public class EntityAlyx extends EntityCreature
 	public void writeEntityToNBT(NBTTagCompound compound)
     {
         super.writeEntityToNBT(compound);
+        compound.setBoolean("Spoken", this.hasSpoken());
     }
 	
 	@Override
 	public void readEntityFromNBT(NBTTagCompound compound)
     {
         super.readEntityFromNBT(compound);
+        this.setSpoken(compound.getBoolean("Spoken"));
     }
 	
     @Override
 	public void onLivingUpdate()
     {   
         super.onLivingUpdate();
+        
+        if(this.world.isRemote)
+        {
+	        if(this.getNavigator().getPath() == null)
+	        {
+	        	if(!this.hasSpoken())
+	        	{
+	        		this.setSpoken(true);
+	        		List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(100, 70, 100));
+			        
+			        for (EntityPlayer player : list)
+			        {
+			        	player.sendMessage(new TextComponentTranslation("message.em.alyx.firebossdeath"));
+			        }
+	        	}
+	        }
+        }
     }
 	
 	@Override
 	protected void updateAITasks()
     {
 		super.updateAITasks();
+		if(this.destination != null)
+		{
+			this.tasks.addTask(1, new EntityAIMoveTo(this, 0.5D, 30, destination.getX(), destination.getY(), destination.getZ()));
+		}
     }
 	
 	@Override
 	public float getEyeHeight()
 	{
 		return 1.625F;
+	}
+	
+	public void setSpoken(boolean spoken)
+	{
+		this.spoken = spoken;
+	}
+	
+	public boolean hasSpoken()
+	{
+		return this.spoken;
 	}
 	
 	@Override

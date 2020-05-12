@@ -44,9 +44,9 @@ import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
 
-public class EntityFireBossMini extends EntityMob
+public class EntityFireBossMinion extends EntityMob
 {
-	public EntityFireBossMini(World worldIn) 
+	public EntityFireBossMinion(World worldIn) 
 	{
 		super(worldIn);
 		this.isImmuneToFire = true;
@@ -55,7 +55,7 @@ public class EntityFireBossMini extends EntityMob
 	
 	public static void registerFixesBoss(DataFixer fixer)
     {
-        EntityLiving.registerFixesMob(fixer, EntityFireBossMini.class);
+        EntityLiving.registerFixesMob(fixer, EntityFireBossMinion.class);
     }
 	
 	@Override
@@ -74,7 +74,7 @@ public class EntityFireBossMini extends EntityMob
 	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(40.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(25.0F);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(17.0F);
 		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.55D);
 	}
@@ -190,5 +190,10 @@ public class EntityFireBossMini extends EntityMob
     {
         return EnumCreatureAttribute.UNDEAD;
     }
-
+    
+    @Override
+    protected int getExperiencePoints(EntityPlayer player)
+    {
+    	return 0;
+    }
 }

@@ -10,13 +10,14 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class EMSoundHandler {
 	
-	public static SoundEvent FIRE_BURN, WATER_FLOW, NATURE_LEAVES;
+	public static SoundEvent FIRE_BURN, WATER_FLOW, NATURE_LEAVES, FIRE_DOOR_CLOSE;
 	
 	public static void init()
 	{
 		FIRE_BURN = registerSound("block.infuser.fire");
 		WATER_FLOW = registerSound("block.infuser.water");
 		NATURE_LEAVES = registerSound("block.infuser.nature");
+		FIRE_DOOR_CLOSE = registerSound("ambient.fire_door_close");
 	}
 	
 	public static SoundEvent registerSound(String name)

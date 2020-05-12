@@ -45,5 +45,6 @@ public class EMConfig {
 	public static final int ENTITY_FIRE_CRYSTAL = 136;
 	public static final int ENTITY_FIRE_BOSS_MINI = 137;
 	public static final int ENTITY_FIRE_GUARDIAN = 138;
+	public static final int ENTITY_FIRE_GUARDIAN_CASTLE = 139;
 	
 }

@@ -3,9 +3,10 @@ package com.water.elementmod;
 import java.util.Collection;
 
 import com.water.elementmod.entity.boss.fire.EntityFireBoss;
-import com.water.elementmod.entity.boss.fire.EntityFireBossMini;
+import com.water.elementmod.entity.boss.fire.EntityFireBossMinion;
 import com.water.elementmod.entity.boss.fire.EntityFireCrystal;
 import com.water.elementmod.entity.boss.fire.EntityFireGuardian;
+import com.water.elementmod.entity.boss.fire.EntityFireGuardianCastle;
 import com.water.elementmod.entity.boss.nature.EntityNatureBoss;
 import com.water.elementmod.entity.boss.nature.EntityNatureBossMinion;
 import com.water.elementmod.entity.boss.nature.EntityPhotoSynthesizerCrystal;
@@ -52,8 +53,9 @@ public class EMCoreEntities
 		registerEntity(EMConfig.ENTITY_ALYX, "em_alyx", EntityAlyx.class, 100, 3877140, 880148);
 		registerEntity(EMConfig.ENTITY_FIRE_BOSS, "fire_boss", EntityFireBoss.class, 100, 16738048, 16711680);
 		registerEntity(EMConfig.ENTITY_FIRE_CRYSTAL, "fire_crystal", EntityFireCrystal.class, 100, 16738048, 16711680);
-		registerEntity(EMConfig.ENTITY_FIRE_BOSS_MINI, "fire_boss_mini", EntityFireBossMini.class, 100, 16738048, 16711680);
+		registerEntity(EMConfig.ENTITY_FIRE_BOSS_MINI, "fire_boss_mini", EntityFireBossMinion.class, 100, 16738048, 16711680);
 		registerEntity(EMConfig.ENTITY_FIRE_GUARDIAN, "fire_guardian", EntityFireGuardian.class, 100, 16738048, 16711680);
+		registerEntity(EMConfig.ENTITY_FIRE_GUARDIAN_CASTLE, "fire_guardian_castle", EntityFireGuardianCastle.class, 100, 16738048, 16711680);
 		
 		registerArrow("nature_arrow", EntityNatureArrow.class, EMConfig.ENTITY_NATUREARROW);
 		registerArrow("water_arrow", EntityWaterArrow.class, EMConfig.ENTITY_WATERARROW);

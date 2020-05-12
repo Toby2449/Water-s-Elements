@@ -12,6 +12,7 @@ import com.water.elementmod.items.armor.WaterArmor;
 import com.water.elementmod.items.arrow.ItemFireArrow;
 import com.water.elementmod.items.arrow.ItemNatureArrow;
 import com.water.elementmod.items.arrow.ItemWaterArrow;
+import com.water.elementmod.items.special.ItemEternalFire;
 import com.water.elementmod.items.special.ItemHeartOfTheWild;
 import com.water.elementmod.items.weapons.FireSword;
 import com.water.elementmod.items.weapons.NatureSword;
@@ -22,9 +23,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
-import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemSword;
 import net.minecraftforge.common.util.EnumHelper;
 
@@ -138,7 +137,8 @@ public class EMCoreItems
 	public static final Item ASHES = new EMItemBase("item_ashes", 64);
 	public static final Item BURNING_ASHES = new EMItemBase("item_burning_ashes", 64);
 	public static final Item EMBERS = new EMItemBase("item_scolding_embers", 64);
-	public static final Item ETERNAL_FIRE = new EMShinyItemBase("item_eternal_fire", 1);
+	public static final Item FLAMING_EMBERS = new EMShinyItemBase("item_flaming_embers", 16);
+	public static final Item ETERNAL_FIRE = new ItemEternalFire("item_eternal_fire");
 	
 	public static final Item MICRO_DRPS = new EMItemBase("item_micro_droplets", 64);
 	public static final Item SMALL_DRPS = new EMItemBase("item_small_droplets", 64);

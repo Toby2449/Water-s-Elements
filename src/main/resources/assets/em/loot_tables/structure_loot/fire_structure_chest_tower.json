@@ -1,0 +1,204 @@
+{
+    "pools": [
+        {
+			"name": "1",
+            "rolls": {
+                "min": 1,
+                "max": 3
+            },
+            "entries": [
+                {
+                    "type": "item",
+                    "weight": 10,
+                    "name": "minecraft:golden_apple",
+                    "conditions": [
+                        {
+                            "condition": "random_chance",
+                            "chance": 0.25
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "function": "set_data",
+                            "data": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "weight": 10,
+                    "name": "minecraft:name_tag"
+                },
+                {
+                    "type": "item",
+                    "weight": 20,
+                    "name": "minecraft:bow"
+                },
+				{
+                    "type": "item",
+                    "weight": 5,
+                    "name": "minecraft:chainmail_helmet",
+					"conditions": [
+                        {
+                            "condition": "random_chance",
+                            "chance": 0.25
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "function": "enchant_randomly"
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "weight": 5,
+                    "name": "minecraft:chainmail_chestplate",
+					"conditions": [
+                        {
+                            "condition": "random_chance",
+                            "chance": 0.25
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "function": "enchant_randomly"
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "weight": 5,
+                    "name": "minecraft:chainmail_leggings",
+					"conditions": [
+                        {
+                            "condition": "random_chance",
+                            "chance": 0.25
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "function": "enchant_randomly"
+                        }
+                    ]
+                },
+				{
+                    "type": "item",
+                    "weight": 5,
+                    "name": "minecraft:chainmail_boots",
+					"conditions": [
+                        {
+                            "condition": "random_chance",
+                            "chance": 0.25
+                        }
+                    ],
+                    "functions": [
+                        {
+                            "function": "enchant_randomly"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+			"name": "2",
+            "rolls": {
+                "min": 1,
+                "max": 4
+            },
+            "entries": [
+                {
+                    "type": "item",
+                    "weight": 15,
+                    "name": "minecraft:gold_ingot",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 4
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "weight": 15,
+                    "name": "minecraft:coal",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 4
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+			"name": "1",
+            "rolls": 3,
+            "entries": [
+                {
+                    "type": "item",
+                    "weight": 10,
+                    "name": "minecraft:bone",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 8
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "weight": 10,
+                    "name": "minecraft:rotten_flesh",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 8
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "weight": 10,
+                    "name": "minecraft:string",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 8
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "weight": 5,
+                    "name": "em:item_skeletonfemur_fire"
+                },
+                {
+                    "type": "item",
+                    "weight": 3,
+                    "name": "em:item_ashes"
+                },
+				                {
+                    "type": "item",
+                    "weight": 2,
+                    "name": "em:item_burning_ashes"
+                }
+            ]
+        }
+    ]
+}

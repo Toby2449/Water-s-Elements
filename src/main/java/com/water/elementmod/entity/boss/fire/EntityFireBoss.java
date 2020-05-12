@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.water.elementmod.EMCoreItems;
 import com.water.elementmod.entity.boss.nature.EntityNatureBossMinion;
 import com.water.elementmod.entity.boss.nature.EntityPhotoSynthesizerCrystal;
+import com.water.elementmod.entity.friendly.EntityAlyx;
+import com.water.elementmod.entity.projectile.EntityPoisonBall;
 import com.water.elementmod.network.PacketCustomParticleData;
 import com.water.elementmod.network.PacketHandler;
 import com.water.elementmod.particle.EnumCustomParticleTypes;
 import com.water.elementmod.particle.ParticleSpawner;
+import com.water.elementmod.util.handlers.EMSoundHandler;
 
 import net.minecraft.block.BlockSlab.EnumBlockHalf;
 import net.minecraft.block.BlockStairs;
@@ -18,7 +22,9 @@ import net.minecraft.block.BlockStoneSlab;
 import net.minecraft.block.BlockStoneSlab.EnumType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
@@ -26,10 +32,12 @@ import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.projectile.EntityLargeFireball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
@@ -42,10 +50,12 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
@@ -67,6 +77,9 @@ public class EntityFireBoss extends EntityMob
 	private final double ARENA_SIZE_X = 50.0D;
 	private final double ARENA_SIZE_Y = 11.0D;
 	private final double ARENA_SIZE_Z = 40.0D;
+	private final double MF_SIZE_X = 95.0D;
+	private final double MF_SIZE_Y = 65.0D;
+	private final double MF_SIZE_Z = 105.0D;
 	private boolean arenaInitalized = false;
 	
 	private final int MINION_SPAWN_COOLDOWN = 400;
@@ -74,16 +87,30 @@ public class EntityFireBoss extends EntityMob
 	private int spawnMinionCooldownP1 = 0;
 	private static List trailPoints = new ArrayList();
 	private static List trailPointTimers = new ArrayList();
-	
 	private int spawnMinionCooldownP2 = 0;
 	private int minionWaves;
-	
+	private int spawnMinionCooldownP3 = 0;
 	private final int GUARDIAN_RESET_TIMER = 1350;
 	private int guardianTimer = GUARDIAN_RESET_TIMER;
 	private boolean spawnGurdianP4 = false;
-	private boolean spawnGurdianP5 = false;
+	private int spawnMinionCooldownP5 = 0;
 	private boolean spawnGurdianP6 = false;
-	private boolean spawnGurdianP7 = false;
+	private int spawnMinionCooldownP7 = 0;
+	private boolean spawnGurdianP8 = false;
+	private int spawnMinionCooldownP9 = 0;
+	private boolean spawnGurdianP10 = false;
+	private int spawnMinionCooldownRage = 0;
+	
+	private boolean chatted1 = false;
+	private boolean chatted2 = false;
+	private boolean chatted3 = false;
+	private boolean chatted4 = false;
+	private boolean chatted5 = false;
+	private boolean chatted6 = false;
+	private boolean chatted7 = false;
+	private boolean chatted8 = false;
+	private boolean chatted9 = false;
+	private boolean chatted10 = false;
 	
 	public EntityFireBoss(World worldIn) 
 	{
@@ -120,7 +147,7 @@ public class EntityFireBoss extends EntityMob
 	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(300.0F);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(400.0F);
 		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(7.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.75D);
 	}
@@ -229,10 +256,7 @@ public class EntityFireBoss extends EntityMob
     {
     	if(!this.isFightActivated()) 
     	{
-	    	if (world.isRemote)
-	    	{
-	    		player.sendMessage(new TextComponentTranslation("message.em.fireboss.fight_initiate"));
-	    	}
+    		this.sayChatLine(0);
 	    	this.arenaInit();
 	    	this.activateFight();
 	    	this.world.playBroadcastSound(1023, new BlockPos(this), 0);
@@ -284,7 +308,7 @@ public class EntityFireBoss extends EntityMob
 			        {
 			            
 			            ent.setFire(8);
-			            if(!ent.isPotionActive(MobEffects.SLOWNESS)) 
+			            if(!ent.isPotionActive(MobEffects.SLOWNESS) && !(ent instanceof EntityFireGuardian)) 
 			            {
 			            	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 250, 1));
 			            }
@@ -329,7 +353,10 @@ public class EntityFireBoss extends EntityMob
 						FireSpitAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), this.world);
 					}
 				}
-				this.trailPointTimers.set(i, CircleTimer - 1);
+				else
+				{
+					this.trailPointTimers.set(i, CircleTimer - 1);
+				}
 			}
 			else
 			{
@@ -340,6 +367,19 @@ public class EntityFireBoss extends EntityMob
 				}
 			}
 		}
+        
+        if(!this.world.isRemote)
+        {
+        	if(this.ticksExisted % 20 == 1)
+        	{
+	        	List<EntityPlayer> playerlist = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(MF_SIZE_X, MF_SIZE_Y, MF_SIZE_Z).offset(0, -20, 0));
+		        
+		        for (EntityPlayer player : playerlist)
+		        {
+		        	player.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 100, 2));
+		        }
+        	}
+        }
         
         
         // Phases and fight mechanics
@@ -355,9 +395,9 @@ public class EntityFireBoss extends EntityMob
 		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
 		        	
 		        	this.minionsAlive = 0;
-		        	List<EntityFireBossMini> list = this.world.<EntityFireBossMini>getEntitiesWithinAABB(EntityFireBossMini.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
 			        
-			        for (EntityFireBossMini entity : list)
+			        for (EntityFireBossMinion entity : list)
 			        {
 			        	this.minionsAlive++;
 			        }
@@ -373,7 +413,7 @@ public class EntityFireBoss extends EntityMob
 			        		if(this.world.getDifficulty() == EnumDifficulty.HARD) i = 2;
 			        		for(int j = 0; j <= i; j++)
 			        		{
-				        		EntityFireBossMini entity = new EntityFireBossMini(this.world);
+				        		EntityFireBossMinion entity = new EntityFireBossMinion(this.world);
 						       	entity.setPosition(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
 						   		this.world.spawnEntity(entity);
 			        		}
@@ -398,9 +438,9 @@ public class EntityFireBoss extends EntityMob
 		        	this.setInvulState(true);
 		        	
 		        	this.minionsAlive = 0;
-		        	List<EntityFireBossMini> list = this.world.<EntityFireBossMini>getEntitiesWithinAABB(EntityFireBossMini.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
 			        
-			        for (EntityFireBossMini entity : list)
+			        for (EntityFireBossMinion entity : list)
 			        {
 			        	this.minionsAlive++;
 			        }
@@ -418,9 +458,9 @@ public class EntityFireBoss extends EntityMob
 						        {
 						        	BlockPos position = crystal.getPosition();
 			    				    
-			    			      	EntityFireBossMini entity = new EntityFireBossMini(this.world);
+			    			      	EntityFireBossMinion entity = new EntityFireBossMinion(this.world);
 			    				    entity.enablePersistence();
-			    				    entity.setPosition(position.getX(), position.getY(), position.getZ());
+			    				    entity.setPosition(position.getX() + 0.5D, position.getY(), position.getZ() + 0.5D);
 			    				   	this.world.spawnEntity(entity);
 						        }
 						        this.minionWaves++;
@@ -429,11 +469,19 @@ public class EntityFireBoss extends EntityMob
 				        }
 			        }
 			        
-			        if(this.minionWaves == 2 && this.minionsAlive == 0)
+			        if(this.minionWaves == 2)
 			        {
 			        	this.minionWaves = 0;
 			        	this.setPhase(3);
 			        }
+	        	}
+	        	else
+	        	{
+	        		if(!this.chatted1)
+	        		{
+	        			this.chatted1 = true;
+	        			this.sayChatLine(1);
+	        		}
 	        	}
 	        	break;
 	        		
@@ -447,30 +495,30 @@ public class EntityFireBoss extends EntityMob
 		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
 		        	
 		        	this.minionsAlive = 0;
-		        	List<EntityFireBossMini> list = this.world.<EntityFireBossMini>getEntitiesWithinAABB(EntityFireBossMini.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z).offset(0, -1, 0));
+		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z).offset(0, -1, 0));
 			        
-			        for (EntityFireBossMini entity : list)
+			        for (EntityFireBossMinion entity : list)
 			        {
 			        	this.minionsAlive++;
 			        }
 			        
 			        if(this.minionsAlive == 0)
 			        {
-			        	if(this.spawnMinionCooldownP1 == 0)
+			        	if(this.spawnMinionCooldownP3 == 0)
 			        	{
-			        		this.spawnMinionCooldownP1 = 400;
+			        		this.spawnMinionCooldownP3 = 400;
 			        		int i = 0;
 			        		if(this.world.getDifficulty() == EnumDifficulty.EASY) i = 1;
 			        		if(this.world.getDifficulty() == EnumDifficulty.NORMAL) i = 1;
 			        		if(this.world.getDifficulty() == EnumDifficulty.HARD) i = 2;
 			        		for(int j = 0; j <= i; j++)
 			        		{
-				        		EntityFireBossMini entity = new EntityFireBossMini(this.world);
+				        		EntityFireBossMinion entity = new EntityFireBossMinion(this.world);
 						       	entity.setPosition(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
 						   		this.world.spawnEntity(entity);
 			        		}
 			        	}
-			        	this.spawnMinionCooldownP1--;
+			        	this.spawnMinionCooldownP3--;
 	        		}
 		        	
 		        	// Goto next phase
@@ -478,6 +526,14 @@ public class EntityFireBoss extends EntityMob
 		        	{
 		        		this.setPhase(4);
 		        	}
+	        	}
+	        	else
+	        	{
+	        		if(!this.chatted2)
+	        		{
+	        			this.chatted2 = true;
+	        			this.sayChatLine(2);
+	        		}
 	        	}
 	        	break;
 	        
@@ -540,76 +596,69 @@ public class EntityFireBoss extends EntityMob
 	        	}
 	        	else // Client
 	        	{
+	        		if(!this.chatted3)
+	        		{
+	        			this.chatted3 = true;
+	        			this.sayChatLine(3);
+	        		}
+	        		
 	        		if(this.ticksExisted % 32 == 1)
 	        		{
 	        			this.FireRingAnimation(this.getPosition().getX() + 0.5D, this.getPosition().getY(), this.getPosition().getZ() + 0.5D, 3, this.world);
 	        		}
 	        	}
 	        	break;
-	        	
+	        
 	        case 5: // Phase 5
 	        	if(!this.world.isRemote) // Server
 	        	{
-		        	this.setInvulState(true);
+		        	this.setInvulState(false);
 		        	
-		        	if(!this.spawnGurdianP5)
-		        	{
-		        		this.spawnGurdianP5 = true;
-		        		int crystalsInArena = 0;
-		        		int randomnumber = this.rand.nextInt(2);
-		        		List<EntityFireCrystal> list = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
-				        
-				        for (EntityFireCrystal crystalFound : list)
-				        {
-				        	crystalsInArena++;
-				        	if(crystalsInArena - 1 == randomnumber)
-				        	{
-				        		crystalFound.Explode();
-				        		
-				        		EntityFireGuardian entity = new EntityFireGuardian(this.world, this.posX, this.posY, this.posZ);
-						       	entity.setPosition(crystalFound.getPosition().getX() + 0.5D, crystalFound.getPosition().getY(), crystalFound.getPosition().getZ() + 0.5D);
+		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
+		        	
+		        	this.minionsAlive = 0;
+		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+			        
+			        for (EntityFireBossMinion entity : list)
+			        {
+			        	this.minionsAlive++;
+			        }
+			        
+			        if(this.minionsAlive == 0)
+			        {
+			        	if(this.spawnMinionCooldownP5 == 0)
+			        	{
+			        		this.spawnMinionCooldownP5 = MINION_SPAWN_COOLDOWN;
+			        		int i = 0;
+			        		if(this.world.getDifficulty() == EnumDifficulty.EASY) i = 1;
+			        		if(this.world.getDifficulty() == EnumDifficulty.NORMAL) i = 1;
+			        		if(this.world.getDifficulty() == EnumDifficulty.HARD) i = 2;
+			        		for(int j = 0; j <= i; j++)
+			        		{
+				        		EntityFireBossMinion entity = new EntityFireBossMinion(this.world);
+						       	entity.setPosition(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
 						   		this.world.spawnEntity(entity);
-				        	}
-				        }
-		        	}
+			        		}
+			        	}
+			        	this.spawnMinionCooldownP5--;
+	        		}
 		        	
-		        	boolean guardianInRadius = false;
-		        	List<EntityFireGuardian> list = this.world.<EntityFireGuardian>getEntitiesWithinAABB(EntityFireGuardian.class, this.getEntityBoundingBox().grow(1.5D, 11, 1.5D));
-			        
-		        	for (EntityFireGuardian guardians : list)
-			        {
-		        		guardianInRadius = true;
-			        }
-		        	
-		        	this.guardianTimer--;
-		        	if(this.guardianTimer <= 0 || guardianInRadius)
+		        	// Goto next phase
+		        	if(this.getHealth() <= (this.getMaxHealth() / 5) * 3) // 3/5
 		        	{
-		        		this.resetFight();
-		        		this.fightActive = false;
+		        		this.setPhase(6);
 		        	}
-		        	
-		        	int guardiansLeft = 0;
-		        	List<EntityFireGuardian> list1 = this.world.<EntityFireGuardian>getEntitiesWithinAABB(EntityFireGuardian.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
-			        
-			        for (EntityFireGuardian guardians : list1)
-			        {
-			        	guardiansLeft++;
-			        }
-			        
-			        if(guardiansLeft == 0) 
-			        {
-			        	this.guardianTimer = GUARDIAN_RESET_TIMER;
-			        	this.setPhase(6);
-			        }
 	        	}
-	        	else // Client
+	        	else
 	        	{
-	        		if(this.ticksExisted % 32 == 1)
+	        		if(!this.chatted4)
 	        		{
-	        			this.FireRingAnimation(this.getPosition().getX() + 0.5D, this.getPosition().getY(), this.getPosition().getZ() + 0.5D, 3, this.world);
+	        			this.chatted4 = true;
+	        			this.sayChatLine(7);
 	        		}
 	        	}
-	        	break;
+	        	break;	
+	        
 	        case 6: // Phase 6
 	        	if(!this.world.isRemote) // Server
 	        	{
@@ -619,7 +668,7 @@ public class EntityFireBoss extends EntityMob
 		        	{
 		        		this.spawnGurdianP6 = true;
 		        		int crystalsInArena = 0;
-		        		int randomnumber = this.rand.nextInt(1);
+		        		int randomnumber = this.rand.nextInt(2);
 		        		List<EntityFireCrystal> list = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
 				        
 				        for (EntityFireCrystal crystalFound : list)
@@ -667,20 +716,198 @@ public class EntityFireBoss extends EntityMob
 	        	}
 	        	else // Client
 	        	{
+	        		if(!this.chatted5)
+	        		{
+	        			this.chatted5 = true;
+	        			this.sayChatLine(4);
+	        		}
+	        		
 	        		if(this.ticksExisted % 32 == 1)
 	        		{
 	        			this.FireRingAnimation(this.getPosition().getX() + 0.5D, this.getPosition().getY(), this.getPosition().getZ() + 0.5D, 3, this.world);
 	        		}
 	        	}
 	        	break;
-	        case 7: // Phase 7
+	        	
+	        case 7:
+	        	if(!this.world.isRemote) // Server
+	        	{
+		        	this.setInvulState(false);
+		        	
+		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
+		        	
+		        	this.minionsAlive = 0;
+		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+			        
+			        for (EntityFireBossMinion entity : list)
+			        {
+			        	this.minionsAlive++;
+			        }
+			        
+			        if(this.minionsAlive == 0)
+			        {
+			        	if(this.spawnMinionCooldownP7 == 0)
+			        	{
+			        		this.spawnMinionCooldownP7 = MINION_SPAWN_COOLDOWN;
+			        		int i = 0;
+			        		if(this.world.getDifficulty() == EnumDifficulty.EASY) i = 1;
+			        		if(this.world.getDifficulty() == EnumDifficulty.NORMAL) i = 1;
+			        		if(this.world.getDifficulty() == EnumDifficulty.HARD) i = 2;
+			        		for(int j = 0; j <= i; j++)
+			        		{
+				        		EntityFireBossMinion entity = new EntityFireBossMinion(this.world);
+						       	entity.setPosition(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+						   		this.world.spawnEntity(entity);
+			        		}
+			        	}
+			        	this.spawnMinionCooldownP7--;
+	        		}
+		        	
+		        	// Goto next phase
+			        if(this.getHealth() <= (this.getMaxHealth() / 5) * 2) // 2/5
+		        	{
+		        		this.setPhase(8);
+		        	}
+	        	}
+	        	else
+	        	{
+	        		if(!this.chatted6)
+	        		{
+	        			this.chatted6 = true;
+	        			this.sayChatLine(8);
+	        		}
+	        	}
+	        	break;
+	        	
+	        
+	        case 8: // Phase 8
 	        	if(!this.world.isRemote) // Server
 	        	{
 		        	this.setInvulState(true);
 		        	
-		        	if(!this.spawnGurdianP7)
+		        	if(!this.spawnGurdianP8)
 		        	{
-		        		this.spawnGurdianP7 = true;
+		        		this.spawnGurdianP8 = true;
+		        		int crystalsInArena = 0;
+		        		int randomnumber = this.rand.nextInt(1);
+		        		List<EntityFireCrystal> list = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+				        
+				        for (EntityFireCrystal crystalFound : list)
+				        {
+				        	crystalsInArena++;
+				        	if(crystalsInArena - 1 == randomnumber)
+				        	{
+				        		crystalFound.Explode();
+				        		
+				        		EntityFireGuardian entity = new EntityFireGuardian(this.world, this.posX, this.posY, this.posZ);
+						       	entity.setPosition(crystalFound.getPosition().getX() + 0.5D, crystalFound.getPosition().getY(), crystalFound.getPosition().getZ() + 0.5D);
+						   		this.world.spawnEntity(entity);
+				        	}
+				        }
+		        	}
+		        	
+		        	boolean guardianInRadius = false;
+		        	List<EntityFireGuardian> list = this.world.<EntityFireGuardian>getEntitiesWithinAABB(EntityFireGuardian.class, this.getEntityBoundingBox().grow(1.5D, 11, 1.5D));
+			        
+		        	for (EntityFireGuardian guardians : list)
+			        {
+		        		guardianInRadius = true;
+			        }
+		        	
+		        	this.guardianTimer--;
+		        	if(this.guardianTimer <= 0 || guardianInRadius)
+		        	{
+		        		this.resetFight();
+		        		this.fightActive = false;
+		        	}
+		        	
+		        	int guardiansLeft = 0;
+		        	List<EntityFireGuardian> list1 = this.world.<EntityFireGuardian>getEntitiesWithinAABB(EntityFireGuardian.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+			        
+			        for (EntityFireGuardian guardians : list1)
+			        {
+			        	guardiansLeft++;
+			        }
+			        
+			        if(guardiansLeft == 0) 
+			        {
+			        	this.guardianTimer = GUARDIAN_RESET_TIMER;
+			        	this.setPhase(9);
+			        }
+	        	}
+	        	else // Client
+	        	{
+	        		if(!this.chatted7)
+	        		{
+	        			this.chatted7 = true;
+	        			this.sayChatLine(5);
+	        		}
+	        		
+	        		if(this.ticksExisted % 32 == 1)
+	        		{
+	        			this.FireRingAnimation(this.getPosition().getX() + 0.5D, this.getPosition().getY(), this.getPosition().getZ() + 0.5D, 3, this.world);
+	        		}
+	        	}
+	        	break;
+	        
+	        case 9: // Phase 5
+	        	if(!this.world.isRemote) // Server
+	        	{
+		        	this.setInvulState(false);
+		        	
+		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
+		        	
+		        	this.minionsAlive = 0;
+		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+			        
+			        for (EntityFireBossMinion entity : list)
+			        {
+			        	this.minionsAlive++;
+			        }
+			        
+			        if(this.minionsAlive == 0)
+			        {
+			        	if(this.spawnMinionCooldownP9 == 0)
+			        	{
+			        		this.spawnMinionCooldownP9 = MINION_SPAWN_COOLDOWN;
+			        		int i = 0;
+			        		if(this.world.getDifficulty() == EnumDifficulty.EASY) i = 1;
+			        		if(this.world.getDifficulty() == EnumDifficulty.NORMAL) i = 1;
+			        		if(this.world.getDifficulty() == EnumDifficulty.HARD) i = 2;
+			        		for(int j = 0; j <= i; j++)
+			        		{
+				        		EntityFireBossMinion entity = new EntityFireBossMinion(this.world);
+						       	entity.setPosition(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+						   		this.world.spawnEntity(entity);
+			        		}
+			        	}
+			        	this.spawnMinionCooldownP9--;
+	        		}
+		        	
+		        	// Goto next phase
+		        	if(this.getHealth() <= this.getMaxHealth() / 5) // 1/5
+		        	{
+		        		this.setPhase(10);
+		        	}
+	        	}
+	        	else
+	        	{
+	        		if(!this.chatted8)
+	        		{
+	        			this.chatted8 = true;
+	        			this.sayChatLine(9);
+	        		}
+	        	}
+	        	break;	
+	        	
+	        case 10: // Phase 10
+	        	if(!this.world.isRemote) // Server
+	        	{
+		        	this.setInvulState(true);
+		        	
+		        	if(!this.spawnGurdianP10)
+		        	{
+		        		this.spawnGurdianP10 = true;
 		        		List<EntityFireCrystal> list = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
 				        
 				        for (EntityFireCrystal crystalFound : list)
@@ -716,17 +943,67 @@ public class EntityFireBoss extends EntityMob
 			        	guardiansLeft++;
 			        }
 		        	
-//		        	if(guardiansLeft == 0) 
-//			        {
-//			        	this.guardianTimer = GUARDIAN_RESET_TIMER;
-//			        	this.setPhase(5);
-//			        }
+		        	if(guardiansLeft == 0) 
+			        {
+			        	this.guardianTimer = GUARDIAN_RESET_TIMER;
+			        	this.setPhase(11);
+			        }
 	        	}
 	        	else // Client
 	        	{
+	        		if(!this.chatted9)
+	        		{
+	        			this.chatted9 = true;
+	        			this.sayChatLine(6);
+	        		}
+	        		
 	        		if(this.ticksExisted % 32 == 1)
 	        		{
 	        			this.FireRingAnimation(this.getPosition().getX() + 0.5D, this.getPosition().getY(), this.getPosition().getZ() + 0.5D, 3, this.world);
+	        		}
+	        	}
+	        	break;
+	        	
+	        case 11: // Phase 11
+	        	if(!this.world.isRemote) // Server
+	        	{
+		        	this.setInvulState(false);
+		        	
+		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
+		        	
+		        	this.minionsAlive = 0;
+		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+			        
+			        for (EntityFireBossMinion entity : list)
+			        {
+			        	this.minionsAlive++;
+			        }
+			        
+			        if(this.minionsAlive == 0)
+			        {
+			        	if(this.spawnMinionCooldownRage == 0)
+			        	{
+			        		this.spawnMinionCooldownRage = MINION_SPAWN_COOLDOWN;
+			        		int i = 0;
+			        		if(this.world.getDifficulty() == EnumDifficulty.EASY) i = 2;
+			        		if(this.world.getDifficulty() == EnumDifficulty.NORMAL) i = 3;
+			        		if(this.world.getDifficulty() == EnumDifficulty.HARD) i = 4;
+			        		for(int j = 0; j <= i; j++)
+			        		{
+				        		EntityFireBossMinion entity = new EntityFireBossMinion(this.world);
+						       	entity.setPosition(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+						   		this.world.spawnEntity(entity);
+			        		}
+			        	}
+			        	this.spawnMinionCooldownRage--;
+	        		}
+	        	}
+	        	else
+	        	{
+	        		if(!this.chatted10)
+	        		{
+	        			this.chatted10 = true;
+	        			this.sayChatLine(10);
 	        		}
 	        	}
 	        	break;
@@ -762,6 +1039,16 @@ public class EntityFireBoss extends EntityMob
     {
 		super.updateAITasks();
 		
+		if(!this.isFightActivated())
+		{
+			this.tasks.removeTask(this.aiMeleeAttack);
+    		this.tasks.removeTask(this.aiWander);
+    		if(this.getSpawnLocation() != null)
+    		{
+    			this.setPosition(this.getSpawnLocation().getX() + 0.5D, this.getSpawnLocation().getY(), this.getSpawnLocation().getZ() + 0.5D);
+    		}
+		}
+		
 		switch(this.getPhase())
     	{
     	case 1: // Phase 1
@@ -787,6 +1074,46 @@ public class EntityFireBoss extends EntityMob
     		{
     			this.setPosition(this.getSpawnLocation().getX() + 0.5D, this.getSpawnLocation().getY(), this.getSpawnLocation().getZ() + 0.5D);
     		}
+    		break;
+    	case 5: // Phase 5
+    		this.tasks.addTask(0, this.aiMeleeAttack);
+    		this.tasks.addTask(1, aiWander);
+    		break;
+    	case 6: // Phase 6
+    		this.tasks.removeTask(this.aiMeleeAttack);
+    		this.tasks.removeTask(this.aiWander);
+    		if(this.getSpawnLocation() != null)
+    		{
+    			this.setPosition(this.getSpawnLocation().getX() + 0.5D, this.getSpawnLocation().getY(), this.getSpawnLocation().getZ() + 0.5D);
+    		}
+    		break;
+    	case 7: // Phase 7
+    		this.tasks.addTask(0, this.aiMeleeAttack);
+    		this.tasks.addTask(1, aiWander);
+    		break;
+    	case 8: // Phase 8
+    		this.tasks.removeTask(this.aiMeleeAttack);
+    		this.tasks.removeTask(this.aiWander);
+    		if(this.getSpawnLocation() != null)
+    		{
+    			this.setPosition(this.getSpawnLocation().getX() + 0.5D, this.getSpawnLocation().getY(), this.getSpawnLocation().getZ() + 0.5D);
+    		}
+    		break;
+    	case 9: // Phase 9
+    		this.tasks.addTask(0, this.aiMeleeAttack);
+    		this.tasks.addTask(1, aiWander);
+    		break;
+    	case 10: // Phase 10
+    		this.tasks.removeTask(this.aiMeleeAttack);
+    		this.tasks.removeTask(this.aiWander);
+    		if(this.getSpawnLocation() != null)
+    		{
+    			this.setPosition(this.getSpawnLocation().getX() + 0.5D, this.getSpawnLocation().getY(), this.getSpawnLocation().getZ() + 0.5D);
+    		}
+    		break;
+    	case 11: // Rage
+    		this.tasks.addTask(0, this.aiMeleeAttack);
+    		this.tasks.addTask(1, aiWander);
     		break;
     	}
     }
@@ -851,11 +1178,26 @@ public class EntityFireBoss extends EntityMob
     	this.trailPointTimers.clear();
     	this.spawnMinionCooldownP2 = 0;
     	this.minionWaves = 0;
-    	this.spawnGurdianP4 = false;
-    	this.spawnGurdianP5 = false;
-    	this.spawnGurdianP6 = false;
-    	this.spawnGurdianP7 = false;
+    	this.spawnMinionCooldownP3 = 0;
     	this.guardianTimer = GUARDIAN_RESET_TIMER;
+    	this.spawnGurdianP4 = false;
+    	this.spawnMinionCooldownP5 = 0;
+    	this.spawnGurdianP6 = false;
+    	this.spawnMinionCooldownP7 = 0;
+    	this.spawnGurdianP8 = false;
+    	this.spawnMinionCooldownP9 = 0;
+    	this.spawnGurdianP10 = false;
+    	this.spawnMinionCooldownRage = 0;
+    	this.chatted1 = false;
+    	this.chatted2 = false;
+    	this.chatted3 = false;
+    	this.chatted4 = false;
+    	this.chatted5 = false;
+    	this.chatted6 = false;
+    	this.chatted7 = false;
+    	this.chatted8 = false;
+    	this.chatted9 = false;
+    	this.chatted10 = false;
     	this.openDoor();
     	
     	List<EntityFireCrystal> list = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
@@ -864,17 +1206,17 @@ public class EntityFireBoss extends EntityMob
     	{
 	    	for (EntityFireCrystal entity : list)
 	        {
-	    		entity.isDead = true;
+	    		entity.setDead();
 	        }
     	}
     	
-    	List<EntityFireBossMini> list1 = this.world.<EntityFireBossMini>getEntitiesWithinAABB(EntityFireBossMini.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+    	List<EntityFireBossMinion> list1 = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
     	
     	if(!list1.isEmpty())
     	{
-	    	for (EntityFireBossMini entity : list1)
+	    	for (EntityFireBossMinion entity : list1)
 	        {
-	    		entity.isDead = true;
+	    		entity.setDead();
 	        }
     	}
     	
@@ -884,7 +1226,7 @@ public class EntityFireBoss extends EntityMob
     	{
 	    	for (EntityFireGuardian entity : list2)
 	        {
-	    		entity.isDead = true;
+	    		entity.setDead();
 	        }
     	}
     	
@@ -900,6 +1242,63 @@ public class EntityFireBoss extends EntityMob
         	}
 		}
     }
+	
+	public void sayChatLine(int message)
+	{
+		if(this.world.isRemote)
+		{
+			List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+	    	
+	    	if(!list.isEmpty())
+	    	{
+		    	for (EntityPlayer player : list)
+		        {
+		    		switch(message)
+		    		{
+		    		case 0:
+		    			player.sendMessage(new TextComponentTranslation("message.em.fireboss.fight_initiate"));
+		    			break;
+		    		case 1:
+		    			player.sendMessage(new TextComponentTranslation("message.em.fireboss.chat1"));
+		    			break;
+		    		case 2:
+		    			player.sendMessage(new TextComponentTranslation("message.em.fireboss.chat2"));
+		    			break;
+		    		case 3:
+		    			player.sendMessage(new TextComponentTranslation("message.em.fireboss.chat3"));
+		    			break;
+		    		case 4:
+		    			player.sendMessage(new TextComponentTranslation("message.em.fireboss.chat4"));
+		    			break;
+		    		case 5:
+		    			player.sendMessage(new TextComponentTranslation("message.em.fireboss.chat5"));
+		    			break;
+		    		case 6:
+		    			player.sendMessage(new TextComponentTranslation("message.em.fireboss.chat6"));
+		    			break;
+		    		case 7:
+		    			player.sendMessage(new TextComponentTranslation("message.em.fireboss.chat7"));
+		    			break;
+		    		case 8:
+		    			player.sendMessage(new TextComponentTranslation("message.em.fireboss.chat8"));
+		    			break;
+		    		case 9:
+		    			player.sendMessage(new TextComponentTranslation("message.em.fireboss.chat9"));
+		    			break;
+		    		case 10:
+		    			player.sendMessage(new TextComponentTranslation("message.em.fireboss.chat10"));
+		    			break;
+		    		case 11:
+		    			player.sendMessage(new TextComponentTranslation("message.em.fireboss.chat11"));
+		    			break;
+		    		case 12:
+		    			player.sendMessage(new TextComponentTranslation("message.em.fireboss.voidentitydeathmessagefire"));
+		    			break;
+		    		}
+		        }
+	    	}
+		}
+	}
 	
 	@Override
 	public float getEyeHeight()
@@ -964,12 +1363,38 @@ public class EntityFireBoss extends EntityMob
 	    	return false;
 	    }
     }
+	
+	@Override
+	public boolean attackEntityAsMob(Entity entityIn)
+    {
+        boolean flag = super.attackEntityAsMob(entityIn);
+
+        if (flag)
+        {
+            float f = this.world.getDifficultyForLocation(new BlockPos(this)).getAdditionalDifficulty();
+
+            entityIn.setFire(2 * (int)f);
+        }
+        
+        entityIn.setFire(3);
+        return flag;
+    }
     
     @Override
     public void onDeath(DamageSource cause)
     {
         super.onDeath(cause);
+        
+        BlockPos spawnPos = this.getSpawnLocation().add(0, 0, 16);
+        EntityAlyx alyx = new EntityAlyx(this.world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ() - 4);
+        alyx.setPosition(spawnPos.getX() + 0.5D, spawnPos.getY(), spawnPos.getZ() + 0.5D);
+        this.world.spawnEntity(alyx);
+        
+        this.sayChatLine(11);
+        this.sayChatLine(12);
         this.openDoor();
+        this.trailPoints.clear();
+        this.trailPointTimers.clear();
     }
     
     public void placeDoor()
@@ -1045,13 +1470,9 @@ public class EntityFireBoss extends EntityMob
 	    	this.world.setBlockState(doorpos.add(1, -2, 0), Blocks.NETHER_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.EAST).withProperty(BlockStairs.HALF, EnumHalf.BOTTOM));
 	    	this.world.setBlockState(doorpos.add(0, -2, 0), Blocks.STONE_SLAB.getDefaultState().withProperty(BlockStoneSlab.VARIANT, EnumType.NETHERBRICK).withProperty(BlockStoneSlab.HALF, EnumBlockHalf.BOTTOM));
 	    	this.world.setBlockState(doorpos.add(-1, -2, 0), Blocks.NETHER_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.WEST).withProperty(BlockStairs.HALF, EnumHalf.BOTTOM));
+	    	
+	    	this.world.playSound((EntityPlayer)null, doorpos, EMSoundHandler.FIRE_DOOR_CLOSE, SoundCategory.BLOCKS, 10.0F, 1.0F);
     	}
-    }
-    
-    @Override
-    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
-    {
-        super.dropFewItems(wasRecentlyHit, lootingModifier);
     }
     
     public boolean getInvulState()
@@ -1099,6 +1520,24 @@ public class EntityFireBoss extends EntityMob
     	return this.spawn_location;
     }
     
+    @Override
+    protected int getExperiencePoints(EntityPlayer player)
+    {
+    	return 750;
+    }
+    
+    @Override
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
+    {
+        EntityItem entityitem = this.dropItem(EMCoreItems.ETERNAL_FIRE, 1);
+        
+        if (entityitem != null)
+        {
+            entityitem.setNoDespawn();
+            entityitem.setEntityInvulnerable(true);
+        }
+    }
+    
     /**
      * Get this Entity's EnumCreatureAttribute
      */
@@ -1132,5 +1571,4 @@ public class EntityFireBoss extends EntityMob
 
     @Override
     protected void collideWithNearbyEntities() {}
-
 }

@@ -512,6 +512,12 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
     }
     
     @Override
+    protected int getExperiencePoints(EntityPlayer player)
+    {
+    	return 750;
+    }
+    
+    @Override
     protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
     {
         EntityItem entityitem = this.dropItem(EMCoreItems.HEART_OF_THE_WILD, 1);
@@ -519,6 +525,7 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
         if (entityitem != null)
         {
             entityitem.setNoDespawn();
+            entityitem.setEntityInvulnerable(true);
         }
     }
     
@@ -576,8 +583,8 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
     	System.out.println(pos1);
     	System.out.println(this.getSpawnLocation().add(0, 0, -14));
     	
-    	EntityAlyx alyx = new EntityAlyx(this.world, pos1.getX(), pos1.getY(), pos1.getZ(), pos2.getX(), pos2.getY(), pos2.getZ());
-        this.world.spawnEntity(alyx);
+    	//EntityAlyx alyx = new EntityAlyx(this.world, pos1.getX(), pos1.getY(), pos1.getZ(), pos2.getX(), pos2.getY(), pos2.getZ());
+        //this.world.spawnEntity(alyx);
     }
     
     public boolean getInvulState()

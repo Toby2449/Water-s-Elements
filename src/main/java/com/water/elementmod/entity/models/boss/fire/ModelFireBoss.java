@@ -128,9 +128,10 @@ public class ModelFireBoss extends ModelBase {
         
         EntityFireBoss entity = (EntityFireBoss)entityIn;
         
-        if(!entity.isFightActivated())
+        switch(entity.getPhase())
         {
-	        this.R_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F;
+        case 0:
+        	this.R_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F;
 	        this.L_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F;
 	        this.R_arm.rotateAngleZ = 0.0F;
 	        this.L_arm.rotateAngleZ = 0.0F;
@@ -138,6 +139,62 @@ public class ModelFireBoss extends ModelBase {
 	        this.L_arm.rotateAngleX -= MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
 	        this.R_arm.rotateAngleZ += MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
 	        this.L_arm.rotateAngleZ -= MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+	        break;
+	        
+        case 2:
+        	this.R_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F;
+	        this.L_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F;
+	        this.R_arm.rotateAngleZ = 0.0F;
+	        this.L_arm.rotateAngleZ = 0.0F;
+	        this.R_arm.rotateAngleX += MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+	        this.L_arm.rotateAngleX -= MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+	        this.R_arm.rotateAngleZ += MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+	        this.L_arm.rotateAngleZ -= MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+        	break;
+        	
+        case 4:
+        	this.R_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F;
+	        this.L_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F;
+	        this.R_arm.rotateAngleZ = 0.0F;
+	        this.L_arm.rotateAngleZ = 0.0F;
+	        this.R_arm.rotateAngleX += MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+	        this.L_arm.rotateAngleX -= MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+	        this.R_arm.rotateAngleZ += MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+	        this.L_arm.rotateAngleZ -= MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+        	break;
+        	
+        case 6:
+        	this.R_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F;
+	        this.L_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F;
+	        this.R_arm.rotateAngleZ = 0.0F;
+	        this.L_arm.rotateAngleZ = 0.0F;
+	        this.R_arm.rotateAngleX += MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+	        this.L_arm.rotateAngleX -= MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+	        this.R_arm.rotateAngleZ += MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+	        this.L_arm.rotateAngleZ -= MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+        	break;
+        	
+        case 8:
+        	this.R_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F;
+	        this.L_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F;
+	        this.R_arm.rotateAngleZ = 0.0F;
+	        this.L_arm.rotateAngleZ = 0.0F;
+	        this.R_arm.rotateAngleX += MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+	        this.L_arm.rotateAngleX -= MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+	        this.R_arm.rotateAngleZ += MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+	        this.L_arm.rotateAngleZ -= MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+        	break;
+        	
+        case 10:
+        	this.R_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F;
+	        this.L_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F;
+	        this.R_arm.rotateAngleZ = 0.0F;
+	        this.L_arm.rotateAngleZ = 0.0F;
+	        this.R_arm.rotateAngleX += MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+	        this.L_arm.rotateAngleX -= MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+	        this.R_arm.rotateAngleZ += MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+	        this.L_arm.rotateAngleZ -= MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+        	break;
         }
     }
 }

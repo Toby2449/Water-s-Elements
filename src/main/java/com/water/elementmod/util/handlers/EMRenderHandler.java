@@ -1,9 +1,10 @@
 package com.water.elementmod.util.handlers;
 
 import com.water.elementmod.entity.boss.fire.EntityFireBoss;
-import com.water.elementmod.entity.boss.fire.EntityFireBossMini;
+import com.water.elementmod.entity.boss.fire.EntityFireBossMinion;
 import com.water.elementmod.entity.boss.fire.EntityFireCrystal;
 import com.water.elementmod.entity.boss.fire.EntityFireGuardian;
+import com.water.elementmod.entity.boss.fire.EntityFireGuardianCastle;
 import com.water.elementmod.entity.boss.nature.EntityNatureBoss;
 import com.water.elementmod.entity.boss.nature.EntityNatureBossMinion;
 import com.water.elementmod.entity.boss.nature.EntityPhotoSynthesizerCrystal;
@@ -20,9 +21,10 @@ import com.water.elementmod.entity.projectile.EntityNatureArrow;
 import com.water.elementmod.entity.projectile.EntityPoisonBall;
 import com.water.elementmod.entity.projectile.EntityWaterArrow;
 import com.water.elementmod.entity.render.boss.fire.RenderFireBoss;
-import com.water.elementmod.entity.render.boss.fire.RenderFireBossMini;
+import com.water.elementmod.entity.render.boss.fire.RenderFireBossMinion;
 import com.water.elementmod.entity.render.boss.fire.RenderFireCrystal;
 import com.water.elementmod.entity.render.boss.fire.RenderFireGuardian;
+import com.water.elementmod.entity.render.boss.fire.RenderFireGuardianCastle;
 import com.water.elementmod.entity.render.boss.nature.RenderNatureBoss;
 import com.water.elementmod.entity.render.boss.nature.RenderNatureBossMinion;
 import com.water.elementmod.entity.render.boss.nature.RenderPhotoSynthesizerCrystal;
@@ -195,12 +197,12 @@ public class EMRenderHandler
 			}
 		});
 		
-		RenderingRegistry.registerEntityRenderingHandler(EntityFireBossMini.class, new IRenderFactory<EntityFireBossMini>()
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireBossMinion.class, new IRenderFactory<EntityFireBossMinion>()
 		{
 			@Override
-			public Render<? super EntityFireBossMini> createRenderFor(RenderManager manager)
+			public Render<? super EntityFireBossMinion> createRenderFor(RenderManager manager)
 			{
-				return new RenderFireBossMini(manager);
+				return new RenderFireBossMinion(manager);
 			}
 		});
 		RenderingRegistry.registerEntityRenderingHandler(EntityFireGuardian.class, new IRenderFactory<EntityFireGuardian>()
@@ -209,6 +211,14 @@ public class EMRenderHandler
 			public Render<? super EntityFireGuardian> createRenderFor(RenderManager manager)
 			{
 				return new RenderFireGuardian(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireGuardianCastle.class, new IRenderFactory<EntityFireGuardianCastle>()
+		{
+			@Override
+			public Render<? super EntityFireGuardianCastle> createRenderFor(RenderManager manager)
+			{
+				return new RenderFireGuardianCastle(manager);
 			}
 		});
 	}

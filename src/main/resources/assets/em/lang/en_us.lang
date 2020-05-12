@@ -9,13 +9,14 @@ item.item_skeletonfemur_nature.name=§2Skeleton Femur§r
 item.item_ashes.name=§6Ashes§r
 item.item_burning_ashes.name=§6Glowing Ashes§r
 item.item_scolding_embers.name=§6Scolding Embers§r
+item.item_flaming_embers.name=§6Flaming Embers§r
 item.item_eternal_fire.name=§6§lEternal Fire§r
 
 item.item_various_micro_organisms.name=§2Various Micro Organisms§r
 item.item_thriving_cells.name=§2Thriving Cells§r
 item.item_reconstructed_tissue.name=§2Reconstructed Tissue§r
-item.item_heart_of_the_wild.name=§2§lHeart of the Wild§r
 item.item_nature_essence.name=§2Nature Essence§r
+item.item_heart_of_the_wild.name=§2§lHeart of the Wild§r
 
 item.item_micro_droplets.name=§9Micro Water Droplets§r
 item.item_small_droplets.name=§9Small Water Droplets§r
@@ -50,9 +51,11 @@ entity.fire_skeleton.name=Fire Skeleton
 entity.water_skeleton.name=Water Skeleton
 entity.nature_skeleton.name=Nature Skeleton
 
-entity.nature_boss.name=Ivus, Elder of Nature
+entity.nature_boss.name=§2§lIvus, Elder of Nature
 
+entity.fire_boss.name=§6§lPhonos, King of the Nether§r
 entity.fire_guardian.name=§6§oFire Guardian§r
+entity.fire_guardian_castle.name=§6Fire Guardian§r
 
 tooltip.Enchant=Element: 
 tooltip.ResetFormatting=§r
@@ -87,17 +90,31 @@ tooltip.NatureAbilityRadius=§2§o§lAura Radius:
 tooltip.NatureAbilityCDDuration=§2§o§lAbility Cooldown: 
 tooltip.NatureRegenerationLevel=§2§o§lRegeneration Level: 
 
-tooltip.HotW_Description=§2§oThe power that this item contains makes it impossible to destroy.§r
+tooltip.HotW_Description=§2§oThe power that this item contains makes it impossible to destroy§r
+tooltip.EF_Description=§6§oThis item will burn for eternity, making its power limitless§r
 
 item.item_fire_chestplate.name=§6Fire Battle Breastplate§r
 item.item_water_robe.name=§9Water Silk Robe§r
 item.item_leaf_armor.name=§2Leaf Hide Armor§r
 item.item_void_helmet.name=§5Helmet of the Corrupted Void§r
 
+message.em.alyx.firebossdeath=<Alyx> Excellent work! You are now one step closer to defeating the great evil once and for all.
 
 message.em.natureboss.fight_initiate=My crystals will protect me! Prepare to get overtaken by the forest.
 
-
+message.em.fireboss.fight_initiate=<§6§lPhonos, King of the Nether§r> You shouldn't of come here...
+message.em.fireboss.chat1=<§6§lPhonos, King of the Nether§r> I harness the power of my orbs!
+message.em.fireboss.chat2=<§6§lPhonos, King of the Nether§r> Burnnnnn in my own creation!
+message.em.fireboss.chat3=<§6§lPhonos, King of the Nether§r> As soon as we become one, you will all parish into the depths of hell!
+message.em.fireboss.chat4=<§6§lPhonos, King of the Nether§r> Haha! Come to me my little one.
+message.em.fireboss.chat5=<§6§lPhonos, King of the Nether§r> You fools! I grow stronger the longer I burn.
+message.em.fireboss.chat6=<§6§lPhonos, King of the Nether§r> Hurry here, we must scare away our guests!
+message.em.fireboss.chat7=<§6§lPhonos, King of the Nether§r> Why don't you just leave me alone!
+message.em.fireboss.chat8=<§6§lPhonos, King of the Nether§r> Servants of the nether, be here at once!
+message.em.fireboss.chat9=<§6§lPhonos, King of the Nether§r> The Entity will NOT be happy with you peasants.
+message.em.fireboss.chat10=<§6§lPhonos, King of the Nether§r> Go... AWAY!!
+message.em.fireboss.chat11=<§6§lPhonos, King of the Nether§r> I... just... wanted to... burn... alone....
+message.em.fireboss.voidentitydeathmessagefire=<§1§lVoid Entity§r> ...
 
 
 

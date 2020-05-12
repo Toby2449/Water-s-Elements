@@ -6,12 +6,16 @@ import java.util.Random;
 
 import com.water.elementmod.entity.boss.fire.EntityFireBoss;
 import com.water.elementmod.entity.boss.fire.EntityFireCrystal;
+import com.water.elementmod.entity.boss.fire.EntityFireGuardianCastle;
 import com.water.elementmod.util.EMConfig;
+import com.water.elementmod.util.handlers.EMLootTableHandler;
 import com.water.elementmod.util.interfaces.IStructure;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -69,71 +73,57 @@ public class WorldGenFArena extends WorldGenerator implements IStructure
 			Map<BlockPos, String> map = template.getDataBlocks(pos, settings);
 			for (Entry<BlockPos, String> entry : map.entrySet())
 			{
-//				if("chest1".equals(entry.getValue()))
-//				{
-//					BlockPos blockpos = entry.getKey();
-//					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
-//					TileEntity tileentity = world.getTileEntity(blockpos.down());
-//					
-//					if(tileentity instanceof TileEntityChest)
-//					{
-//						((TileEntityChest)tileentity).setLootTable(EMLootTableHandler.NATURE_STRUCTURE_CHEST1, random.nextLong());
-//					}
-//				}
-//				
-//				if("chest2".equals(entry.getValue()))
-//				{
-//					BlockPos blockpos = entry.getKey();
-//					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
-//					TileEntity tileentity = world.getTileEntity(blockpos.down());
-//					
-//					if(tileentity instanceof TileEntityChest)
-//					{
-//						((TileEntityChest)tileentity).setLootTable(EMLootTableHandler.NATURE_STRUCTURE_CHEST2, random.nextLong());
-//					}
-//				}
-//				
-//				if("chest3".equals(entry.getValue()))
-//				{
-//					BlockPos blockpos = entry.getKey();
-//					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
-//					TileEntity tileentity = world.getTileEntity(blockpos.down());
-//					
-//					if(tileentity instanceof TileEntityChest)
-//					{
-//						((TileEntityChest)tileentity).setLootTable(EMLootTableHandler.NATURE_STRUCTURE_CHEST3, random.nextLong());
-//					}
-//				}
-//				
-//				if("stalker_group_small".equals(entry.getValue()))
-//				{
-//					BlockPos blockpos = entry.getKey();
-//					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
-//					int randnum = new Random().nextInt(1);
-//					System.out.println(randnum);
-//					for(int i = 1 + randnum; i > 0; i--)
-//					{
-//						EntityNatureStalker stalker = new EntityNatureStalker(world);
-//						stalker.enablePersistence();
-//						stalker.setPosition(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
-//						world.spawnEntity(stalker);
-//					}
-//				}
-//				
-//				if("stalker_group_large".equals(entry.getValue()))
-//				{
-//					BlockPos blockpos = entry.getKey();
-//					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
-//					int randnum = new Random().nextInt(2);
-//					System.out.println(randnum);
-//					for(int i = 2 + randnum; i > 0; i--)
-//					{
-//						EntityNatureStalker stalker = new EntityNatureStalker(world);
-//						stalker.enablePersistence();
-//						stalker.setPosition(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
-//						world.spawnEntity(stalker);
-//					}
-//				}
+				if("chest".equals(entry.getValue()))
+				{
+					BlockPos blockpos = entry.getKey();
+					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
+					TileEntity tileentity = world.getTileEntity(blockpos.down());
+					
+					if(tileentity instanceof TileEntityChest)
+					{
+						((TileEntityChest)tileentity).setLootTable(EMLootTableHandler.FIRE_STRUCTURE_CHEST, random.nextLong());
+					}
+				}
+				
+				if("tower_chest".equals(entry.getValue()))
+					{
+						BlockPos blockpos = entry.getKey();
+						world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
+						TileEntity tileentity = world.getTileEntity(blockpos.down());
+						
+						if(tileentity instanceof TileEntityChest)
+						{
+							((TileEntityChest)tileentity).setLootTable(EMLootTableHandler.FIRE_STRUCTURE_CHEST_TOWER, random.nextLong());
+						}
+					}
+				
+				if("guardian_group_small".equals(entry.getValue()))
+				{
+					BlockPos blockpos = entry.getKey();
+					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
+					int randnum = new Random().nextInt(1);
+					for(int i = 1 + randnum; i > 0; i--)
+					{
+						EntityFireGuardianCastle stalker = new EntityFireGuardianCastle(world);
+						stalker.enablePersistence();
+						stalker.setPosition(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
+						world.spawnEntity(stalker);
+					}
+				}
+				
+				if("guardian_group_large".equals(entry.getValue()))
+				{
+					BlockPos blockpos = entry.getKey();
+					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
+					int randnum = new Random().nextInt(2);
+					for(int i = 2 + randnum; i > 0; i--)
+					{
+						EntityFireGuardianCastle stalker = new EntityFireGuardianCastle(world);
+						stalker.enablePersistence();
+						stalker.setPosition(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
+						world.spawnEntity(stalker);
+					}
+				}
 				
 				if("crystal_location".equals(entry.getValue()))
 				{

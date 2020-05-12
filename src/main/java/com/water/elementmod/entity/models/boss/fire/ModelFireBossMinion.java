@@ -8,7 +8,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
-public class ModelFireBossMini extends ModelBase {
+public class ModelFireBossMinion extends ModelBase {
 	private final ModelRenderer Main;
 	private final ModelRenderer Head;
 	private final ModelRenderer Torso;
@@ -17,7 +17,7 @@ public class ModelFireBossMini extends ModelBase {
 	private final ModelRenderer R_arm;
 	private final ModelRenderer Torso_Bottom;
 
-	public ModelFireBossMini() {
+	public ModelFireBossMinion() {
 		textureWidth = 81;
 		textureHeight = 80;
 

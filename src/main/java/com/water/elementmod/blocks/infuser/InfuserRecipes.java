@@ -25,16 +25,16 @@ public class InfuserRecipes
 	
 	private InfuserRecipes() 
 	{
-		addInfuserItemRecipe(Items.DIAMOND_SWORD, new ItemStack(EMCoreItems.ETERNAL_FIRE), EMCoreItems.FIRE_SWORD1);
-		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD1, new ItemStack(EMCoreItems.ETERNAL_FIRE), EMCoreItems.FIRE_SWORD2);
-		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD2, new ItemStack(EMCoreItems.ETERNAL_FIRE), EMCoreItems.FIRE_SWORD3);
-		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD3, new ItemStack(EMCoreItems.ETERNAL_FIRE), EMCoreItems.FIRE_SWORD4);
-		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD4, new ItemStack(EMCoreItems.ETERNAL_FIRE), EMCoreItems.FIRE_SWORD5);
-		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD5, new ItemStack(EMCoreItems.ETERNAL_FIRE), EMCoreItems.FIRE_SWORD6);
-		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD6, new ItemStack(EMCoreItems.ETERNAL_FIRE), EMCoreItems.FIRE_SWORD7);
-		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD7, new ItemStack(EMCoreItems.ETERNAL_FIRE), EMCoreItems.FIRE_SWORD8);
-		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD8, new ItemStack(EMCoreItems.ETERNAL_FIRE), EMCoreItems.FIRE_SWORD9);
-		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD9, new ItemStack(EMCoreItems.ETERNAL_FIRE), EMCoreItems.FIRE_SWORD10);
+		addInfuserItemRecipe(Items.DIAMOND_SWORD, new ItemStack(EMCoreItems.FLAMING_EMBERS), EMCoreItems.FIRE_SWORD1);
+		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD1, new ItemStack(EMCoreItems.FLAMING_EMBERS), EMCoreItems.FIRE_SWORD2);
+		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD2, new ItemStack(EMCoreItems.FLAMING_EMBERS), EMCoreItems.FIRE_SWORD3);
+		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD3, new ItemStack(EMCoreItems.FLAMING_EMBERS), EMCoreItems.FIRE_SWORD4);
+		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD4, new ItemStack(EMCoreItems.FLAMING_EMBERS), EMCoreItems.FIRE_SWORD5);
+		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD5, new ItemStack(EMCoreItems.FLAMING_EMBERS), EMCoreItems.FIRE_SWORD6);
+		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD6, new ItemStack(EMCoreItems.FLAMING_EMBERS), EMCoreItems.FIRE_SWORD7);
+		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD7, new ItemStack(EMCoreItems.FLAMING_EMBERS), EMCoreItems.FIRE_SWORD8);
+		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD8, new ItemStack(EMCoreItems.FLAMING_EMBERS), EMCoreItems.FIRE_SWORD9);
+		addInfuserItemRecipe(EMCoreItems.FIRE_SWORD9, new ItemStack(EMCoreItems.FLAMING_EMBERS), EMCoreItems.FIRE_SWORD10);
 		
 		addInfuserItemRecipe(Items.DIAMOND_SWORD, new ItemStack(EMCoreItems.PERPETUAL_DRP), EMCoreItems.WATER_SWORD1);
 		addInfuserItemRecipe(EMCoreItems.WATER_SWORD1, new ItemStack(EMCoreItems.PERPETUAL_DRP), EMCoreItems.WATER_SWORD2);

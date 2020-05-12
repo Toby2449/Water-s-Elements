@@ -34,6 +34,14 @@ public class SynthesizerRecipes
 			addSynthesizerRecipe(new ItemStack(EMCoreItems.RECONSTRUCTED_TISSUE), new ItemStack(EMCoreItems.HEART_OF_THE_WILD, 1, i), new ItemStack(EMCoreItems.NATURE_ESSENCE));
 			addSynthesizerRecipe(new ItemStack(EMCoreItems.HEART_OF_THE_WILD, 1, i), new ItemStack(EMCoreItems.RECONSTRUCTED_TISSUE), new ItemStack(EMCoreItems.NATURE_ESSENCE));
 		}
+		
+		addSynthesizerRecipe(new ItemStack(EMCoreItems.EMBERS), new ItemStack(EMCoreItems.ETERNAL_FIRE), new ItemStack(EMCoreItems.FLAMING_EMBERS));
+		addSynthesizerRecipe(new ItemStack(EMCoreItems.ETERNAL_FIRE), new ItemStack(EMCoreItems.EMBERS), new ItemStack(EMCoreItems.FLAMING_EMBERS));
+		for(int i = 0; i <= 30; i++)
+		{
+			addSynthesizerRecipe(new ItemStack(EMCoreItems.EMBERS), new ItemStack(EMCoreItems.ETERNAL_FIRE, 1, i), new ItemStack(EMCoreItems.FLAMING_EMBERS));
+			addSynthesizerRecipe(new ItemStack(EMCoreItems.ETERNAL_FIRE, 1, i), new ItemStack(EMCoreItems.EMBERS), new ItemStack(EMCoreItems.FLAMING_EMBERS));
+		}
 	}
 	
 	
