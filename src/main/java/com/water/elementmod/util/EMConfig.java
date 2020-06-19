@@ -39,12 +39,19 @@ public class EMConfig {
 	public static final int ENTITY_NATURE_BOSS_MINION = 132;
 	public static final int ENTITY_NATURE_STALKER = 133;
 	
-	public static final int ENTITY_ALYX = 134;
-	
+	public static final int ENTITY_ALYX_FIRE = 134;
 	public static final int ENTITY_FIRE_BOSS = 135;
 	public static final int ENTITY_FIRE_CRYSTAL = 136;
 	public static final int ENTITY_FIRE_BOSS_MINI = 137;
 	public static final int ENTITY_FIRE_GUARDIAN = 138;
 	public static final int ENTITY_FIRE_GUARDIAN_CASTLE = 139;
+	
+	public static final int ENTITY_WATER_BOSS = 140;
+	public static final int ENTITY_WATER_BOSS_CLONE = 141;
+	public static final int ENTITY_WATER_BOSS_RANGED_MINION = 142;
+	public static final int ENTITY_WATER_BOSS_MELEE_MINION = 143;
+	public static final int ENTITY_ICEBALL = 144;
+	public static final int ENTITY_ICEBALL2 = 145;
+	public static final int ENTITY_ALYX_WATER = 146;
 	
 }

@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import com.google.common.base.Predicates;
 import com.water.elementmod.EMCoreItems;
 import com.water.elementmod.entity.ai.EntityAIMeleeCollide;
-import com.water.elementmod.entity.friendly.EntityAlyx;
+import com.water.elementmod.entity.friendly.EntityAlyxFire;
 import com.water.elementmod.entity.monster.EntityWaterSkeleton;
 import com.water.elementmod.entity.projectile.EntityFireArrow;
 import com.water.elementmod.entity.projectile.EntityPoisonBall;

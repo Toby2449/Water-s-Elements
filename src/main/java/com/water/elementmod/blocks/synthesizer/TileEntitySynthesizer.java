@@ -278,7 +278,7 @@ public class TileEntitySynthesizer extends TileEntity implements ITickable, IInv
 				else if(output.getItem() == result2.getItem()) output.grow(result2.getCount());
 			}
 			
-			if(input1.getItem() == EMCoreItems.HEART_OF_THE_WILD)
+			if(input1.getItem() == EMCoreItems.HEART_OF_THE_WILD || input1.getItem() == EMCoreItems.ETERNAL_FIRE || input1.getItem() == EMCoreItems.CORRODED_HARDWARE)
 			{
 				input1.setItemDamage(input1.getItemDamage() + 1);
 			}
@@ -291,7 +291,7 @@ public class TileEntitySynthesizer extends TileEntity implements ITickable, IInv
 				input1.shrink(1);
 			}
 			
-			if(input2.getItem() == EMCoreItems.HEART_OF_THE_WILD)
+			if(input2.getItem() == EMCoreItems.HEART_OF_THE_WILD || input2.getItem() == EMCoreItems.ETERNAL_FIRE || input2.getItem() == EMCoreItems.CORRODED_HARDWARE)
 			{
 				input2.setItemDamage(input2.getItemDamage() + 1);
 			}

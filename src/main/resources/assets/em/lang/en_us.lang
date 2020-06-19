@@ -21,7 +21,8 @@ item.item_heart_of_the_wild.name=§2§lHeart of the Wild§r
 item.item_micro_droplets.name=§9Micro Water Droplets§r
 item.item_small_droplets.name=§9Small Water Droplets§r
 item.item_large_droplets.name=§9Large Water Droplets§r
-item.item_perpetual_droplet.name=§9§lPerpetual Water Drops§r
+item.item_perpetual_droplet.name=§9Perpetual Water Drops§r
+item.item_corroded_hardware.name=§9§lCorroded Hardware§r
 
 item.item_void_essence.name=§5§oVoid Essence§r
 item.item_void_singularity.name=§5§lVoid Singularity§r
@@ -56,6 +57,11 @@ entity.nature_boss.name=§2§lIvus, Elder of Nature
 entity.fire_boss.name=§6§lPhonos, King of the Nether§r
 entity.fire_guardian.name=§6§oFire Guardian§r
 entity.fire_guardian_castle.name=§6Fire Guardian§r
+
+entity.water_boss.name=§9§lNiako, Operate of the Sea§r
+entity.water_boss_clone.name=§9A power beyond comprehension§r
+entity.water_boss_ranged_minion.name=§9Water Slave§r
+entity.water_boss_melee_minion.name=§9Water Slave§r
 
 tooltip.Enchant=Element: 
 tooltip.ResetFormatting=§r
@@ -92,6 +98,7 @@ tooltip.NatureRegenerationLevel=§2§o§lRegeneration Level:
 
 tooltip.HotW_Description=§2§oThe power that this item contains makes it impossible to destroy§r
 tooltip.EF_Description=§6§oThis item will burn for eternity, making its power limitless§r
+tooltip.CH_Description=§9§oImbued with the power of the sea, the cog contains unlimited power§r
 
 item.item_fire_chestplate.name=§6Fire Battle Breastplate§r
 item.item_water_robe.name=§9Water Silk Robe§r
@@ -111,12 +118,24 @@ message.em.fireboss.chat5=<§6§lPhonos, King of the Nether§r> You fools! I gro
 message.em.fireboss.chat6=<§6§lPhonos, King of the Nether§r> Hurry here, we must scare away our guests!
 message.em.fireboss.chat7=<§6§lPhonos, King of the Nether§r> Why don't you just leave me alone!
 message.em.fireboss.chat8=<§6§lPhonos, King of the Nether§r> Servants of the nether, be here at once!
-message.em.fireboss.chat9=<§6§lPhonos, King of the Nether§r> The Entity will NOT be happy with you peasants.
+message.em.fireboss.chat9=<§6§lPhonos, King of the Nether§r> The Overlord will NOT be happy with you peasants.
 message.em.fireboss.chat10=<§6§lPhonos, King of the Nether§r> Go... AWAY!!
 message.em.fireboss.chat11=<§6§lPhonos, King of the Nether§r> I... just... wanted to... burn... alone....
 message.em.fireboss.voidentitydeathmessagefire=<§1§lVoid Entity§r> ...
 
+message.em.alyx.waterbossdeath=<Alyx> Awesome! The seas will now be a safer place to be.
 
+message.em.waterboss.fight_initiate=<§9§lNiako, Operate of the Sea§r> Operations have been disrupted! Commencing system restart.
+message.em.waterboss.chat1=<§9§lNiako, Operate of the Sea§r> System unable to restart water delivery sy... You mortals are the root of this problem. You must GO!
+message.em.waterboss.chat2=<§9§lNiako, Operate of the Sea§r> I have better things to do besides dealing with you non amphibians.
+message.em.waterboss.chat3=<§9§lNiako, Operate of the Sea§r> I can hear them flowing through the pipes...
+message.em.waterboss.chat4=<§9§lNiako, Operate of the Sea§r> Silly mortals, I will deal with you myself!
+message.em.waterboss.chat5=<§9§lNiako, Operate of the Sea§r> SERVANTS! DEAL WITH THESE FOOLS!
+message.em.waterboss.chat6=<§9§lNiako, Operate of the Sea§r> I WILL HARNESS THE POWER OF THE OVERLORD!
+message.em.waterboss.chat7=<§9§lNiako, Operate of the Sea§r> I have failed you... Forgive me...
+message.em.waterboss.voidentitydeathmessagewater=<§1§lVoid Entity§r> ...
+
+message.em.waterboss.valve_closed=§7§oYou twist the valve with tremendous strength and a large shutter is felt throughout the factory...§r
 
 
 item.fire_sword1.name=Diamond Sword

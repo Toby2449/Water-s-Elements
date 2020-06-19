@@ -8,7 +8,12 @@ import com.water.elementmod.entity.boss.fire.EntityFireGuardianCastle;
 import com.water.elementmod.entity.boss.nature.EntityNatureBoss;
 import com.water.elementmod.entity.boss.nature.EntityNatureBossMinion;
 import com.water.elementmod.entity.boss.nature.EntityPhotoSynthesizerCrystal;
-import com.water.elementmod.entity.friendly.EntityAlyx;
+import com.water.elementmod.entity.boss.water.EntityWaterBoss;
+import com.water.elementmod.entity.boss.water.EntityWaterBossClone;
+import com.water.elementmod.entity.boss.water.EntityWaterBossMeleeMinion;
+import com.water.elementmod.entity.boss.water.EntityWaterBossRangedMinion;
+import com.water.elementmod.entity.friendly.EntityAlyxFire;
+import com.water.elementmod.entity.friendly.EntityAlyxWater;
 import com.water.elementmod.entity.monster.EntityFireSkeleton;
 import com.water.elementmod.entity.monster.EntityFireZombie;
 import com.water.elementmod.entity.monster.EntityNatureSkeleton;
@@ -17,6 +22,8 @@ import com.water.elementmod.entity.monster.EntityNatureZombie;
 import com.water.elementmod.entity.monster.EntityWaterSkeleton;
 import com.water.elementmod.entity.monster.EntityWaterZombie;
 import com.water.elementmod.entity.projectile.EntityFireArrow;
+import com.water.elementmod.entity.projectile.EntityIceBall;
+import com.water.elementmod.entity.projectile.EntityIceBall2;
 import com.water.elementmod.entity.projectile.EntityNatureArrow;
 import com.water.elementmod.entity.projectile.EntityPoisonBall;
 import com.water.elementmod.entity.projectile.EntityWaterArrow;
@@ -28,7 +35,12 @@ import com.water.elementmod.entity.render.boss.fire.RenderFireGuardianCastle;
 import com.water.elementmod.entity.render.boss.nature.RenderNatureBoss;
 import com.water.elementmod.entity.render.boss.nature.RenderNatureBossMinion;
 import com.water.elementmod.entity.render.boss.nature.RenderPhotoSynthesizerCrystal;
-import com.water.elementmod.entity.render.friendly.RenderAlyx;
+import com.water.elementmod.entity.render.boss.water.RenderWaterBoss;
+import com.water.elementmod.entity.render.boss.water.RenderWaterBossClone;
+import com.water.elementmod.entity.render.boss.water.RenderWaterBossMeleeMinion;
+import com.water.elementmod.entity.render.boss.water.RenderWaterBossRangedMinion;
+import com.water.elementmod.entity.render.friendly.RenderAlyxFire;
+import com.water.elementmod.entity.render.friendly.RenderAlyxWater;
 import com.water.elementmod.entity.render.monster.RenderFireSkeleton;
 import com.water.elementmod.entity.render.monster.RenderFireZombie;
 import com.water.elementmod.entity.render.monster.RenderNatureSkeleton;
@@ -37,6 +49,8 @@ import com.water.elementmod.entity.render.monster.RenderNatureZombie;
 import com.water.elementmod.entity.render.monster.RenderWaterSkeleton;
 import com.water.elementmod.entity.render.monster.RenderWaterZombie;
 import com.water.elementmod.entity.render.projectile.RenderFireArrow;
+import com.water.elementmod.entity.render.projectile.RenderIceBall;
+import com.water.elementmod.entity.render.projectile.RenderIceBall2;
 import com.water.elementmod.entity.render.projectile.RenderNatureArrow;
 import com.water.elementmod.entity.render.projectile.RenderPoisonBall;
 import com.water.elementmod.entity.render.projectile.RenderWaterArrow;
@@ -170,12 +184,12 @@ public class EMRenderHandler
 			}
 		});
 		
-		RenderingRegistry.registerEntityRenderingHandler(EntityAlyx.class, new IRenderFactory<EntityAlyx>()
+		RenderingRegistry.registerEntityRenderingHandler(EntityAlyxFire.class, new IRenderFactory<EntityAlyxFire>()
 		{
 			@Override
-			public Render<? super EntityAlyx> createRenderFor(RenderManager manager)
+			public Render<? super EntityAlyxFire> createRenderFor(RenderManager manager)
 			{
-				return new RenderAlyx(manager);
+				return new RenderAlyxFire(manager);
 			}
 		});
 		
@@ -219,6 +233,62 @@ public class EMRenderHandler
 			public Render<? super EntityFireGuardianCastle> createRenderFor(RenderManager manager)
 			{
 				return new RenderFireGuardianCastle(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityWaterBoss.class, new IRenderFactory<EntityWaterBoss>()
+		{
+			@Override
+			public Render<? super EntityWaterBoss> createRenderFor(RenderManager manager)
+			{
+				return new RenderWaterBoss(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityWaterBossClone.class, new IRenderFactory<EntityWaterBossClone>()
+		{
+			@Override
+			public Render<? super EntityWaterBossClone> createRenderFor(RenderManager manager)
+			{
+				return new RenderWaterBossClone(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityWaterBossRangedMinion.class, new IRenderFactory<EntityWaterBossRangedMinion>()
+		{
+			@Override
+			public Render<? super EntityWaterBossRangedMinion> createRenderFor(RenderManager manager)
+			{
+				return new RenderWaterBossRangedMinion(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityIceBall.class, new IRenderFactory<EntityIceBall>()
+		{
+			@Override
+			public Render<? super EntityIceBall> createRenderFor(RenderManager manager)
+			{
+				return new RenderIceBall(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityIceBall2.class, new IRenderFactory<EntityIceBall2>()
+		{
+			@Override
+			public Render<? super EntityIceBall2> createRenderFor(RenderManager manager)
+			{
+				return new RenderIceBall2(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityWaterBossMeleeMinion.class, new IRenderFactory<EntityWaterBossMeleeMinion>()
+		{
+			@Override
+			public Render<? super EntityWaterBossMeleeMinion> createRenderFor(RenderManager manager)
+			{
+				return new RenderWaterBossMeleeMinion(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityAlyxWater.class, new IRenderFactory<EntityAlyxWater>()
+		{
+			@Override
+			public Render<? super EntityAlyxWater> createRenderFor(RenderManager manager)
+			{
+				return new RenderAlyxWater(manager);
 			}
 		});
 	}

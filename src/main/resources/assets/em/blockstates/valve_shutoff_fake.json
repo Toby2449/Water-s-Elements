@@ -1,0 +1,12 @@
+{
+    "variants": {		
+        "facing=north,used=false": { "model": "em:valve_shutoff" },
+        "facing=east,used=false": { "model": "em:valve_shutoff", "y": 90 },
+        "facing=south,used=false": { "model": "em:valve_shutoff", "y": 180 },
+        "facing=west,used=false": { "model": "em:valve_shutoff", "y": 270 },
+		"facing=north,used=true": { "model": "em:valve_shutoff" },
+		"facing=east,used=true": { "model": "em:valve_shutoff", "y": 90 },
+		"facing=south,used=true": { "model": "em:valve_shutoff", "y": 180 },
+		"facing=west,used=true": { "model": "em:valve_shutoff", "y": 270 }
+    }
+}

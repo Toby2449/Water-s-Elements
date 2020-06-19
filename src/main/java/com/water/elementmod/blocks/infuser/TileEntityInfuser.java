@@ -257,7 +257,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 		if(flag2 != this.isCooking())
 		{
 			flag1 = true;
-			if(this.inventory.get(1).getItem() == EMCoreItems.ETERNAL_FIRE) 
+			if(this.inventory.get(1).getItem() == EMCoreItems.BURNING_ASHES) 
 			{
 				BlockInfuser.setState(this.isCooking(), 0, this.world, this.pos);
 			}
@@ -324,9 +324,9 @@ public class TileEntityInfuser extends TileEntity implements ITickable, IInvento
 			EnchantmentHelper.setEnchantments(map, result);
 			if(output.isEmpty()) this.inventory.set(3, result.copy());
 			
-			if(input2.getItem() == EMCoreItems.ETERNAL_FIRE) this.world.playSound((EntityPlayer)null, this.getPos(), SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 1.0F, this.world.rand.nextFloat() * 0.7F + 0.3F);
+			if(input2.getItem() == EMCoreItems.BURNING_ASHES) this.world.playSound((EntityPlayer)null, this.getPos(), SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 1.0F, this.world.rand.nextFloat() * 0.7F + 0.3F);
 			if(input2.getItem() == EMCoreItems.PERPETUAL_DRP) this.world.playSound((EntityPlayer)null, this.getPos(), SoundEvents.BLOCK_WATER_AMBIENT, SoundCategory.BLOCKS, 1.0F, this.world.rand.nextFloat() + 0.5F);
-			if(input2.getItem() == EMCoreItems.NATURESMPL_Z) this.world.playSound((EntityPlayer)null, this.getPos(), EMSoundHandler.NATURE_LEAVES, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+			if(input2.getItem() == EMCoreItems.NATURE_ESSENCE) this.world.playSound((EntityPlayer)null, this.getPos(), EMSoundHandler.NATURE_LEAVES, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
 			this.world.playSound((EntityPlayer)null, this.getPos(), SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, this.world.rand.nextFloat() * 0.1F + 0.9F);
 			
 			input1.shrink(1);

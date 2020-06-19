@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeForest;
 import net.minecraft.world.biome.BiomeHell;
+import net.minecraft.world.biome.BiomeOcean;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.WorldGenerator;
@@ -22,6 +23,7 @@ public class WorldGenCustomStructures implements IWorldGenerator
 {
 	public static final WorldGenNArena N_ARENA = new WorldGenNArena();
 	public static final WorldGenFArena F_ARENA = new WorldGenFArena();
+	public static final WorldGenWArena W_ARENA = new WorldGenWArena();
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) 
@@ -35,7 +37,7 @@ public class WorldGenCustomStructures implements IWorldGenerator
 		case 0: // Over world
 			
 			generatorStructureOverworld(N_ARENA, world, random, chunkX, chunkZ, 200, Blocks.GRASS, 0, -4, 0, BiomeForest.class);
-			
+			generatorStructureOverworldOcean(W_ARENA, world, random, chunkX, chunkZ, 200, Blocks.GRAVEL, 0, 0, 0, BiomeOcean.class);
 			break;
 			
 		case -1: // Nether
@@ -57,6 +59,32 @@ public class WorldGenCustomStructures implements IWorldGenerator
 		Class<?> biome = world.provider.getBiomeForCoords(pos).getClass();
 		
 		if(y >= 60) // So the structure doesn't generate underground
+		{
+			if(world.getWorldType() != WorldType.FLAT)
+			{
+				if(classesList.contains(biome))
+				{
+					if(random.nextInt(chance) == 0)
+					{
+						generator.generate(world, random, pos);
+					}
+				}
+			}
+		}
+	}
+	
+	private void generatorStructureOverworldOcean(WorldGenerator generator, World world, Random random, int chunkX, int chunkZ, int chance, Block topBlock, int skewX, int skewY, int skewZ, Class<?>... classes)
+	{
+		ArrayList<Class<?>> classesList = new ArrayList<Class<?>>(Arrays.asList(classes));
+		
+		int x = (chunkX * 16) + random.nextInt(15);
+		int z = (chunkZ * 16) + random.nextInt(15);
+		int y = calculateGenerationHeight(world, x, z, topBlock);
+		BlockPos pos = new BlockPos(x + skewX, y + skewY, z + skewZ);
+		
+		Class<?> biome = world.provider.getBiomeForCoords(pos).getClass();
+		
+		if(y >= 25 && y <= 41) // So the structure doesn't generate underground
 		{
 			if(world.getWorldType() != WorldType.FLAT)
 			{

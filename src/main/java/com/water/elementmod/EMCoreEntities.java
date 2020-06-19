@@ -10,7 +10,12 @@ import com.water.elementmod.entity.boss.fire.EntityFireGuardianCastle;
 import com.water.elementmod.entity.boss.nature.EntityNatureBoss;
 import com.water.elementmod.entity.boss.nature.EntityNatureBossMinion;
 import com.water.elementmod.entity.boss.nature.EntityPhotoSynthesizerCrystal;
-import com.water.elementmod.entity.friendly.EntityAlyx;
+import com.water.elementmod.entity.boss.water.EntityWaterBoss;
+import com.water.elementmod.entity.boss.water.EntityWaterBossClone;
+import com.water.elementmod.entity.boss.water.EntityWaterBossMeleeMinion;
+import com.water.elementmod.entity.boss.water.EntityWaterBossRangedMinion;
+import com.water.elementmod.entity.friendly.EntityAlyxFire;
+import com.water.elementmod.entity.friendly.EntityAlyxWater;
 import com.water.elementmod.entity.monster.EntityFireSkeleton;
 import com.water.elementmod.entity.monster.EntityFireZombie;
 import com.water.elementmod.entity.monster.EntityNatureSkeleton;
@@ -19,6 +24,8 @@ import com.water.elementmod.entity.monster.EntityNatureZombie;
 import com.water.elementmod.entity.monster.EntityWaterSkeleton;
 import com.water.elementmod.entity.monster.EntityWaterZombie;
 import com.water.elementmod.entity.projectile.EntityFireArrow;
+import com.water.elementmod.entity.projectile.EntityIceBall;
+import com.water.elementmod.entity.projectile.EntityIceBall2;
 import com.water.elementmod.entity.projectile.EntityNatureArrow;
 import com.water.elementmod.entity.projectile.EntityPoisonBall;
 import com.water.elementmod.entity.projectile.EntityWaterArrow;
@@ -50,18 +57,25 @@ public class EMCoreEntities
 		registerEntity(EMConfig.ENTITY_PHOTOSYNCRYSTAL, "photo_synthetic_crystal", EntityPhotoSynthesizerCrystal.class, 100, 15263976, 2457391);
 		registerEntity(EMConfig.ENTITY_NATURE_BOSS_MINION, "nature_boss_minion", EntityNatureBossMinion.class, 100, 15263976, 2457391);
 		registerEntity(EMConfig.ENTITY_NATURE_STALKER, "nature_stalker", EntityNatureStalker.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_ALYX, "em_alyx", EntityAlyx.class, 100, 3877140, 880148);
+		registerEntity(EMConfig.ENTITY_ALYX_FIRE, "em_alyx_fire", EntityAlyxFire.class, 100, 3877140, 880148);
 		registerEntity(EMConfig.ENTITY_FIRE_BOSS, "fire_boss", EntityFireBoss.class, 100, 16738048, 16711680);
 		registerEntity(EMConfig.ENTITY_FIRE_CRYSTAL, "fire_crystal", EntityFireCrystal.class, 100, 16738048, 16711680);
 		registerEntity(EMConfig.ENTITY_FIRE_BOSS_MINI, "fire_boss_mini", EntityFireBossMinion.class, 100, 16738048, 16711680);
 		registerEntity(EMConfig.ENTITY_FIRE_GUARDIAN, "fire_guardian", EntityFireGuardian.class, 100, 16738048, 16711680);
 		registerEntity(EMConfig.ENTITY_FIRE_GUARDIAN_CASTLE, "fire_guardian_castle", EntityFireGuardianCastle.class, 100, 16738048, 16711680);
+		registerEntity(EMConfig.ENTITY_WATER_BOSS, "water_boss", EntityWaterBoss.class, 100, 4360181, 14481);
+		registerEntity(EMConfig.ENTITY_WATER_BOSS_CLONE, "water_boss_clone", EntityWaterBossClone.class, 100, 4360181, 14481);
+		registerEntity(EMConfig.ENTITY_WATER_BOSS_RANGED_MINION, "water_boss_ranged_minion", EntityWaterBossRangedMinion.class, 100, 4360181, 14481);
+		registerEntity(EMConfig.ENTITY_WATER_BOSS_MELEE_MINION, "water_boss_melee_minion", EntityWaterBossMeleeMinion.class, 100, 4360181, 14481);
+		registerEntity(EMConfig.ENTITY_ALYX_WATER, "em_alyx_water", EntityAlyxWater.class, 100, 3877140, 880148);
 		
 		registerArrow("nature_arrow", EntityNatureArrow.class, EMConfig.ENTITY_NATUREARROW);
 		registerArrow("water_arrow", EntityWaterArrow.class, EMConfig.ENTITY_WATERARROW);
 		registerArrow("fire_arrow", EntityFireArrow.class, EMConfig.ENTITY_FIREARROW);
 		
 		registerArrow("poison_ball", EntityPoisonBall.class, EMConfig.ENTITY_POISONBALL);
+		registerArrow("ice_ball", EntityIceBall.class, EMConfig.ENTITY_ICEBALL);
+		registerArrow("ice_ball2", EntityIceBall2.class, EMConfig.ENTITY_ICEBALL2);
 	}
 	
 	public static void registerSpawns()

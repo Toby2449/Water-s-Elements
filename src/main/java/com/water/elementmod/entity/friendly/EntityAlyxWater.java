@@ -33,19 +33,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
-public class EntityAlyx extends EntityCreature
+public class EntityAlyxWater extends EntityCreature
 {
 	private BlockPos destination = null;
 	private boolean spoken = false;
 	
-	public EntityAlyx(World worldIn) 
+	public EntityAlyxWater(World worldIn) 
 	{
 		super(worldIn);
 		this.setSize(0.7F, 1.875F);
 		this.setCustomNameTag("Aylx");
 	}
 	
-	public EntityAlyx(World worldIn, double gotoX, double gotoY, double gotoZ) 
+	public EntityAlyxWater(World worldIn, double gotoX, double gotoY, double gotoZ) 
 	{
 		super(worldIn);
 		this.setSize(0.7F, 1.875F);
@@ -55,7 +55,7 @@ public class EntityAlyx extends EntityCreature
 	
 	public static void registerFixesAlyx(DataFixer fixer)
     {
-        EntityLiving.registerFixesMob(fixer, EntityAlyx.class);
+        EntityLiving.registerFixesMob(fixer, EntityAlyxWater.class);
     }
 	
 	@Override
@@ -117,7 +117,7 @@ public class EntityAlyx extends EntityCreature
 			        
 			        for (EntityPlayer player : list)
 			        {
-			        	player.sendMessage(new TextComponentTranslation("message.em.alyx.firebossdeath"));
+			        	player.sendMessage(new TextComponentTranslation("message.em.alyx.waterbossdeath"));
 			        }
 	        	}
 	        }

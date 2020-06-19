@@ -12,6 +12,7 @@ import com.water.elementmod.items.armor.WaterArmor;
 import com.water.elementmod.items.arrow.ItemFireArrow;
 import com.water.elementmod.items.arrow.ItemNatureArrow;
 import com.water.elementmod.items.arrow.ItemWaterArrow;
+import com.water.elementmod.items.special.ItemCorrodedHardware;
 import com.water.elementmod.items.special.ItemEternalFire;
 import com.water.elementmod.items.special.ItemHeartOfTheWild;
 import com.water.elementmod.items.weapons.FireSword;
@@ -143,7 +144,8 @@ public class EMCoreItems
 	public static final Item MICRO_DRPS = new EMItemBase("item_micro_droplets", 64);
 	public static final Item SMALL_DRPS = new EMItemBase("item_small_droplets", 64);
 	public static final Item LARGE_DRPS = new EMItemBase("item_large_droplets", 64);
-	public static final Item PERPETUAL_DRP = new EMShinyItemBase("item_perpetual_droplet", 1);
+	public static final Item PERPETUAL_DRP = new EMShinyItemBase("item_perpetual_droplet", 16);
+	public static final Item CORRODED_HARDWARE = new ItemCorrodedHardware("item_corroded_hardware");
 	
 	public static final Item NATURE_ARROW = new ItemNatureArrow("item_nature_arrow", 64);
 	public static final Item WATER_ARROW = new ItemWaterArrow("item_water_arrow", 64);

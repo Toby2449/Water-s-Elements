@@ -7,7 +7,7 @@ import java.util.Random;
 import com.water.elementmod.EMCoreItems;
 import com.water.elementmod.entity.boss.nature.EntityNatureBossMinion;
 import com.water.elementmod.entity.boss.nature.EntityPhotoSynthesizerCrystal;
-import com.water.elementmod.entity.friendly.EntityAlyx;
+import com.water.elementmod.entity.friendly.EntityAlyxFire;
 import com.water.elementmod.entity.projectile.EntityPoisonBall;
 import com.water.elementmod.network.PacketCustomParticleData;
 import com.water.elementmod.network.PacketHandler;
@@ -377,6 +377,7 @@ public class EntityFireBoss extends EntityMob
 		        for (EntityPlayer player : playerlist)
 		        {
 		        	player.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 100, 2));
+		        	player.addPotionEffect(new PotionEffect(MobEffects.HASTE, 100, 1));
 		        }
         	}
         }
@@ -1386,7 +1387,7 @@ public class EntityFireBoss extends EntityMob
         super.onDeath(cause);
         
         BlockPos spawnPos = this.getSpawnLocation().add(0, 0, 16);
-        EntityAlyx alyx = new EntityAlyx(this.world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ() - 4);
+        EntityAlyxFire alyx = new EntityAlyxFire(this.world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ() - 4);
         alyx.setPosition(spawnPos.getX() + 0.5D, spawnPos.getY(), spawnPos.getZ() + 0.5D);
         this.world.spawnEntity(alyx);
         
