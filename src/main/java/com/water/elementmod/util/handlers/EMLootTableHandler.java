@@ -21,4 +21,6 @@ public class EMLootTableHandler
 	
 	public static final ResourceLocation FIRE_STRUCTURE_CHEST = LootTableList.register(new ResourceLocation(EMConfig.MOD_ID, "structure_loot/fire_structure_chest"));
 	public static final ResourceLocation FIRE_STRUCTURE_CHEST_TOWER = LootTableList.register(new ResourceLocation(EMConfig.MOD_ID, "structure_loot/fire_structure_chest_tower"));
+	
+	public static final ResourceLocation WATER_STRUCTURE_CHEST = LootTableList.register(new ResourceLocation(EMConfig.MOD_ID, "structure_loot/water_structure_chest"));
 }

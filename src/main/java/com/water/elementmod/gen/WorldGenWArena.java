@@ -4,21 +4,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import com.water.elementmod.EMCoreBlocks;
-import com.water.elementmod.blocks.valve.BlockValve;
-import com.water.elementmod.entity.boss.nature.EntityPhotoSynthesizerCrystal;
 import com.water.elementmod.entity.boss.water.EntityWaterBoss;
+import com.water.elementmod.entity.boss.water.EntityWaterTrash;
 import com.water.elementmod.util.EMConfig;
 import com.water.elementmod.util.handlers.EMLootTableHandler;
 import com.water.elementmod.util.interfaces.IStructure;
 
-import net.minecraft.block.BlockStairs;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -69,9 +65,52 @@ public class WorldGenWArena extends WorldGenerator implements IStructure
 					
 					if(tileentity instanceof TileEntityChest)
 					{
-						((TileEntityChest)tileentity).setLootTable(EMLootTableHandler.NATURE_STRUCTURE_CHEST3, random.nextLong());
+						((TileEntityChest)tileentity).setLootTable(EMLootTableHandler.WATER_STRUCTURE_CHEST, random.nextLong());
 					}
 				}
+				
+				if("trash_group_small".equals(entry.getValue()))
+				{
+					BlockPos blockpos = entry.getKey();
+					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
+					int randnum = new Random().nextInt(1);
+					for(int i = 1 + randnum; i > 0; i--)
+					{
+						EntityWaterTrash stalker = new EntityWaterTrash(world);
+						stalker.enablePersistence();
+						stalker.setPosition(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
+						world.spawnEntity(stalker);
+					}
+				}
+				
+				if("trash_group_medium".equals(entry.getValue()))
+				{
+					BlockPos blockpos = entry.getKey();
+					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
+					int randnum = new Random().nextInt(1);
+					for(int i = 2 + randnum; i > 0; i--)
+					{
+						EntityWaterTrash stalker = new EntityWaterTrash(world);
+						stalker.enablePersistence();
+						stalker.setPosition(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
+						world.spawnEntity(stalker);
+					}
+				}
+				
+				if("trash_group_large".equals(entry.getValue()))
+				{
+					BlockPos blockpos = entry.getKey();
+					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
+					int randnum = new Random().nextInt(2);
+					for(int i = 3 + randnum; i > 0; i--)
+					{
+						EntityWaterTrash stalker = new EntityWaterTrash(world);
+						stalker.enablePersistence();
+						stalker.setPosition(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
+						world.spawnEntity(stalker);
+					}
+				}
+				
 				if("boss_spawn".equals(entry.getValue()))
 				{
 					BlockPos blockpos = entry.getKey();

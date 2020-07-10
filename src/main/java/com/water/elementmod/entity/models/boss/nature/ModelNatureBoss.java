@@ -154,13 +154,6 @@ public class ModelNatureBoss extends ModelBase
         
         this.l_arm.rotateAngleX = -1.0F * this.triangleWave(limbSwing, 13.0F) * limbSwingAmount;
         this.r_arm.rotateAngleX = 1.5F * this.triangleWave(limbSwing, 13.0F) * limbSwingAmount;
-        //this.l_arm.rotateAngleY = 0.0F;
-        //this.r_arm.rotateAngleY = 0.0F;
-        
-        //this.l_lower_arm.rotateAngleX = -this.triangleWave(limbSwing, 13.0F) * limbSwingAmount;
-        //this.r_lower_arm.rotateAngleX = this.triangleWave(limbSwing, 13.0F) * limbSwingAmount;
-        //this.l_lower_arm.rotateAngleY = 0.25F;
-        //this.r_lower_arm.rotateAngleY = 0.25F;
     }
 	
 	private float triangleWave(float p_78172_1_, float p_78172_2_)

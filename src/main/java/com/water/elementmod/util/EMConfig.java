@@ -53,5 +53,11 @@ public class EMConfig {
 	public static final int ENTITY_ICEBALL = 144;
 	public static final int ENTITY_ICEBALL2 = 145;
 	public static final int ENTITY_ALYX_WATER = 146;
+	public static final int ENTITY_ALYX_NATURE = 147;
+	public static final int ENTITY_WATER_TRASH = 148;
+	
+	public static final int ENTITY_VOID_KNIGHT = 149;
+	public static final int ENTITY_VOID_BLOB = 150;
+	public static final int ENTITY_VOID_SMASHER = 151;
 	
 }

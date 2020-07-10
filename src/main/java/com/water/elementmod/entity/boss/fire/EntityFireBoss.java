@@ -74,15 +74,9 @@ public class EntityFireBoss extends EntityMob
 	private boolean minionsSpawned = false;
 	private BlockPos spawn_location;
 	private static List crystal_locations = new ArrayList();
-	private final double ARENA_SIZE_X = 50.0D;
-	private final double ARENA_SIZE_Y = 11.0D;
-	private final double ARENA_SIZE_Z = 40.0D;
-	private final double MF_SIZE_X = 95.0D;
-	private final double MF_SIZE_Y = 65.0D;
-	private final double MF_SIZE_Z = 105.0D;
 	private boolean arenaInitalized = false;
 	
-	private final int MINION_SPAWN_COOLDOWN = 400;
+	private final int MINION_SPAWN_COOLDOWN = _ConfigEntityFireBoss.MINION_SPAWN_COOLDOWN;
 	private int minionsAlive = 0;
 	private int spawnMinionCooldownP1 = 0;
 	private static List trailPoints = new ArrayList();
@@ -90,8 +84,7 @@ public class EntityFireBoss extends EntityMob
 	private int spawnMinionCooldownP2 = 0;
 	private int minionWaves;
 	private int spawnMinionCooldownP3 = 0;
-	private final int GUARDIAN_RESET_TIMER = 1350;
-	private int guardianTimer = GUARDIAN_RESET_TIMER;
+	private int guardianTimer = _ConfigEntityFireBoss.GUARDIAN_RESET_TIMER;
 	private boolean spawnGurdianP4 = false;
 	private int spawnMinionCooldownP5 = 0;
 	private boolean spawnGurdianP6 = false;
@@ -164,7 +157,7 @@ public class EntityFireBoss extends EntityMob
 	public void arenaInit()
 	{
 		this.crystal_locations.clear();
-		List<EntityFireCrystal> list = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		List<EntityFireCrystal> list = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
 		
 		for (EntityFireCrystal entity : list)
 	    {
@@ -290,58 +283,55 @@ public class EntityFireBoss extends EntityMob
         	}
         }
         
-        // Update trail nodes
-        for(int i = 0; i < this.trailPoints.size(); i++)
-		{
-			int CircleTimer = (Integer)this.trailPointTimers.get(i);
-			ArrayList pos = (ArrayList)this.trailPoints.get(i);
-			
-			if(!this.world.isRemote)
+    	if(!this.world.isRemote)
+    	{
+	        // Update trail nodes
+	        for(int i = 0; i < this.trailPoints.size(); i++)
 			{
+				int CircleTimer = (Integer)this.trailPointTimers.get(i);
+				ArrayList pos = (ArrayList)this.trailPoints.get(i);
+				
 				AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - 0.5D, (double)pos.get(1) - 0.5D, (double)pos.get(2) - 0.5D, (double)pos.get(0) + 1.0D, (double)pos.get(1) + 1.0D, (double)pos.get(2) + 1.0D);
 				List<EntityMob> AABBMob = this.world.<EntityMob>getEntitiesWithinAABB(EntityMob.class, AoePoint);
 				List<EntityAnimal> AABBAnimal = this.world.<EntityAnimal>getEntitiesWithinAABB(EntityAnimal.class, AoePoint);
 				List<EntityPlayer> AABBPlayer = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
 				if (!AABBMob.isEmpty())
-			    {
-			    	for (EntityMob ent : AABBMob)
-			        {
-			            
-			            ent.setFire(8);
-			            if(!ent.isPotionActive(MobEffects.SLOWNESS) && !(ent instanceof EntityFireGuardian)) 
-			            {
-			            	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 250, 1));
-			            }
-			        }
-			    }
-					
+				{
+				    for (EntityMob ent : AABBMob)
+				    {
+				            
+				        ent.setFire(8);
+				        if(!ent.isPotionActive(MobEffects.SLOWNESS) && !(ent instanceof EntityFireGuardian)) 
+				        {
+				        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 250, 1));
+				        }
+				    }
+				}
+						
 				if (!AABBAnimal.isEmpty())
-			    {
-			        for (EntityAnimal ent : AABBAnimal)
-			        {
-			        	ent.setFire(8);
-			            if(!ent.isPotionActive(MobEffects.SLOWNESS)) 
-			            {
-			            	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 250, 1));
-			            }
-			        }
-			    }
-					
+				{
+				    for (EntityAnimal ent : AABBAnimal)
+				    {
+				        ent.setFire(8);
+				        if(!ent.isPotionActive(MobEffects.SLOWNESS)) 
+				        {
+				        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 250, 1));
+				        }
+				    }
+				}
+						
 				if (!AABBPlayer.isEmpty())
-			    {
-			        for (EntityPlayer ent : AABBPlayer)
-			        {
-			        	ent.setFire(8);
-		            	if(!ent.isPotionActive(MobEffects.SLOWNESS)) 
-			            {
-			            	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 250, 1));
-			            }
-			        }
-			    }
-			}
-			if((Integer)this.trailPointTimers.get(i) > 0)
-			{
-				if(this.world.isRemote)
+				{
+				    for (EntityPlayer ent : AABBPlayer)
+				    {
+				        ent.setFire(8);
+				        if(!ent.isPotionActive(MobEffects.SLOWNESS)) 
+				        {
+				        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 250, 1));
+				        }
+				    }
+				}
+				if((Integer)this.trailPointTimers.get(i) > 0)
 				{
 					if((Integer)this.trailPointTimers.get(i) % 8 == 0)
 					{
@@ -352,27 +342,47 @@ public class EntityFireBoss extends EntityMob
 					{
 						FireSpitAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), this.world);
 					}
-				}
-				else
-				{
 					this.trailPointTimers.set(i, CircleTimer - 1);
 				}
-			}
-			else
-			{
-				if(!this.world.isRemote)
+				else
 				{
 					this.trailPoints.remove(i);
 					this.trailPointTimers.remove(i);
 				}
 			}
-		}
+    	}
+    	else
+    	{
+    		for(int i = 0; i < this.trailPoints.size(); i++)
+			{
+				int CircleTimer = (Integer)this.trailPointTimers.get(i);
+				ArrayList pos = (ArrayList)this.trailPoints.get(i);
+				if((Integer)this.trailPointTimers.get(i) > 0)
+				{
+					if((Integer)this.trailPointTimers.get(i) % 8 == 0)
+					{
+						FireTrail((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 1, this.world);
+					}
+						
+					if((Integer)this.trailPointTimers.get(i) % 50 == 0)
+					{
+						FireSpitAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), this.world);
+					}
+					this.trailPointTimers.set(i, CircleTimer - 1);
+				}
+				else
+				{
+					this.trailPoints.remove(i);
+					this.trailPointTimers.remove(i);
+				}
+			}
+    	}
         
         if(!this.world.isRemote)
         {
         	if(this.ticksExisted % 20 == 1)
         	{
-	        	List<EntityPlayer> playerlist = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(MF_SIZE_X, MF_SIZE_Y, MF_SIZE_Z).offset(0, -20, 0));
+	        	List<EntityPlayer> playerlist = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.MF_SIZE_X, _ConfigEntityFireBoss.MF_SIZE_Y, _ConfigEntityFireBoss.MF_SIZE_Z).offset(0, -20, 0));
 		        
 		        for (EntityPlayer player : playerlist)
 		        {
@@ -396,7 +406,7 @@ public class EntityFireBoss extends EntityMob
 		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
 		        	
 		        	this.minionsAlive = 0;
-		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
 			        
 			        for (EntityFireBossMinion entity : list)
 			        {
@@ -407,11 +417,11 @@ public class EntityFireBoss extends EntityMob
 			        {
 			        	if(this.spawnMinionCooldownP1 == 0)
 			        	{
-			        		this.spawnMinionCooldownP1 = MINION_SPAWN_COOLDOWN;
+			        		this.spawnMinionCooldownP1 = _ConfigEntityFireBoss.MINION_SPAWN_COOLDOWN;
 			        		int i = 0;
-			        		if(this.world.getDifficulty() == EnumDifficulty.EASY) i = 1;
-			        		if(this.world.getDifficulty() == EnumDifficulty.NORMAL) i = 1;
-			        		if(this.world.getDifficulty() == EnumDifficulty.HARD) i = 2;
+			        		if(this.world.getDifficulty() == EnumDifficulty.EASY) i = _ConfigEntityFireBoss.EASY_MINION_COUNT;
+			        		if(this.world.getDifficulty() == EnumDifficulty.NORMAL) i = _ConfigEntityFireBoss.NORMAL_MINION_COUNT;
+			        		if(this.world.getDifficulty() == EnumDifficulty.HARD) i = _ConfigEntityFireBoss.HARD_MINION_COUNT;
 			        		for(int j = 0; j <= i; j++)
 			        		{
 				        		EntityFireBossMinion entity = new EntityFireBossMinion(this.world);
@@ -439,21 +449,21 @@ public class EntityFireBoss extends EntityMob
 		        	this.setInvulState(true);
 		        	
 		        	this.minionsAlive = 0;
-		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
 			        
 			        for (EntityFireBossMinion entity : list)
 			        {
 			        	this.minionsAlive++;
 			        }
 		        	
-			        if(this.minionWaves <= 2)
+			        if(this.minionWaves <= _ConfigEntityFireBoss.MINION_WAVES)
 			        {
 				        if(this.minionsAlive == 0)
 				        {
 				        	if(this.spawnMinionCooldownP2 <= 0)
 				        	{
-				        		this.spawnMinionCooldownP2 = 40;
-				        		List<EntityFireCrystal> list2 = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+				        		this.spawnMinionCooldownP2 = _ConfigEntityFireBoss.MINION_SPAWN_COOLDOWN;
+				        		List<EntityFireCrystal> list2 = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
 						        
 						        for (EntityFireCrystal crystal : list2)
 						        {
@@ -470,7 +480,7 @@ public class EntityFireBoss extends EntityMob
 				        }
 			        }
 			        
-			        if(this.minionWaves == 2)
+			        if(this.minionWaves == _ConfigEntityFireBoss.MINION_WAVES)
 			        {
 			        	this.minionWaves = 0;
 			        	this.setPhase(3);
@@ -496,7 +506,7 @@ public class EntityFireBoss extends EntityMob
 		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
 		        	
 		        	this.minionsAlive = 0;
-		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z).offset(0, -1, 0));
+		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z).offset(0, -1, 0));
 			        
 			        for (EntityFireBossMinion entity : list)
 			        {
@@ -507,11 +517,11 @@ public class EntityFireBoss extends EntityMob
 			        {
 			        	if(this.spawnMinionCooldownP3 == 0)
 			        	{
-			        		this.spawnMinionCooldownP3 = 400;
+			        		this.spawnMinionCooldownP3 = _ConfigEntityFireBoss.MINION_SPAWN_COOLDOWN;
 			        		int i = 0;
-			        		if(this.world.getDifficulty() == EnumDifficulty.EASY) i = 1;
-			        		if(this.world.getDifficulty() == EnumDifficulty.NORMAL) i = 1;
-			        		if(this.world.getDifficulty() == EnumDifficulty.HARD) i = 2;
+			        		if(this.world.getDifficulty() == EnumDifficulty.EASY) i = _ConfigEntityFireBoss.EASY_MINION_COUNT;
+			        		if(this.world.getDifficulty() == EnumDifficulty.NORMAL) i = _ConfigEntityFireBoss.NORMAL_MINION_COUNT;
+			        		if(this.world.getDifficulty() == EnumDifficulty.HARD) i = _ConfigEntityFireBoss.HARD_MINION_COUNT;
 			        		for(int j = 0; j <= i; j++)
 			        		{
 				        		EntityFireBossMinion entity = new EntityFireBossMinion(this.world);
@@ -530,6 +540,8 @@ public class EntityFireBoss extends EntityMob
 	        	}
 	        	else
 	        	{
+	        		if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
+	        		
 	        		if(!this.chatted2)
 	        		{
 	        			this.chatted2 = true;
@@ -550,7 +562,7 @@ public class EntityFireBoss extends EntityMob
 		        		this.spawnGurdianP4 = true;
 		        		int crystalsInArena = 0;
 		        		int randomnumber = this.rand.nextInt(3);
-		        		List<EntityFireCrystal> list = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		        		List<EntityFireCrystal> list = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
 				        
 				        for (EntityFireCrystal crystalFound : list)
 				        {
@@ -582,7 +594,7 @@ public class EntityFireBoss extends EntityMob
 		        	}
 		        	
 		        	int guardiansLeft = 0;
-		        	List<EntityFireGuardian> list1 = this.world.<EntityFireGuardian>getEntitiesWithinAABB(EntityFireGuardian.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		        	List<EntityFireGuardian> list1 = this.world.<EntityFireGuardian>getEntitiesWithinAABB(EntityFireGuardian.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
 			        
 			        for (EntityFireGuardian guardians : list1)
 			        {
@@ -591,7 +603,7 @@ public class EntityFireBoss extends EntityMob
 			        
 			        if(guardiansLeft == 0) 
 			        {
-			        	this.guardianTimer = GUARDIAN_RESET_TIMER;
+			        	this.guardianTimer = _ConfigEntityFireBoss.GUARDIAN_RESET_TIMER;
 			        	this.setPhase(5);
 			        }
 	        	}
@@ -618,7 +630,7 @@ public class EntityFireBoss extends EntityMob
 		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
 		        	
 		        	this.minionsAlive = 0;
-		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
 			        
 			        for (EntityFireBossMinion entity : list)
 			        {
@@ -629,11 +641,11 @@ public class EntityFireBoss extends EntityMob
 			        {
 			        	if(this.spawnMinionCooldownP5 == 0)
 			        	{
-			        		this.spawnMinionCooldownP5 = MINION_SPAWN_COOLDOWN;
+			        		this.spawnMinionCooldownP5 = _ConfigEntityFireBoss.MINION_SPAWN_COOLDOWN;
 			        		int i = 0;
-			        		if(this.world.getDifficulty() == EnumDifficulty.EASY) i = 1;
-			        		if(this.world.getDifficulty() == EnumDifficulty.NORMAL) i = 1;
-			        		if(this.world.getDifficulty() == EnumDifficulty.HARD) i = 2;
+			        		if(this.world.getDifficulty() == EnumDifficulty.EASY) i = _ConfigEntityFireBoss.EASY_MINION_COUNT;
+			        		if(this.world.getDifficulty() == EnumDifficulty.NORMAL) i = _ConfigEntityFireBoss.NORMAL_MINION_COUNT;
+			        		if(this.world.getDifficulty() == EnumDifficulty.HARD) i = _ConfigEntityFireBoss.HARD_MINION_COUNT;
 			        		for(int j = 0; j <= i; j++)
 			        		{
 				        		EntityFireBossMinion entity = new EntityFireBossMinion(this.world);
@@ -652,6 +664,8 @@ public class EntityFireBoss extends EntityMob
 	        	}
 	        	else
 	        	{
+	        		if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
+	        		
 	        		if(!this.chatted4)
 	        		{
 	        			this.chatted4 = true;
@@ -670,7 +684,7 @@ public class EntityFireBoss extends EntityMob
 		        		this.spawnGurdianP6 = true;
 		        		int crystalsInArena = 0;
 		        		int randomnumber = this.rand.nextInt(2);
-		        		List<EntityFireCrystal> list = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		        		List<EntityFireCrystal> list = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
 				        
 				        for (EntityFireCrystal crystalFound : list)
 				        {
@@ -702,7 +716,7 @@ public class EntityFireBoss extends EntityMob
 		        	}
 		        	
 		        	int guardiansLeft = 0;
-		        	List<EntityFireGuardian> list1 = this.world.<EntityFireGuardian>getEntitiesWithinAABB(EntityFireGuardian.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		        	List<EntityFireGuardian> list1 = this.world.<EntityFireGuardian>getEntitiesWithinAABB(EntityFireGuardian.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
 			        
 			        for (EntityFireGuardian guardians : list1)
 			        {
@@ -711,7 +725,7 @@ public class EntityFireBoss extends EntityMob
 			        
 			        if(guardiansLeft == 0) 
 			        {
-			        	this.guardianTimer = GUARDIAN_RESET_TIMER;
+			        	this.guardianTimer = _ConfigEntityFireBoss.GUARDIAN_RESET_TIMER;
 			        	this.setPhase(7);
 			        }
 	        	}
@@ -738,7 +752,7 @@ public class EntityFireBoss extends EntityMob
 		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
 		        	
 		        	this.minionsAlive = 0;
-		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
 			        
 			        for (EntityFireBossMinion entity : list)
 			        {
@@ -749,11 +763,11 @@ public class EntityFireBoss extends EntityMob
 			        {
 			        	if(this.spawnMinionCooldownP7 == 0)
 			        	{
-			        		this.spawnMinionCooldownP7 = MINION_SPAWN_COOLDOWN;
+			        		this.spawnMinionCooldownP7 = _ConfigEntityFireBoss.MINION_SPAWN_COOLDOWN;
 			        		int i = 0;
-			        		if(this.world.getDifficulty() == EnumDifficulty.EASY) i = 1;
-			        		if(this.world.getDifficulty() == EnumDifficulty.NORMAL) i = 1;
-			        		if(this.world.getDifficulty() == EnumDifficulty.HARD) i = 2;
+			        		if(this.world.getDifficulty() == EnumDifficulty.EASY) i = _ConfigEntityFireBoss.EASY_MINION_COUNT;
+			        		if(this.world.getDifficulty() == EnumDifficulty.NORMAL) i = _ConfigEntityFireBoss.NORMAL_MINION_COUNT;
+			        		if(this.world.getDifficulty() == EnumDifficulty.HARD) i = _ConfigEntityFireBoss.HARD_MINION_COUNT;
 			        		for(int j = 0; j <= i; j++)
 			        		{
 				        		EntityFireBossMinion entity = new EntityFireBossMinion(this.world);
@@ -772,6 +786,8 @@ public class EntityFireBoss extends EntityMob
 	        	}
 	        	else
 	        	{
+	        		if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
+	        		
 	        		if(!this.chatted6)
 	        		{
 	        			this.chatted6 = true;
@@ -791,7 +807,7 @@ public class EntityFireBoss extends EntityMob
 		        		this.spawnGurdianP8 = true;
 		        		int crystalsInArena = 0;
 		        		int randomnumber = this.rand.nextInt(1);
-		        		List<EntityFireCrystal> list = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		        		List<EntityFireCrystal> list = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
 				        
 				        for (EntityFireCrystal crystalFound : list)
 				        {
@@ -823,7 +839,7 @@ public class EntityFireBoss extends EntityMob
 		        	}
 		        	
 		        	int guardiansLeft = 0;
-		        	List<EntityFireGuardian> list1 = this.world.<EntityFireGuardian>getEntitiesWithinAABB(EntityFireGuardian.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		        	List<EntityFireGuardian> list1 = this.world.<EntityFireGuardian>getEntitiesWithinAABB(EntityFireGuardian.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
 			        
 			        for (EntityFireGuardian guardians : list1)
 			        {
@@ -832,7 +848,7 @@ public class EntityFireBoss extends EntityMob
 			        
 			        if(guardiansLeft == 0) 
 			        {
-			        	this.guardianTimer = GUARDIAN_RESET_TIMER;
+			        	this.guardianTimer = _ConfigEntityFireBoss.GUARDIAN_RESET_TIMER;
 			        	this.setPhase(9);
 			        }
 	        	}
@@ -859,7 +875,7 @@ public class EntityFireBoss extends EntityMob
 		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
 		        	
 		        	this.minionsAlive = 0;
-		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
 			        
 			        for (EntityFireBossMinion entity : list)
 			        {
@@ -870,11 +886,11 @@ public class EntityFireBoss extends EntityMob
 			        {
 			        	if(this.spawnMinionCooldownP9 == 0)
 			        	{
-			        		this.spawnMinionCooldownP9 = MINION_SPAWN_COOLDOWN;
+			        		this.spawnMinionCooldownP9 = _ConfigEntityFireBoss.MINION_SPAWN_COOLDOWN;
 			        		int i = 0;
-			        		if(this.world.getDifficulty() == EnumDifficulty.EASY) i = 1;
-			        		if(this.world.getDifficulty() == EnumDifficulty.NORMAL) i = 1;
-			        		if(this.world.getDifficulty() == EnumDifficulty.HARD) i = 2;
+			        		if(this.world.getDifficulty() == EnumDifficulty.EASY) i = _ConfigEntityFireBoss.EASY_MINION_COUNT;
+			        		if(this.world.getDifficulty() == EnumDifficulty.NORMAL) i = _ConfigEntityFireBoss.NORMAL_MINION_COUNT;
+			        		if(this.world.getDifficulty() == EnumDifficulty.HARD) i = _ConfigEntityFireBoss.HARD_MINION_COUNT;
 			        		for(int j = 0; j <= i; j++)
 			        		{
 				        		EntityFireBossMinion entity = new EntityFireBossMinion(this.world);
@@ -893,6 +909,8 @@ public class EntityFireBoss extends EntityMob
 	        	}
 	        	else
 	        	{
+	        		if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
+	        		
 	        		if(!this.chatted8)
 	        		{
 	        			this.chatted8 = true;
@@ -909,7 +927,7 @@ public class EntityFireBoss extends EntityMob
 		        	if(!this.spawnGurdianP10)
 		        	{
 		        		this.spawnGurdianP10 = true;
-		        		List<EntityFireCrystal> list = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		        		List<EntityFireCrystal> list = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
 				        
 				        for (EntityFireCrystal crystalFound : list)
 				        {
@@ -937,7 +955,7 @@ public class EntityFireBoss extends EntityMob
 		        	}
 		        	
 		        	int guardiansLeft = 0;
-		        	List<EntityFireGuardian> list1 = this.world.<EntityFireGuardian>getEntitiesWithinAABB(EntityFireGuardian.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		        	List<EntityFireGuardian> list1 = this.world.<EntityFireGuardian>getEntitiesWithinAABB(EntityFireGuardian.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
 			        
 			        for (EntityFireGuardian guardians : list1)
 			        {
@@ -946,7 +964,7 @@ public class EntityFireBoss extends EntityMob
 		        	
 		        	if(guardiansLeft == 0) 
 			        {
-			        	this.guardianTimer = GUARDIAN_RESET_TIMER;
+			        	this.guardianTimer = _ConfigEntityFireBoss.GUARDIAN_RESET_TIMER;
 			        	this.setPhase(11);
 			        }
 	        	}
@@ -973,7 +991,7 @@ public class EntityFireBoss extends EntityMob
 		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
 		        	
 		        	this.minionsAlive = 0;
-		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
 			        
 			        for (EntityFireBossMinion entity : list)
 			        {
@@ -984,11 +1002,11 @@ public class EntityFireBoss extends EntityMob
 			        {
 			        	if(this.spawnMinionCooldownRage == 0)
 			        	{
-			        		this.spawnMinionCooldownRage = MINION_SPAWN_COOLDOWN;
+			        		this.spawnMinionCooldownRage = _ConfigEntityFireBoss.MINION_SPAWN_COOLDOWN;
 			        		int i = 0;
-			        		if(this.world.getDifficulty() == EnumDifficulty.EASY) i = 2;
-			        		if(this.world.getDifficulty() == EnumDifficulty.NORMAL) i = 3;
-			        		if(this.world.getDifficulty() == EnumDifficulty.HARD) i = 4;
+			        		if(this.world.getDifficulty() == EnumDifficulty.EASY) i = _ConfigEntityFireBoss.EASY_RAGE_MINION_COUNT;
+			        		if(this.world.getDifficulty() == EnumDifficulty.NORMAL) i = _ConfigEntityFireBoss.NORMAL_RAGE_MINION_COUNT;
+			        		if(this.world.getDifficulty() == EnumDifficulty.HARD) i = _ConfigEntityFireBoss.HARD_RAGE_MINION_COUNT;
 			        		for(int j = 0; j <= i; j++)
 			        		{
 				        		EntityFireBossMinion entity = new EntityFireBossMinion(this.world);
@@ -1001,6 +1019,8 @@ public class EntityFireBoss extends EntityMob
 	        	}
 	        	else
 	        	{
+	        		if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
+	        		
 	        		if(!this.chatted10)
 	        		{
 	        			this.chatted10 = true;
@@ -1015,7 +1035,7 @@ public class EntityFireBoss extends EntityMob
 		    	// If nobodies in the arena
 		        if(this.isFightActivated() && this.fightActive)
 		        {
-		        	List<EntityPlayer> players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		        	List<EntityPlayer> players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
 			        
 		        	if(players.size() <= 0)
 		        	{
@@ -1180,7 +1200,7 @@ public class EntityFireBoss extends EntityMob
     	this.spawnMinionCooldownP2 = 0;
     	this.minionWaves = 0;
     	this.spawnMinionCooldownP3 = 0;
-    	this.guardianTimer = GUARDIAN_RESET_TIMER;
+    	this.guardianTimer = _ConfigEntityFireBoss.GUARDIAN_RESET_TIMER;
     	this.spawnGurdianP4 = false;
     	this.spawnMinionCooldownP5 = 0;
     	this.spawnGurdianP6 = false;
@@ -1201,7 +1221,7 @@ public class EntityFireBoss extends EntityMob
     	this.chatted10 = false;
     	this.openDoor();
     	
-    	List<EntityFireCrystal> list = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+    	List<EntityFireCrystal> list = this.world.<EntityFireCrystal>getEntitiesWithinAABB(EntityFireCrystal.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
     	
     	if(!list.isEmpty())
     	{
@@ -1211,7 +1231,7 @@ public class EntityFireBoss extends EntityMob
 	        }
     	}
     	
-    	List<EntityFireBossMinion> list1 = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+    	List<EntityFireBossMinion> list1 = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
     	
     	if(!list1.isEmpty())
     	{
@@ -1221,7 +1241,7 @@ public class EntityFireBoss extends EntityMob
 	        }
     	}
     	
-    	List<EntityFireGuardian> list2 = this.world.<EntityFireGuardian>getEntitiesWithinAABB(EntityFireGuardian.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+    	List<EntityFireGuardian> list2 = this.world.<EntityFireGuardian>getEntitiesWithinAABB(EntityFireGuardian.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
     	
     	if(!list2.isEmpty())
     	{
@@ -1248,7 +1268,7 @@ public class EntityFireBoss extends EntityMob
 	{
 		if(this.world.isRemote)
 		{
-			List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+			List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
 	    	
 	    	if(!list.isEmpty())
 	    	{

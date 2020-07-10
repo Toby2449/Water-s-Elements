@@ -3,81 +3,53 @@ package com.water.elementmod.entity.boss.nature;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
-import com.google.common.base.Predicates;
 import com.water.elementmod.EMCoreItems;
-import com.water.elementmod.entity.ai.EntityAIMeleeCollide;
-import com.water.elementmod.entity.friendly.EntityAlyxFire;
-import com.water.elementmod.entity.monster.EntityWaterSkeleton;
+import com.water.elementmod.entity.friendly.EntityAlyxNature;
 import com.water.elementmod.entity.projectile.EntityFireArrow;
 import com.water.elementmod.entity.projectile.EntityPoisonBall;
 import com.water.elementmod.particle.EnumCustomParticleTypes;
 import com.water.elementmod.particle.ParticleSpawner;
-import com.water.elementmod.util.handlers.EMLootTableHandler;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
-import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIAttackRanged;
-import net.minecraft.entity.ai.EntityAIAttackRangedBow;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAIFollow;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
-import net.minecraft.entity.ai.EntityAIMoveTowardsTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.ai.EntityAIZombieAttack;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.boss.dragon.phase.PhaseManager;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.monster.AbstractSkeleton;
-import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.entity.projectile.EntityDragonFireball;
-import net.minecraft.entity.projectile.EntityWitherSkull;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.stats.StatList;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import scala.reflect.internal.Trees.This;
 
 public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
 {
@@ -92,9 +64,7 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
 	private BlockPos spawn_location;
 	private int ticks_existed_after_vunerable;
 	private static List crystal_locations = new ArrayList();
-	private final double ARENA_SIZE_X = 30.0D;
-	private final double ARENA_SIZE_Y = 20.0D;
-	private final double ARENA_SIZE_Z = 30.0D;
+	private int chatted = 0;
 	
 	public EntityNatureBoss(World worldIn) 
 	{
@@ -147,7 +117,7 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
 	
 	public void arenaInit()
 	{
-		List<EntityPhotoSynthesizerCrystal> list = this.world.<EntityPhotoSynthesizerCrystal>getEntitiesWithinAABB(EntityPhotoSynthesizerCrystal.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+		List<EntityPhotoSynthesizerCrystal> list = this.world.<EntityPhotoSynthesizerCrystal>getEntitiesWithinAABB(EntityPhotoSynthesizerCrystal.class, this.getEntityBoundingBox().grow(_ConfigEntityNatureBoss.ARENA_SIZE_X, _ConfigEntityNatureBoss.ARENA_SIZE_Y, _ConfigEntityNatureBoss.ARENA_SIZE_Z));
 		
 		for (EntityPhotoSynthesizerCrystal entity : list)
 	    {
@@ -202,10 +172,7 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
     {
     	if(!this.isFightActivated()) 
     	{
-	    	if (world.isRemote)
-	    	{
-	    		player.sendMessage(new TextComponentTranslation("message.em.natureboss.fight_initiate"));
-	    	}
+	    	this.sayChatLine(0);
 	    	this.arenaInit();
 	    	this.activateFight();
 	    	this.placeDoor();
@@ -227,18 +194,29 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
     @Override
 	public void onLivingUpdate()
     {
+    	super.onLivingUpdate();
+    	
         if (this.world.isRemote)
         {
             ParticleSpawner.spawnParticle(EnumCustomParticleTypes.LEAF, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height - 0.25D, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 0.0D);
         }
         
-        super.onLivingUpdate();
-        
         this.crystals_alive = 0;
         
         if(!this.world.isRemote)
         {
-	        List<EntityPhotoSynthesizerCrystal> list = this.world.<EntityPhotoSynthesizerCrystal>getEntitiesWithinAABB(EntityPhotoSynthesizerCrystal.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+        	if(this.ticksExisted % 20 == 1)
+        	{
+            	List<EntityPlayer> playerlist = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityNatureBoss.MF_SIZE_X, _ConfigEntityNatureBoss.MF_SIZE_Y, _ConfigEntityNatureBoss.MF_SIZE_Z).offset(0, -20, 0));
+    	        
+    	        for (EntityPlayer player : playerlist)
+    	        {
+    	        	player.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 100, 2));
+    	        	player.addPotionEffect(new PotionEffect(MobEffects.HASTE, 100, 1));
+    	        }
+        	}
+        	
+	        List<EntityPhotoSynthesizerCrystal> list = this.world.<EntityPhotoSynthesizerCrystal>getEntitiesWithinAABB(EntityPhotoSynthesizerCrystal.class, this.getEntityBoundingBox().grow(_ConfigEntityNatureBoss.ARENA_SIZE_X, _ConfigEntityNatureBoss.ARENA_SIZE_Y, _ConfigEntityNatureBoss.ARENA_SIZE_Z));
 	        
 	        for (EntityPhotoSynthesizerCrystal entity : list)
 	        {
@@ -276,7 +254,7 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
 		        		{
 			        		if(this.world.getDifficulty() == EnumDifficulty.EASY)
 			        		{
-			        			for(int i = 0; i < 2; i++)
+			        			for(int i = 0; i < _ConfigEntityNatureBoss.EASY_MINION_COUNT; i++)
 			        			{
 						        	EntityNatureBossMinion minion = new EntityNatureBossMinion(this.world);
 						        	minion.setPosition(this.posX, this.posY, this.posZ);
@@ -285,7 +263,7 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
 			        		}
 			        		else if(this.world.getDifficulty() == EnumDifficulty.NORMAL)
 			        		{
-			        			for(int i = 0; i < 3; i++)
+			        			for(int i = 0; i < _ConfigEntityNatureBoss.NORMAL_MINION_COUNT; i++)
 			        			{
 						        	EntityNatureBossMinion minion = new EntityNatureBossMinion(this.world);
 						        	minion.setPosition(this.posX, this.posY, this.posZ);
@@ -294,7 +272,7 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
 			        		}
 			        		else if(this.world.getDifficulty() == EnumDifficulty.HARD)
 			        		{
-			        			for(int i = 0; i < 4; i++)
+			        			for(int i = 0; i < _ConfigEntityNatureBoss.HARD_MINION_COUNT; i++)
 			        			{
 						        	EntityNatureBossMinion minion = new EntityNatureBossMinion(this.world);
 						        	minion.setPosition(this.posX, this.posY, this.posZ);
@@ -326,7 +304,7 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
 	        // If nobodies in the arena
 	        if(this.isFightActivated() && this.fightActive)
 	        {
-	        	List<EntityPlayer> players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+	        	List<EntityPlayer> players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityNatureBoss.ARENA_SIZE_X, _ConfigEntityNatureBoss.ARENA_SIZE_Y, _ConfigEntityNatureBoss.ARENA_SIZE_Z));
 		        
 	        	if(players.size() <= 0)
 	        	{
@@ -340,6 +318,15 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
 	        	this.setHealth(this.getMaxHealth());
 	        }
     	}
+        else
+        {
+        	this.chatted++;
+        	if(this.chatted >= _ConfigEntityNatureBoss.CHATTED)
+        	{
+        		this.sayChatLine(this.rand.nextInt(4) + 1);
+        		this.chatted = 0;
+        	}
+        }
 		
 		this.ticksExisted++;
         
@@ -352,7 +339,7 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
     	this.setInvulState(true);
     	this.openDoor();
     	
-    	List<EntityPhotoSynthesizerCrystal> list = this.world.<EntityPhotoSynthesizerCrystal>getEntitiesWithinAABB(EntityPhotoSynthesizerCrystal.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+    	List<EntityPhotoSynthesizerCrystal> list = this.world.<EntityPhotoSynthesizerCrystal>getEntitiesWithinAABB(EntityPhotoSynthesizerCrystal.class, this.getEntityBoundingBox().grow(_ConfigEntityNatureBoss.ARENA_SIZE_X, _ConfigEntityNatureBoss.ARENA_SIZE_Y, _ConfigEntityNatureBoss.ARENA_SIZE_Z));
     	
     	if(!list.isEmpty())
     	{
@@ -362,7 +349,7 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
 	        }
     	}
     	
-    	List<EntityNatureBossMinion> list1 = this.world.<EntityNatureBossMinion>getEntitiesWithinAABB(EntityNatureBossMinion.class, this.getEntityBoundingBox().grow(ARENA_SIZE_X, ARENA_SIZE_Y, ARENA_SIZE_Z));
+    	List<EntityNatureBossMinion> list1 = this.world.<EntityNatureBossMinion>getEntitiesWithinAABB(EntityNatureBossMinion.class, this.getEntityBoundingBox().grow(_ConfigEntityNatureBoss.ARENA_SIZE_X, _ConfigEntityNatureBoss.ARENA_SIZE_Y, _ConfigEntityNatureBoss.ARENA_SIZE_Z));
     	
     	if(!list1.isEmpty())
     	{
@@ -432,6 +419,48 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
     {
         return SoundEvents.ENTITY_WITHER_DEATH;
     }
+	
+	public void sayChatLine(int message)
+	{
+		if(this.world.isRemote)
+		{
+			List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityNatureBoss.ARENA_SIZE_X, _ConfigEntityNatureBoss.ARENA_SIZE_Y, _ConfigEntityNatureBoss.ARENA_SIZE_Z));
+	    	
+	    	if(!list.isEmpty())
+	    	{
+		    	for (EntityPlayer player : list)
+		        {
+		    		switch(message)
+		    		{
+		    		case 0:
+		    			player.sendMessage(new TextComponentTranslation("message.em.natureboss.fight_initiate"));
+		    			break;
+		    		case 1:
+		    			player.sendMessage(new TextComponentTranslation("message.em.natureboss.chat1"));
+		    			break;
+		    		case 2:
+		    			player.sendMessage(new TextComponentTranslation("message.em.natureboss.chat2"));
+		    			break;
+		    		case 3:
+		    			player.sendMessage(new TextComponentTranslation("message.em.natureboss.chat3"));
+		    			break;
+		    		case 4:
+		    			player.sendMessage(new TextComponentTranslation("message.em.natureboss.chat4"));
+		    			break;
+		    		case 5:
+		    			player.sendMessage(new TextComponentTranslation("message.em.natureboss.chat5"));
+		    			break;
+		    		case 6:
+		    			player.sendMessage(new TextComponentTranslation("message.em.natureboss.chat6"));
+		    			break;
+		    		case 7:
+		    			player.sendMessage(new TextComponentTranslation("message.em.natureboss.voidentitydeathmessagenature"));
+		    			break;
+		    		}
+		        }
+	    	}
+		}
+	}
 	
 	/**
      * Add the given player to the list of players tracking this entity. For instance, a player may track a boss in
@@ -508,7 +537,13 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
         
         this.crystal_locations.clear();
         
-        spawnAlyx();
+        BlockPos spawnPos = this.getSpawnLocation().add(0, 0, 13);
+        EntityAlyxNature alyx = new EntityAlyxNature(this.world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ() - 13);
+        alyx.setPosition(spawnPos.getX() + 0.5D, spawnPos.getY(), spawnPos.getZ() + 0.5D);
+        this.world.spawnEntity(alyx);
+        
+        this.sayChatLine(6);
+        this.sayChatLine(7);
     }
     
     @Override
@@ -573,18 +608,6 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
 	    	this.world.setBlockToAir(doorpos.add(0, -1, 0));
 	    	this.world.setBlockToAir(doorpos.add(-1, -1, 0));
     	}
-    }
-    
-    public void spawnAlyx()
-    {
-    	BlockPos pos1 = this.getSpawnLocation();
-    	BlockPos pos2 = this.getSpawnLocation().add(0, 0, -14);
-    	
-    	System.out.println(pos1);
-    	System.out.println(this.getSpawnLocation().add(0, 0, -14));
-    	
-    	//EntityAlyx alyx = new EntityAlyx(this.world, pos1.getX(), pos1.getY(), pos1.getZ(), pos2.getX(), pos2.getY(), pos2.getZ());
-        //this.world.spawnEntity(alyx);
     }
     
     public boolean getInvulState()

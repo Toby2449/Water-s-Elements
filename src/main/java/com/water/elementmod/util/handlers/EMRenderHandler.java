@@ -1,5 +1,6 @@
 package com.water.elementmod.util.handlers;
 
+import com.water.elementmod.EMCoreBlocks;
 import com.water.elementmod.entity.boss.fire.EntityFireBoss;
 import com.water.elementmod.entity.boss.fire.EntityFireBossMinion;
 import com.water.elementmod.entity.boss.fire.EntityFireCrystal;
@@ -8,11 +9,16 @@ import com.water.elementmod.entity.boss.fire.EntityFireGuardianCastle;
 import com.water.elementmod.entity.boss.nature.EntityNatureBoss;
 import com.water.elementmod.entity.boss.nature.EntityNatureBossMinion;
 import com.water.elementmod.entity.boss.nature.EntityPhotoSynthesizerCrystal;
+import com.water.elementmod.entity.boss.overworld.EntityVoidBlob;
+import com.water.elementmod.entity.boss.overworld.EntityVoidKnight;
+import com.water.elementmod.entity.boss.overworld.EntityVoidSmasher;
 import com.water.elementmod.entity.boss.water.EntityWaterBoss;
 import com.water.elementmod.entity.boss.water.EntityWaterBossClone;
 import com.water.elementmod.entity.boss.water.EntityWaterBossMeleeMinion;
 import com.water.elementmod.entity.boss.water.EntityWaterBossRangedMinion;
+import com.water.elementmod.entity.boss.water.EntityWaterTrash;
 import com.water.elementmod.entity.friendly.EntityAlyxFire;
+import com.water.elementmod.entity.friendly.EntityAlyxNature;
 import com.water.elementmod.entity.friendly.EntityAlyxWater;
 import com.water.elementmod.entity.monster.EntityFireSkeleton;
 import com.water.elementmod.entity.monster.EntityFireZombie;
@@ -35,11 +41,16 @@ import com.water.elementmod.entity.render.boss.fire.RenderFireGuardianCastle;
 import com.water.elementmod.entity.render.boss.nature.RenderNatureBoss;
 import com.water.elementmod.entity.render.boss.nature.RenderNatureBossMinion;
 import com.water.elementmod.entity.render.boss.nature.RenderPhotoSynthesizerCrystal;
+import com.water.elementmod.entity.render.boss.overworld.RenderVoidBlob;
+import com.water.elementmod.entity.render.boss.overworld.RenderVoidKnight;
+import com.water.elementmod.entity.render.boss.overworld.RenderVoidSmasher;
 import com.water.elementmod.entity.render.boss.water.RenderWaterBoss;
 import com.water.elementmod.entity.render.boss.water.RenderWaterBossClone;
 import com.water.elementmod.entity.render.boss.water.RenderWaterBossMeleeMinion;
 import com.water.elementmod.entity.render.boss.water.RenderWaterBossRangedMinion;
+import com.water.elementmod.entity.render.boss.water.RenderWaterTrash;
 import com.water.elementmod.entity.render.friendly.RenderAlyxFire;
+import com.water.elementmod.entity.render.friendly.RenderAlyxNature;
 import com.water.elementmod.entity.render.friendly.RenderAlyxWater;
 import com.water.elementmod.entity.render.monster.RenderFireSkeleton;
 import com.water.elementmod.entity.render.monster.RenderFireZombie;
@@ -54,9 +65,17 @@ import com.water.elementmod.entity.render.projectile.RenderIceBall2;
 import com.water.elementmod.entity.render.projectile.RenderNatureArrow;
 import com.water.elementmod.entity.render.projectile.RenderPoisonBall;
 import com.water.elementmod.entity.render.projectile.RenderWaterArrow;
+import com.water.elementmod.util.EMConfig;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -289,6 +308,67 @@ public class EMRenderHandler
 			public Render<? super EntityAlyxWater> createRenderFor(RenderManager manager)
 			{
 				return new RenderAlyxWater(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityAlyxNature.class, new IRenderFactory<EntityAlyxNature>()
+		{
+			@Override
+			public Render<? super EntityAlyxNature> createRenderFor(RenderManager manager)
+			{
+				return new RenderAlyxNature(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityWaterTrash.class, new IRenderFactory<EntityWaterTrash>()
+		{
+			@Override
+			public Render<? super EntityWaterTrash> createRenderFor(RenderManager manager)
+			{
+				return new RenderWaterTrash(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityVoidKnight.class, new IRenderFactory<EntityVoidKnight>()
+		{
+			@Override
+			public Render<? super EntityVoidKnight> createRenderFor(RenderManager manager)
+			{
+				return new RenderVoidKnight(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityVoidBlob.class, new IRenderFactory<EntityVoidBlob>()
+		{
+			@Override
+			public Render<? super EntityVoidBlob> createRenderFor(RenderManager manager)
+			{
+				return new RenderVoidBlob(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityVoidSmasher.class, new IRenderFactory<EntityVoidSmasher>()
+		{
+			@Override
+			public Render<? super EntityVoidSmasher> createRenderFor(RenderManager manager)
+			{
+				return new RenderVoidSmasher(manager);
+			}
+		});
+	}
+	
+	public static void registerCustomMeshesAndStates()
+	{
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(EMCoreBlocks.PURE_EVIL_BLOCK), new ItemMeshDefinition()
+		{
+			@Override
+			public ModelResourceLocation getModelLocation(ItemStack stack)
+			{
+				return new ModelResourceLocation(EMConfig.MOD_ID + ":pure_evil", "fluid");
+			}
+		});
+		
+		ModelLoader.setCustomStateMapper(EMCoreBlocks.PURE_EVIL_BLOCK, new StateMapperBase()
+		{
+			@Override
+			public ModelResourceLocation getModelResourceLocation(IBlockState state)
+			{
+				return new ModelResourceLocation(EMConfig.MOD_ID + ":pure_evil", "fluid");
 			}
 		});
 	}

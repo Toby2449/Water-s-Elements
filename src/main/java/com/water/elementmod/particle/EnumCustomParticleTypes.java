@@ -14,7 +14,9 @@ public enum EnumCustomParticleTypes
 	SMALL_HEART("small_heart", 2, false),
 	LEAF("leaf", 3, false),
 	LEAF_AURA("leaf_aura", 4, false),
-	LAVA("lava_fall", 5, false);
+	LAVA("lava_fall", 5, false),
+	VOID_PORTAL("void_portal", 6, false),
+	VOID_PORTAL_BLOCK("void_portal_block", 7, false);
 	
 	private final String particleName;
     private final int particleID;

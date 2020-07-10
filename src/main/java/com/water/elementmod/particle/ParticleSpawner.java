@@ -22,7 +22,7 @@ public class ParticleSpawner
 			double var17 = mc.getRenderViewEntity().posY - par4;
 			double var19 = mc.getRenderViewEntity().posZ - par6;
 			Particle var21 = null;
-			double var22 = 16.0D;
+			double var22 = 50.0D;
 			
 			if (var15 * var15 + var17 * var17 + var19 * var19 > var22 * var22)
 			{
@@ -57,6 +57,14 @@ public class ParticleSpawner
 				else if (type == EnumCustomParticleTypes.LAVA)
 				{
 					var21 = new ParticleLava(mc.world, par2, par4, par6, par8, par10, par12);
+				}
+				else if (type == EnumCustomParticleTypes.VOID_PORTAL)
+				{
+					var21 = new ParticleVoidPortal(mc.world, par2, par4, par6, par8, par10, par12);
+				}
+				else if (type == EnumCustomParticleTypes.VOID_PORTAL_BLOCK)
+				{
+					var21 = new ParticleVoidPortalBlock(mc.world, par2, par4, par6, par8, par10, par12);
 				}
 
 				mc.effectRenderer.addEffect(var21);

@@ -5,6 +5,8 @@ import java.util.Random;
 import com.water.elementmod.EMCoreBlocks;
 import com.water.elementmod.EMCoreItems;
 import com.water.elementmod.blocks.EMOreBase;
+import com.water.elementmod.particle.EnumCustomParticleTypes;
+import com.water.elementmod.particle.ParticleSpawner;
 
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -76,7 +78,7 @@ public class BlockVoidOre extends EMOreBase
             {
             	for (int i1 = 0; i1 < 10; ++i1)
                 {
-            		worldIn.spawnParticle(EnumParticleTypes.PORTAL, d1, d2, d3, (rand.nextDouble() - 0.5D) * 2.0D, -rand.nextDouble(), (rand.nextDouble() - 0.5D) * 2.0D);
+            		ParticleSpawner.spawnParticle(EnumCustomParticleTypes.VOID_PORTAL_BLOCK, d1, d2, d3, (rand.nextDouble() - 0.5D) * 2.0D, -rand.nextDouble(), (rand.nextDouble() - 0.5D) * 2.0D);
                 }
             }
         }

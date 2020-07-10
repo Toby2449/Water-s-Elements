@@ -37,6 +37,7 @@ public class EntityAlyxWater extends EntityCreature
 {
 	private BlockPos destination = null;
 	private boolean spoken = false;
+	private int spokenCD = 0;
 	
 	public EntityAlyxWater(World worldIn) 
 	{
@@ -108,19 +109,20 @@ public class EntityAlyxWater extends EntityCreature
         
         if(this.world.isRemote)
         {
-	        if(this.getNavigator().getPath() == null)
-	        {
-	        	if(!this.hasSpoken())
-	        	{
-	        		this.setSpoken(true);
-	        		List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(100, 70, 100));
-			        
-			        for (EntityPlayer player : list)
-			        {
-			        	player.sendMessage(new TextComponentTranslation("message.em.alyx.waterbossdeath"));
-			        }
-	        	}
-	        }
+        	if(!this.hasSpoken())
+        	{
+        		this.spokenCD++;
+        		if(this.spokenCD >= 80)
+        		{
+        			this.setSpoken(true);
+            		List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(100, 70, 100));
+    		        
+    		        for (EntityPlayer player : list)
+    		        {
+    		        	player.sendMessage(new TextComponentTranslation("message.em.alyx.waterbossdeath"));
+    		        }
+        		}
+        	}
         }
     }
 	

@@ -10,11 +10,16 @@ import com.water.elementmod.entity.boss.fire.EntityFireGuardianCastle;
 import com.water.elementmod.entity.boss.nature.EntityNatureBoss;
 import com.water.elementmod.entity.boss.nature.EntityNatureBossMinion;
 import com.water.elementmod.entity.boss.nature.EntityPhotoSynthesizerCrystal;
+import com.water.elementmod.entity.boss.overworld.EntityVoidBlob;
+import com.water.elementmod.entity.boss.overworld.EntityVoidKnight;
+import com.water.elementmod.entity.boss.overworld.EntityVoidSmasher;
 import com.water.elementmod.entity.boss.water.EntityWaterBoss;
 import com.water.elementmod.entity.boss.water.EntityWaterBossClone;
 import com.water.elementmod.entity.boss.water.EntityWaterBossMeleeMinion;
 import com.water.elementmod.entity.boss.water.EntityWaterBossRangedMinion;
+import com.water.elementmod.entity.boss.water.EntityWaterTrash;
 import com.water.elementmod.entity.friendly.EntityAlyxFire;
+import com.water.elementmod.entity.friendly.EntityAlyxNature;
 import com.water.elementmod.entity.friendly.EntityAlyxWater;
 import com.water.elementmod.entity.monster.EntityFireSkeleton;
 import com.water.elementmod.entity.monster.EntityFireZombie;
@@ -68,6 +73,11 @@ public class EMCoreEntities
 		registerEntity(EMConfig.ENTITY_WATER_BOSS_RANGED_MINION, "water_boss_ranged_minion", EntityWaterBossRangedMinion.class, 100, 4360181, 14481);
 		registerEntity(EMConfig.ENTITY_WATER_BOSS_MELEE_MINION, "water_boss_melee_minion", EntityWaterBossMeleeMinion.class, 100, 4360181, 14481);
 		registerEntity(EMConfig.ENTITY_ALYX_WATER, "em_alyx_water", EntityAlyxWater.class, 100, 3877140, 880148);
+		registerEntity(EMConfig.ENTITY_ALYX_NATURE, "em_alyx_nature", EntityAlyxNature.class, 100, 3877140, 880148);
+		registerEntity(EMConfig.ENTITY_WATER_TRASH, "water_trash", EntityWaterTrash.class, 100, 3877140, 880148);
+		registerEntity(EMConfig.ENTITY_VOID_KNIGHT, "void_knight", EntityVoidKnight.class, 100, 3877140, 880148);
+		registerEntity(EMConfig.ENTITY_VOID_BLOB, "void_blob", EntityVoidBlob.class, 100, 3877140, 880148);
+		registerEntity(EMConfig.ENTITY_VOID_SMASHER, "void_smasher", EntityVoidSmasher.class, 100, 3877140, 880148);
 		
 		registerArrow("nature_arrow", EntityNatureArrow.class, EMConfig.ENTITY_NATUREARROW);
 		registerArrow("water_arrow", EntityWaterArrow.class, EMConfig.ENTITY_WATERARROW);

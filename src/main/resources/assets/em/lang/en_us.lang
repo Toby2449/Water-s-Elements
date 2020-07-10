@@ -39,10 +39,18 @@ tile.synthesizer.name=Synthesizer
 tile.extractor.name=Extractor
 tile.infuser.name=Infuser
 tile.ore_void_bedrock.name=§5Void Encrusted Bedrock§r
+tile.valve_shutoff_fake.name=Small Valve
+
+tile.void_block.name=Void Stone
+tile.void_block_2.name=Weeping Void Stone
+
+fluid.pure_evil=§5Pure Evil§r
 
 container.synthesizer=Synthesizer
 container.extractor=Extractor
 container.infuser=Infuser
+
+effect.corruption=§1Corruption§r
 
 entity.fire_zombie.name=Fire Zombie
 entity.water_zombie.name=Water Zombie
@@ -52,7 +60,7 @@ entity.fire_skeleton.name=Fire Skeleton
 entity.water_skeleton.name=Water Skeleton
 entity.nature_skeleton.name=Nature Skeleton
 
-entity.nature_boss.name=§2§lIvus, Elder of Nature
+entity.nature_boss.name=§2§lIvus, Elder of Nature§r
 
 entity.fire_boss.name=§6§lPhonos, King of the Nether§r
 entity.fire_guardian.name=§6§oFire Guardian§r
@@ -62,6 +70,9 @@ entity.water_boss.name=§9§lNiako, Operate of the Sea§r
 entity.water_boss_clone.name=§9A power beyond comprehension§r
 entity.water_boss_ranged_minion.name=§9Water Slave§r
 entity.water_boss_melee_minion.name=§9Water Slave§r
+
+entity.void_knight.name=§lArthur, Guardian of the Overworld§r
+entity.void_smasher.name=§1§lVoid Smasher§r
 
 tooltip.Enchant=Element: 
 tooltip.ResetFormatting=§r
@@ -105,9 +116,20 @@ item.item_water_robe.name=§9Water Silk Robe§r
 item.item_leaf_armor.name=§2Leaf Hide Armor§r
 item.item_void_helmet.name=§5Helmet of the Corrupted Void§r
 
-message.em.alyx.firebossdeath=<Alyx> Excellent work! You are now one step closer to defeating the great evil once and for all.
 
-message.em.natureboss.fight_initiate=My crystals will protect me! Prepare to get overtaken by the forest.
+message.em.alyx.naturebossdeath=<Alyx> Good one, his soul had to be released. The Overlord sees all and he will not like this.
+
+message.em.natureboss.fight_initiate=<§2§lIvus, Elder of Nature§r> You have no purpose here. Leave this place at once.
+message.em.natureboss.chat1=<§2§lIvus, Elder of Nature§r> We live in harmony, but yet you are transgressing here.
+message.em.natureboss.chat2=<§2§lIvus, Elder of Nature§r> I will make life a living hell!
+message.em.natureboss.chat3=<§2§lIvus, Elder of Nature§r> Silly little ones, you think that you can slay the all mighty?!
+message.em.natureboss.chat4=<§2§lIvus, Elder of Nature§r> You should've never found this place.
+message.em.natureboss.chat5=<§2§lIvus, Elder of Nature§r> These words... I cannot control them... The Overlord CONSUMES ME!!
+message.em.natureboss.chat6=<§2§lIvus, Elder of Nature§r> I was the one who protected you... I was the ONE WHO LIVE TO FIGHT FOR YOU!!
+message.em.natureboss.voidentitydeathmessagenature=<§1§lVoid Entity§r> ...
+
+
+message.em.alyx.firebossdeath=<Alyx> Excellent work! You are now one step closer to defeating the great evil once and for all.
 
 message.em.fireboss.fight_initiate=<§6§lPhonos, King of the Nether§r> You shouldn't of come here...
 message.em.fireboss.chat1=<§6§lPhonos, King of the Nether§r> I harness the power of my orbs!
@@ -123,6 +145,7 @@ message.em.fireboss.chat10=<§6§lPhonos, King of the Nether§r> Go... AWAY!!
 message.em.fireboss.chat11=<§6§lPhonos, King of the Nether§r> I... just... wanted to... burn... alone....
 message.em.fireboss.voidentitydeathmessagefire=<§1§lVoid Entity§r> ...
 
+
 message.em.alyx.waterbossdeath=<Alyx> Awesome! The seas will now be a safer place to be.
 
 message.em.waterboss.fight_initiate=<§9§lNiako, Operate of the Sea§r> Operations have been disrupted! Commencing system restart.
@@ -137,6 +160,14 @@ message.em.waterboss.voidentitydeathmessagewater=<§1§lVoid Entity§r> ...
 
 message.em.waterboss.valve_closed=§7§oYou twist the valve with tremendous strength and a large shutter is felt throughout the factory...§r
 
+message.em.voidknight.player_in_arena=<§lArthur, Guardian of the Overworld§r> I require you at once! Things from beyond are about to attack!
+message.em.voidknight.fight_initiate=<§lArthur, Guardian of the Overworld§r> They're here. Defend me from the greater force from beyond!
+message.em.voidknight.phase2=<§lArthur, Guardian of the Overworld§r> They will be sending a lot more of their forces momentarily! Whatever you do, don't allow me to be consumed by the void...
+message.em.voidknight.phase3=<§1§lArthur, Guardian of the Void§r> I.. AM.. SLIPPING.. INTO.. nothingness!
+message.em.voidknight.phase3_1=<§1§lArthur, Guardian of the Void§r> HA HA HA! RUN AWAY LIKE THE COWARDS YOU ARE!
+message.em.voidknight.phase4=<§1§lArthur, Guardian of the Void§r> CONSUME!!
+message.em.voidknight.cleansed=<§lArthur, Guardian of the Overworld§r> I have been freed from the control of the void. I will be forever scarred by the great evil of the void.
+message.em.voidknight.ending_message=<§lArthur, Guardian of the Overworld§r> My senses tell me that you're able to save us all from the greater evil. Dive into the void rift and end this once and for all! The world's counting on you.
 
 item.fire_sword1.name=Diamond Sword
 item.fire_sword2.name=Diamond Sword

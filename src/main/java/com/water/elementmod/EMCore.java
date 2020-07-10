@@ -22,6 +22,7 @@ import com.water.elementmod.util.handlers.EMSoundHandler;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -35,6 +36,8 @@ public class EMCore
 {
 	public static final CreativeTabs TAB_MAIN = new EMTab_Main();
 	public static final CreativeTabs TAB_WEAPONS = new EMTab_Weapons();
+	
+	static { FluidRegistry.enableUniversalBucket(); }
 	
 	@Mod.Instance(EMConfig.MOD_ID)
 	public static EMCore instance;
@@ -60,6 +63,7 @@ public class EMCore
 		MinecraftForge.EVENT_BUS.register(new EventSuperPoison());
 		MinecraftForge.EVENT_BUS.register(new EventDrownDebuff());
 		EMSoundHandler.init();
+		EMCoreDimensions.register();
 		Utils.getLogger().info("Initialized");
 	}
 	

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -12,10 +11,10 @@ import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeForest;
 import net.minecraft.world.biome.BiomeHell;
 import net.minecraft.world.biome.BiomeOcean;
+import net.minecraft.world.biome.BiomePlains;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.WorldGenerator;
-import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import scala.actors.threadpool.Arrays;
 
@@ -24,6 +23,7 @@ public class WorldGenCustomStructures implements IWorldGenerator
 	public static final WorldGenNArena N_ARENA = new WorldGenNArena();
 	public static final WorldGenFArena F_ARENA = new WorldGenFArena();
 	public static final WorldGenWArena W_ARENA = new WorldGenWArena();
+	public static final WorldGenKnightArena KNIGHT_ARENA = new WorldGenKnightArena();
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) 
@@ -35,7 +35,7 @@ public class WorldGenCustomStructures implements IWorldGenerator
 			break;
 			
 		case 0: // Over world
-			
+			generatorStructureOverworld(KNIGHT_ARENA, world, random, chunkX, chunkZ, 200, Blocks.GRASS, 0, 2, 0, BiomePlains.class);
 			generatorStructureOverworld(N_ARENA, world, random, chunkX, chunkZ, 200, Blocks.GRASS, 0, -4, 0, BiomeForest.class);
 			generatorStructureOverworldOcean(W_ARENA, world, random, chunkX, chunkZ, 200, Blocks.GRAVEL, 0, 0, 0, BiomeOcean.class);
 			break;
