@@ -299,7 +299,7 @@ public class EntityVoidKnight extends EntityMob
 	        List<EntityMob> list = this.world.<EntityMob>getEntitiesWithinAABB(EntityMob.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidKnight.ARENA_SIZE_X, _ConfigEntityVoidKnight.ARENA_SIZE_Y, _ConfigEntityVoidKnight.ARENA_SIZE_Z));
 	        for (EntityMob entity : list)
 	        {
-	        	if(!(entity instanceof EntityVoidSmasher || entity instanceof EntityVoidBlob))
+	        	if(!(entity instanceof EntityVoidSmasher || entity instanceof EntityVoidBlob || entity instanceof EntityVoidKnight))
 	        	{
 	        		entity.isDead = true;
 	        	}

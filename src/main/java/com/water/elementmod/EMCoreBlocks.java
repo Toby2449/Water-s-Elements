@@ -8,6 +8,8 @@ import com.water.elementmod.blocks.EMFluidRegistry;
 import com.water.elementmod.blocks.extractor.BlockExtractor;
 import com.water.elementmod.blocks.fluids.BlockFluid;
 import com.water.elementmod.blocks.infuser.BlockInfuser;
+import com.water.elementmod.blocks.slab.EMBlockDoubleSlabBase;
+import com.water.elementmod.blocks.slab.EMBlockHalfSlabBase;
 import com.water.elementmod.blocks.special.BlockCrackBase;
 import com.water.elementmod.blocks.special.BlockVoidOre;
 import com.water.elementmod.blocks.synthesizer.BlockSynthesizer;
@@ -15,6 +17,7 @@ import com.water.elementmod.blocks.valve.BlockValve;
 import com.water.elementmod.blocks.valve.BlockValveFake;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockSlab;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 
@@ -33,6 +36,19 @@ public class EMCoreBlocks
 	
 	public static final Block VOID_BLOCK = new EMBlockBase("void_block", Material.ROCK, SoundType.STONE, 11.0f, 24.0f, "pickaxe", 1, 0.0f, 0);
 	public static final Block VOID_BLOCK_2 = new EMBlockBase("void_block_2", Material.ROCK, SoundType.STONE, 11.0f, 24.0f, "pickaxe", 1, 0.0f, 0);
+	
+	public static final Block CORRUPTED_FLESH = new EMBlockBase("corrupted_flesh", Material.GROUND, SoundType.PLANT, 8.5f, 15.0f, "pickaxe", 1, 0.0f, 0);
+	public static final Block CORRUPTED_FLESH2 = new EMBlockBase("dead_corrupted_flesh", Material.GROUND, SoundType.PLANT, 8.5f, 15.0f, "pickaxe", 1, 0.0f, 0);
+	public static final Block CORRUPTED_HEMORRHAGE = new EMBlockBase("corrupted_hemorrhage", Material.GROUND, SoundType.PLANT, 8.5f, 15.0f, "pickaxe", 1, 0.0f, 0);
+	
+	public static final Block CORRUPTED_VOID_FLESH = new EMBlockBase("corrupted_void_flesh", Material.GROUND, SoundType.PLANT, 8.5f, 15.0f, "pickaxe", 1, 0.0f, 0);
+	public static final Block CORRUPTED_VOID_FLESH2 = new EMBlockBase("dead_corrupted_void_flesh", Material.GROUND, SoundType.PLANT, 8.5f, 15.0f, "pickaxe", 1, 0.0f, 0);
+	
+	public static final BlockSlab CORRUPTED_FLESH_DOUBLE = new EMBlockDoubleSlabBase("corrupted_flesh_double", Material.GROUND, EMCore.TAB_MAIN, EMCoreBlocks.CORRUPTED_FLESH_HALF);
+	public static final BlockSlab CORRUPTED_FLESH_HALF = new EMBlockHalfSlabBase("corrupted_flesh_half", Material.GROUND, EMCore.TAB_MAIN, EMCoreBlocks.CORRUPTED_FLESH_HALF, EMCoreBlocks.CORRUPTED_FLESH_DOUBLE);
+	
+	public static final BlockSlab CORRUPTED_VOID_FLESH_DOUBLE = new EMBlockDoubleSlabBase("corrupted_void_flesh_double", Material.GROUND, EMCore.TAB_MAIN, EMCoreBlocks.CORRUPTED_VOID_FLESH_HALF);
+	public static final BlockSlab CORRUPTED_VOID_FLESH_HALF = new EMBlockHalfSlabBase("corrupted_void_flesh_half", Material.GROUND, EMCore.TAB_MAIN, EMCoreBlocks.CORRUPTED_VOID_FLESH_HALF, EMCoreBlocks.CORRUPTED_VOID_FLESH_DOUBLE);
 	
 	public static final Block PURE_EVIL_BLOCK = new BlockFluid("pure_evil", EMFluidRegistry.PURE_EVIL, Material.LAVA);
 	

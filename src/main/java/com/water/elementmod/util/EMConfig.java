@@ -60,4 +60,6 @@ public class EMConfig {
 	public static final int ENTITY_VOID_BLOB = 150;
 	public static final int ENTITY_VOID_SMASHER = 151;
 	
+	public static final int ENTITY_CARAPACE = 152;
+	
 }

@@ -1,0 +1,6 @@
+{
+   "parent": "block/cube_all",
+   "textures": {
+       "all": "em:blocks/dead_corrupted_void_flesh"
+   }
+}

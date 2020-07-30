@@ -69,6 +69,10 @@ public class ItemTeleporter extends Item implements IHasModel
 					player.setPositionAndUpdate(0, player.getPosition().getY() + 5D, 0);
 				}
 			}
+			
+			((EntityPlayerMP) player).mcServer.getPlayerList().transferPlayerToDimension(
+			(EntityPlayerMP) player, 2, new TeleportWithoutPortal(((EntityPlayerMP) player).mcServer.getWorld(EMCoreDimensions.VOID.getId())));
+			player.setPositionAndUpdate(1.0D, 58, 1.0D);
 		}
 		
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(handIn));

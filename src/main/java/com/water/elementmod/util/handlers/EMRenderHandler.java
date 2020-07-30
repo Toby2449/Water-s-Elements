@@ -1,6 +1,7 @@
 package com.water.elementmod.util.handlers;
 
 import com.water.elementmod.EMCoreBlocks;
+import com.water.elementmod.entity.boss._void.EntityCarapace;
 import com.water.elementmod.entity.boss.fire.EntityFireBoss;
 import com.water.elementmod.entity.boss.fire.EntityFireBossMinion;
 import com.water.elementmod.entity.boss.fire.EntityFireCrystal;
@@ -33,6 +34,7 @@ import com.water.elementmod.entity.projectile.EntityIceBall2;
 import com.water.elementmod.entity.projectile.EntityNatureArrow;
 import com.water.elementmod.entity.projectile.EntityPoisonBall;
 import com.water.elementmod.entity.projectile.EntityWaterArrow;
+import com.water.elementmod.entity.render.boss._void.RenderCarapace;
 import com.water.elementmod.entity.render.boss.fire.RenderFireBoss;
 import com.water.elementmod.entity.render.boss.fire.RenderFireBossMinion;
 import com.water.elementmod.entity.render.boss.fire.RenderFireCrystal;
@@ -348,6 +350,14 @@ public class EMRenderHandler
 			public Render<? super EntityVoidSmasher> createRenderFor(RenderManager manager)
 			{
 				return new RenderVoidSmasher(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityCarapace.class, new IRenderFactory<EntityCarapace>()
+		{
+			@Override
+			public Render<? super EntityCarapace> createRenderFor(RenderManager manager)
+			{
+				return new RenderCarapace(manager);
 			}
 		});
 	}

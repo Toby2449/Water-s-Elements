@@ -1,0 +1,6 @@
+{
+    "variants":
+    {
+        "variant=default": { "model": "em:slab_corrupted_flesh_double" }
+    }
+}

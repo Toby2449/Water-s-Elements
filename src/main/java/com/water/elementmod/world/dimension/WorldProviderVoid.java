@@ -31,6 +31,18 @@ public class WorldProviderVoid extends WorldProvider
 		return new Vec3d(0.467, 0.012, 0.988);
 	}
 	
+	/**
+     * Creates the light to brightness table
+     */
+    protected void generateLightBrightnessTable()
+    {
+        for (int i = 0; i <= 15; ++i)
+        {
+            float f1 = 1.0F - (float)i / 15.0F;
+            this.lightBrightnessTable[i] = (1.0F - f1) / (f1 * 3.0F + 1.0F) * 0.9F + 0.1F;
+        }
+    }
+	
 	@Override
 	public boolean isSurfaceWorld()
 	{

@@ -2,6 +2,7 @@ package com.water.elementmod;
 
 import java.util.Collection;
 
+import com.water.elementmod.entity.boss._void.EntityCarapace;
 import com.water.elementmod.entity.boss.fire.EntityFireBoss;
 import com.water.elementmod.entity.boss.fire.EntityFireBossMinion;
 import com.water.elementmod.entity.boss.fire.EntityFireCrystal;
@@ -78,6 +79,7 @@ public class EMCoreEntities
 		registerEntity(EMConfig.ENTITY_VOID_KNIGHT, "void_knight", EntityVoidKnight.class, 100, 3877140, 880148);
 		registerEntity(EMConfig.ENTITY_VOID_BLOB, "void_blob", EntityVoidBlob.class, 100, 3877140, 880148);
 		registerEntity(EMConfig.ENTITY_VOID_SMASHER, "void_smasher", EntityVoidSmasher.class, 100, 3877140, 880148);
+		registerEntity(EMConfig.ENTITY_CARAPACE, "carapace", EntityCarapace.class, 100, 3877140, 880148);
 		
 		registerArrow("nature_arrow", EntityNatureArrow.class, EMConfig.ENTITY_NATUREARROW);
 		registerArrow("water_arrow", EntityWaterArrow.class, EMConfig.ENTITY_WATERARROW);

@@ -1,0 +1,22 @@
+{
+    "variants": {
+        "normal": [
+            { "model": "em:corrupted_hemorrhage" },
+            { "model": "em:corrupted_hemorrhage", "x": 90 },
+            { "model": "em:corrupted_hemorrhage", "x": 180 },
+            { "model": "em:corrupted_hemorrhage", "x": 270 },
+            { "model": "em:corrupted_hemorrhage", "y": 90 },
+            { "model": "em:corrupted_hemorrhage", "y": 90, "x": 90 },
+            { "model": "em:corrupted_hemorrhage", "y": 90, "x": 180 },
+            { "model": "em:corrupted_hemorrhage", "y": 90, "x": 270 },
+            { "model": "em:corrupted_hemorrhage", "y": 180 },
+            { "model": "em:corrupted_hemorrhage", "y": 180, "x": 90 },
+            { "model": "em:corrupted_hemorrhage", "y": 180, "x": 180 },
+            { "model": "em:corrupted_hemorrhage", "y": 180, "x": 270 },
+            { "model": "em:corrupted_hemorrhage", "y": 270 },
+            { "model": "em:corrupted_hemorrhage", "y": 270, "x": 90 },
+            { "model": "em:corrupted_hemorrhage", "y": 270, "x": 180 },
+            { "model": "em:corrupted_hemorrhage", "y": 270, "x": 270 }
+        ]
+    }
+}
