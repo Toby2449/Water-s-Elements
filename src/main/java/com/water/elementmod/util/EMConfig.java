@@ -61,5 +61,9 @@ public class EMConfig {
 	public static final int ENTITY_VOID_SMASHER = 151;
 	
 	public static final int ENTITY_CARAPACE = 152;
+	public static final int ENTITY_ENERGY_ORB = 153;
+	public static final int ENTITY_BLUE_ORB = 154;
+	public static final int ENTITY_PURPLE_ORB = 155;
+	public static final int ENTITY_CARAPACE_EYE = 156;
 	
 }

@@ -13,5 +13,70 @@
         "category": "block",
         "subtitle": "block.infuser.nature",
         "sounds": [ { "name": "em:block/infuser/nature", "stream": true } ]
+    },
+    "entity.carapace_attack_01": {
+        "category": "hostile",
+        "subtitle": "entity.carapace_attack_01",
+        "sounds": [ { "name": "em:entity/carapace_attack_01", "stream": true } ]
+    },
+    "entity.carapace_attack_02": {
+        "category": "hostile",
+        "subtitle": "entity.carapace_attack_02",
+        "sounds": [ { "name": "em:entity/carapace_attack_02", "stream": true } ]
+    },
+    "entity.carapace_critattack_01": {
+        "category": "hostile",
+        "subtitle": "entity.carapace_critattack_01",
+        "sounds": [ { "name": "em:entity/carapace_critattack_01", "stream": true } ]
+    },
+    "entity.carapace_critattack_02": {
+        "category": "hostile",
+        "subtitle": "entity.carapace_critattack_02",
+        "sounds": [ { "name": "em:entity/carapace_critattack_02", "stream": true } ]
+    },
+    "entity.carapace_critattack_03": {
+        "category": "hostile",
+        "subtitle": "entity.carapace_critattack_03",
+        "sounds": [ { "name": "em:entity/carapace_critattack_03", "stream": true } ]
+    },
+    "entity.carapace_critattack_04": {
+        "category": "hostile",
+        "subtitle": "entity.carapace_critattack_04",
+        "sounds": [ { "name": "em:entity/carapace_critattack_04", "stream": true } ]
+    },
+    "entity.carapace_critattack_05": {
+        "category": "hostile",
+        "subtitle": "entity.carapace_critattack_05",
+        "sounds": [ { "name": "em:entity/carapace_critattack_05", "stream": true } ]
+    },
+    "entity.carapace_wound_01": {
+        "category": "hostile",
+        "subtitle": "entity.carapace_wound_01",
+        "sounds": [ { "name": "em:entity/carapace_wound_01", "stream": true } ]
+    },
+    "entity.carapace_wound_02": {
+        "category": "hostile",
+        "subtitle": "entity.carapace_wound_02",
+        "sounds": [ { "name": "em:entity/carapace_wound_02", "stream": true } ]
+    },
+    "entity.carapace_wound_03": {
+        "category": "hostile",
+        "subtitle": "entity.carapace_wound_03",
+        "sounds": [ { "name": "em:entity/carapace_wound_03", "stream": true } ]
+    },
+    "spells.impact_01": {
+        "category": "hostile",
+        "subtitle": "spells.impact_01",
+        "sounds": [ { "name": "em:spells/impact_01", "stream": true } ]
+    },
+    "spells.impact_02": {
+        "category": "hostile",
+        "subtitle": "spells.impact_02",
+        "sounds": [ { "name": "em:spells/impact_02", "stream": true } ]
+    },
+    "spells.impact_03": {
+        "category": "hostile",
+        "subtitle": "spells.impact_03",
+        "sounds": [ { "name": "em:spells/impact_03", "stream": true } ]
     }
 }

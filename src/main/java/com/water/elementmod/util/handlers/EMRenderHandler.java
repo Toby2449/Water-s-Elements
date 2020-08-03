@@ -1,7 +1,11 @@
 package com.water.elementmod.util.handlers;
 
 import com.water.elementmod.EMCoreBlocks;
+import com.water.elementmod.entity.boss._void.EntityBlueOrb;
 import com.water.elementmod.entity.boss._void.EntityCarapace;
+import com.water.elementmod.entity.boss._void.EntityCarapaceEye;
+import com.water.elementmod.entity.boss._void.EntityEnergyOrb;
+import com.water.elementmod.entity.boss._void.EntityPurpleOrb;
 import com.water.elementmod.entity.boss.fire.EntityFireBoss;
 import com.water.elementmod.entity.boss.fire.EntityFireBossMinion;
 import com.water.elementmod.entity.boss.fire.EntityFireCrystal;
@@ -34,7 +38,11 @@ import com.water.elementmod.entity.projectile.EntityIceBall2;
 import com.water.elementmod.entity.projectile.EntityNatureArrow;
 import com.water.elementmod.entity.projectile.EntityPoisonBall;
 import com.water.elementmod.entity.projectile.EntityWaterArrow;
+import com.water.elementmod.entity.render.boss._void.RenderBlueOrb;
 import com.water.elementmod.entity.render.boss._void.RenderCarapace;
+import com.water.elementmod.entity.render.boss._void.RenderCarapaceEye;
+import com.water.elementmod.entity.render.boss._void.RenderEnergyOrb;
+import com.water.elementmod.entity.render.boss._void.RenderPurpleOrb;
 import com.water.elementmod.entity.render.boss.fire.RenderFireBoss;
 import com.water.elementmod.entity.render.boss.fire.RenderFireBossMinion;
 import com.water.elementmod.entity.render.boss.fire.RenderFireCrystal;
@@ -358,6 +366,38 @@ public class EMRenderHandler
 			public Render<? super EntityCarapace> createRenderFor(RenderManager manager)
 			{
 				return new RenderCarapace(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityEnergyOrb.class, new IRenderFactory<EntityEnergyOrb>()
+		{
+			@Override
+			public Render<? super EntityEnergyOrb> createRenderFor(RenderManager manager)
+			{
+				return new RenderEnergyOrb(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityBlueOrb.class, new IRenderFactory<EntityBlueOrb>()
+		{
+			@Override
+			public Render<? super EntityBlueOrb> createRenderFor(RenderManager manager)
+			{
+				return new RenderBlueOrb(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityPurpleOrb.class, new IRenderFactory<EntityPurpleOrb>()
+		{
+			@Override
+			public Render<? super EntityPurpleOrb> createRenderFor(RenderManager manager)
+			{
+				return new RenderPurpleOrb(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityCarapaceEye.class, new IRenderFactory<EntityCarapaceEye>()
+		{
+			@Override
+			public Render<? super EntityCarapaceEye> createRenderFor(RenderManager manager)
+			{
+				return new RenderCarapaceEye(manager);
 			}
 		});
 	}

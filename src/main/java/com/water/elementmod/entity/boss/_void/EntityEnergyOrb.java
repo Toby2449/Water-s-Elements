@@ -1,4 +1,4 @@
-package com.water.elementmod.entity.boss.nature;
+package com.water.elementmod.entity.boss._void;
 
 import java.util.List;
 import java.util.Random;
@@ -29,6 +29,7 @@ import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -45,26 +46,26 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProviderEnd;
 import net.minecraft.world.end.DragonFightManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EntityPhotoSynthesizerCrystal extends EntityLiving
+public class EntityEnergyOrb extends EntityLiving
 {
-	private static final DataParameter<Boolean> IS_INVURNERABLE = EntityDataManager.<Boolean>createKey(EntityPhotoSynthesizerCrystal.class, DataSerializers.BOOLEAN);
     public int innerRotation;
     private AbstractAttributeMap attributeMap;
 
-    public EntityPhotoSynthesizerCrystal(World worldIn)
+    public EntityEnergyOrb(World worldIn)
     {
         super(worldIn);
-        this.setSize(2.0F, 2.0F);
+        this.setSize(1.0F, 1.0F);
         this.innerRotation = this.rand.nextInt(100000);
     }
     
-    public EntityPhotoSynthesizerCrystal(World worldIn, double x, double y, double z)
+    public EntityEnergyOrb(World worldIn, double x, double y, double z)
     {
         this(worldIn);
         this.setPosition(x, y, z);
@@ -74,7 +75,7 @@ public class EntityPhotoSynthesizerCrystal extends EntityLiving
     protected void applyEntityAttributes()
     {
     	super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(35.0F);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(999.0F);
 		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(999999999D);
     }
     
@@ -82,19 +83,18 @@ public class EntityPhotoSynthesizerCrystal extends EntityLiving
     protected void entityInit()
     {
     	super.entityInit();
-    	this.dataManager.register(IS_INVURNERABLE, Boolean.valueOf(true));
     }
     
     @Override
     public void writeEntityToNBT(NBTTagCompound compound)
     {
-    	compound.setBoolean("Invul", this.getInvulState());
+    	super.writeEntityToNBT(compound);
     }
 	
     @Override
 	public void readEntityFromNBT(NBTTagCompound compound)
     {
-    	this.setInvulState(compound.getBoolean("Invul"));
+    	super.readEntityFromNBT(compound);
     }
     
     /**
@@ -104,62 +104,22 @@ public class EntityPhotoSynthesizerCrystal extends EntityLiving
     {
     	super.onLivingUpdate();
     	++this.innerRotation;
+    	this.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 999999999));
     	
-    	if (this.world.isRemote)
+    	List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox());
+        for (EntityPlayer entity : list)
         {
-            ParticleSpawner.spawnParticle(EnumCustomParticleTypes.LEAF, this.posX + (this.rand.nextDouble() - 0.5D) * ((double)this.width - 0.35D), this.posY + this.rand.nextDouble() * (double)this.height - 0.8D, (this.posZ - 0.25D) + (this.rand.nextDouble() - 0.3D) * ((double)this.width - 0.5D), 0.0D, 0.0D, 0.0D);
-        }
-    	
-    	List<EntityNatureBoss> list = this.world.<EntityNatureBoss>getEntitiesWithinAABB(EntityNatureBoss.class, this.getEntityBoundingBox().grow(50.0D, 50.0D, 50.0D));
-        
-        for (EntityNatureBoss entity : list)
-        {
-        	if(entity.isFightActivated())
-        	{
-        		this.setInvulState(false);
-        	}
-        	else
-        	{
-        		this.setInvulState(true);
-        	}
+        	SoundEvent soundevent = this.getDeathSound();
+            this.playSound(soundevent, this.getSoundVolume(), this.getSoundPitch());
+            this.setDead();
         }
     }
     
     @Override
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
-    	Entity entity = source.getImmediateSource();
-    	if(this.getInvulState() == false)
-    	{
-	    	if(entity instanceof EntityPlayer)
-	    	{
-	    		this.setHealth(this.getHealth() - amount);
-	        	NatureParticleHitEffect(this, this.getEntityWorld());
-	        	if(this.getHealth() <= 0.0F)
-	        	{
-	        		SoundEvent soundevent = this.getDeathSound();
-	                this.playSound(soundevent, this.getSoundVolume(), this.getSoundPitch());
-	                this.setDead();
-	        	}
-	        	else
-	        	{
-		        	SoundEvent soundevent = this.getHurtSound(source);
-		            this.playSound(soundevent, this.getSoundVolume(), this.getSoundPitch());
-	        	}
-	    	}
-    	}
     	return false;
     }
-    
-    public boolean NatureParticleHitEffect(EntityLivingBase target, World world)
-	{
-		for(int countparticles = 0; countparticles <= 30; ++countparticles)
-		{
-			Random rand = new Random();
-			PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(target, world, 0, target.posX + (rand.nextDouble() - 0.5D) * (double)target.width, target.posY + rand.nextDouble() * (double)target.height - 0.25D, target.posZ + (rand.nextDouble() - 0.5D) * (double)target.width, 0.0D, 0.0D, 0.0D, -1), target.dimension);
-		}
-		return true;
-	}
     
     @Override
 	protected SoundEvent getHurtSound(DamageSource source)
@@ -170,17 +130,7 @@ public class EntityPhotoSynthesizerCrystal extends EntityLiving
 	@Override
 	protected SoundEvent getDeathSound()
     {
-        return SoundEvents.BLOCK_GLASS_BREAK;
-    }
-	
-	public boolean getInvulState()
-    {
-        return ((Boolean)this.dataManager.get(IS_INVURNERABLE)).booleanValue();
-    }
-
-    public void setInvulState(boolean state)
-    {
-        this.dataManager.set(IS_INVURNERABLE, Boolean.valueOf(state));
+        return SoundEvents.EVOCATION_ILLAGER_CAST_SPELL;
     }
     
     @Override

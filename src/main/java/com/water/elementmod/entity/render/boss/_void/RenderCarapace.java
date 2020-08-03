@@ -15,6 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class RenderCarapace extends RenderLiving<EntityCarapace>
 {
 	public static final ResourceLocation TEXTURE = new ResourceLocation(EMConfig.MOD_ID + ":textures/entity/carapace.png");
+	public static final ResourceLocation ARMOR = new ResourceLocation(EMConfig.MOD_ID + ":textures/entity/carapace_armor.png");
 	
 	public RenderCarapace(RenderManager manager)
 	{
@@ -29,7 +30,8 @@ public class RenderCarapace extends RenderLiving<EntityCarapace>
 	@Override
 	protected ResourceLocation getEntityTexture(EntityCarapace entity)
 	{
-		return TEXTURE;
+		int phase = entity.getPhase();
+		return phase == 6 ? ARMOR : TEXTURE;
 	}
 	
 	@Override

@@ -66,6 +66,18 @@ public class ParticleSpawner
 				{
 					var21 = new ParticleVoidPortalBlock(mc.world, par2, par4, par6, par8, par10, par12);
 				}
+				else if (type == EnumCustomParticleTypes.BLUE_SMOKE)
+				{
+					var21 = new ParticleBlueSmoke(mc.world, par2, par4, par6, par8, par10, par12);
+				}
+				else if (type == EnumCustomParticleTypes.DARK_PURPLE_SMOKE)
+				{
+					var21 = new ParticleDarkPurpleSmoke(mc.world, par2, par4, par6, par8, par10, par12);
+				}
+				else if (type == EnumCustomParticleTypes.DARK_PURPLE_SMOKE_BLOCK)
+				{
+					var21 = new ParticleDarkPurpleSmokeBlock(mc.world, par2, par4, par6, par8, par10, par12);
+				}
 
 				mc.effectRenderer.addEffect(var21);
 				return var21;

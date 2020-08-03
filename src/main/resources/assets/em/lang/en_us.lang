@@ -74,6 +74,8 @@ entity.water_boss_melee_minion.name=§9Water Slave§r
 entity.void_knight.name=§lArthur, Guardian of the Overworld§r
 entity.void_smasher.name=§1§lVoid Smasher§r
 
+entity.carapace.name=§5§lWrath of the Void§r
+
 tooltip.Enchant=Element: 
 tooltip.ResetFormatting=§r
 tooltip.PressAlt=§7§oHold §lALT§r §7§ofor stats...

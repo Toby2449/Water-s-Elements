@@ -898,8 +898,6 @@ public class EntityVoidKnight extends EntityMob
     public void onDeath(DamageSource cause)
     {
         super.onDeath(cause);
-        
-        this.sayChatLine(6);
     }
     
     public void VoidRingAnimation(double x, double y, double z, double radius, World world)

@@ -1,5 +1,7 @@
 package com.water.elementmod.entity.models.boss._void;
 
+import com.water.elementmod.entity.boss._void.EntityCarapace;
+
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
@@ -251,10 +253,12 @@ public class ModelCarapace extends ModelBase
 	}
 
 	@Override
-	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) 
+	{
 		main.render(f5);
 	}
-	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
+	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) 
+	{
 		modelRenderer.rotateAngleX = x;
 		modelRenderer.rotateAngleY = y;
 		modelRenderer.rotateAngleZ = z;
@@ -263,14 +267,37 @@ public class ModelCarapace extends ModelBase
 	@Override
 	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)
     { 
-        this.r_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F;
-	    this.l_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F;
-	    this.r_arm.rotateAngleZ = 0.5F;
-	    this.l_arm.rotateAngleZ = -0.5F;
-	    this.r_arm.rotateAngleX += MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
-	    this.l_arm.rotateAngleX -= MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
-	    this.r_arm.rotateAngleZ += MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
-	    this.l_arm.rotateAngleZ -= MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+		EntityCarapace entity = (EntityCarapace)entityIn;
+        if(entity.WeaknessCasting)
+        {
+        	this.l_arm.rotateAngleX = 0F;
+        	this.l_arm.rotateAngleY = 0F;
+        	this.l_arm.rotateAngleZ = 0F;
+        	this.r_arm.rotateAngleX = 0F;
+        	this.r_arm.rotateAngleY = 0F;
+        	this.r_arm.rotateAngleZ = 0F;
+        	this.l_arm.rotateAngleY = -1.5F;
+        	this.l_arm.rotateAngleZ = -2.8F;
+        	this.r_arm.rotateAngleY = 1.5F;
+        	this.r_arm.rotateAngleZ = 2.85F;
+        }
+        else
+        {
+        	this.l_arm.rotateAngleX = 0F;
+        	this.l_arm.rotateAngleY = 0F;
+        	this.l_arm.rotateAngleZ = 0F;
+        	this.r_arm.rotateAngleX = 0F;
+        	this.r_arm.rotateAngleY = 0F;
+        	this.r_arm.rotateAngleZ = 0F;
+	        this.r_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F;
+		    this.l_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F;
+		    this.r_arm.rotateAngleZ = 0.5F;
+		    this.l_arm.rotateAngleZ = -0.5F;
+		    this.r_arm.rotateAngleX += MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+		    this.l_arm.rotateAngleX -= MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+		    this.r_arm.rotateAngleZ += MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+		    this.l_arm.rotateAngleZ -= MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+        }
 	    
 	    this.l_leg.rotateAngleX = -0.25F - MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F;
         this.r_leg.rotateAngleX = -0.25F + MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F;
