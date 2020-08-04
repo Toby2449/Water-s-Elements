@@ -23,6 +23,9 @@ public class ParticleDarkPurpleSmoke extends Particle
         this.motionX *= 0.10000000149011612D;
         this.motionY *= 0.15000000149011612D;
         this.motionZ *= 0.10000000149011612D;
+        this.motionX += par8;
+        this.motionY += par10;
+        this.motionZ += par12;
 
         if (par8 == 0.0F)
         {

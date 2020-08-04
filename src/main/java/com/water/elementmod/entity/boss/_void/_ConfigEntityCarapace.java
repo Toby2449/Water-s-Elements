@@ -6,7 +6,7 @@ public class _ConfigEntityCarapace
 	public static final double ARENA_SIZE = 100.0D;
 	
 	public static final int EXPLOSION_TIMER = 80;
-	public static final int ATTACK_SOUND_DELAY = 100;
+	public static final int ATTACK_SOUND_DELAY = 150;
 	
 	public static final int PREFIGHTTIMER1 = 160;
 	public static final int PREFIGHTDOORANIMDELAY = 3;
@@ -27,6 +27,8 @@ public class _ConfigEntityCarapace
 	public static final int P6WEAKNESSCASTTIME = 40;
 	public static final int P7WEAKNESSTIMER = 250;
 	public static final int P7WEAKNESSCASTTIME = 40;
-	public static final int P7TIMER = 750;
-	public static final int P8CASTTIME = 100;
+	public static final int P7TIMER = 350;
+	public static final int P8CASTTIME = 80;
+	public static final int P9DOORANIMDELAY = 3;
+	public static final int P9TIMER = 200;
 }

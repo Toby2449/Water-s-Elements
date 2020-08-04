@@ -78,5 +78,35 @@
         "category": "hostile",
         "subtitle": "spells.impact_03",
         "sounds": [ { "name": "em:spells/impact_03", "stream": true } ]
+    },
+    "spells.voidmagic_cast_01": {
+        "category": "hostile",
+        "subtitle": "spells.voidmagic_cast_01",
+        "sounds": [ { "name": "em:spells/voidmagic_cast_01", "stream": true } ]
+    },
+    "spells.voidmagic_cast_02": {
+        "category": "hostile",
+        "subtitle": "spells.voidmagic_cast_02",
+        "sounds": [ { "name": "em:spells/voidmagic_cast_02", "stream": true } ]
+    },
+    "spells.voidmagic_cast_03": {
+        "category": "hostile",
+        "subtitle": "spells.voidmagic_cast_03",
+        "sounds": [ { "name": "em:spells/voidmagic_cast_03", "stream": true } ]
+    },
+    "spells.voidmagic_explosion_01": {
+        "category": "hostile",
+        "subtitle": "spells.voidmagic_explosion_01",
+        "sounds": [ { "name": "em:spells/voidmagic_explosion_01", "stream": true } ]
+    },
+    "spells.voidmagic_explosion_02": {
+        "category": "hostile",
+        "subtitle": "spells.voidmagic_explosion_02",
+        "sounds": [ { "name": "em:spells/voidmagic_explosion_02", "stream": true } ]
+    },
+    "spells.voidmagic_explosion_03": {
+        "category": "hostile",
+        "subtitle": "spells.voidmagic_explosion_03",
+        "sounds": [ { "name": "em:spells/voidmagic_explosion_03", "stream": true } ]
     }
 }
