@@ -19,7 +19,8 @@ public enum EnumCustomParticleTypes
 	VOID_PORTAL_BLOCK("void_portal_block", 7, false),
 	BLUE_SMOKE("blue_smoke", 8, false),
 	DARK_PURPLE_SMOKE("dark_purple_smoke", 9, false),
-	DARK_PURPLE_SMOKE_BLOCK("dark_purple_smoke_block", 10, false);
+	DARK_PURPLE_SMOKE_BLOCK("dark_purple_smoke_block", 10, false),
+	ANGUISH("Anguish", 11, false);
 	
 	private final String particleName;
     private final int particleID;

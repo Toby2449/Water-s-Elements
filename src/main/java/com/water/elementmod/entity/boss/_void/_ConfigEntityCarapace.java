@@ -17,6 +17,7 @@ public class _ConfigEntityCarapace
 	public static final int RUNTOMIDTIMER = 70;
 	public static final int P2EXPLOSIONTIMER = 300;
 	public static final int P3TIMER = 1200;
+	public static final int P3EXPLOSIONTIMER = 300;
 	public static final int BLUEBUFFCD = 130;
 	public static final int BLUEBUFFSOAKTIMER = 100;
 	public static final int PURPLEBUFFCD = 20;
@@ -25,10 +26,17 @@ public class _ConfigEntityCarapace
 	public static final int P5DOORANIMDELAY = 3;
 	public static final int P6WEAKNESSTIMER = 250;
 	public static final int P6WEAKNESSCASTTIME = 40;
+	public static final int P7DOORANIMDELAY = 3;
 	public static final int P7WEAKNESSTIMER = 250;
 	public static final int P7WEAKNESSCASTTIME = 40;
 	public static final int P7TIMER = 350;
 	public static final int P8CASTTIME = 80;
 	public static final int P9DOORANIMDELAY = 3;
-	public static final int P9TIMER = 200;
+	public static final int P9TIMER = 300;
+	public static final int P10DOORANIMDELAY = 3;
+	public static final int P10BIGGROUNDAOE = 1200;
+	public static final int ANGUISHTIMER = 4200;
+	public static final int P10EXPLOSIONTIMER = 300;
+	public static final int PURPLEBEAMCD = 200;
+	public static final int PURPLEBEAMTIMER = 80;
 }
