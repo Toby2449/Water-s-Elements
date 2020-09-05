@@ -7,6 +7,8 @@ import java.util.Random;
 import com.water.elementmod.EMCoreBlocks;
 import com.water.elementmod.entity.boss._void.EntityCarapace;
 import com.water.elementmod.entity.boss._void.EntityCarapaceEye;
+import com.water.elementmod.entity.boss._void.EntityVEBase;
+import com.water.elementmod.entity.boss._void.EntityVoidEntity;
 import com.water.elementmod.util.EMConfig;
 import com.water.elementmod.util.interfaces.IStructure;
 
@@ -87,6 +89,15 @@ public class WorldGenVoidArena extends WorldGenerator implements IStructure
 					carapace.enablePersistence();
 					carapace.setPosition(blockpos.getX() + 1.0D, blockpos.getY(), blockpos.getZ() + 1.0D);
 		            world.spawnEntity(carapace);
+				}
+				if("ve_base".equals(entry.getValue()))
+				{
+					BlockPos blockpos = entry.getKey();
+					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
+					EntityVEBase VEBase = new EntityVEBase(world);
+					VEBase.enablePersistence();
+					VEBase.setPosition(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D);
+		            world.spawnEntity(VEBase);
 				}
 			}
 		}

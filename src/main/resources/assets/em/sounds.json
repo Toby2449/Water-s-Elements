@@ -2,111 +2,166 @@
     "block.infuser.fire": {
         "category": "block",
         "subtitle": "block.infuser.fire",
-        "sounds": [ { "name": "em:block/infuser/fire", "stream": true } ]
+        "sounds": [ { "name": "em:block/infuser/fire", "stream": false } ]
     },
     "block.infuser.water": {
         "category": "block",
         "subtitle": "block.infuser.water",
-        "sounds": [ { "name": "em:block/infuser/water", "stream": true } ]
+        "sounds": [ { "name": "em:block/infuser/water", "stream": false } ]
     },
     "block.infuser.nature": {
         "category": "block",
         "subtitle": "block.infuser.nature",
-        "sounds": [ { "name": "em:block/infuser/nature", "stream": true } ]
+        "sounds": [ { "name": "em:block/infuser/nature", "stream": false } ]
     },
     "entity.carapace_attack_01": {
         "category": "hostile",
         "subtitle": "entity.carapace_attack_01",
-        "sounds": [ { "name": "em:entity/carapace_attack_01", "stream": true } ]
+        "sounds": [ { "name": "em:entity/carapace_attack_01", "stream": false } ]
     },
     "entity.carapace_attack_02": {
         "category": "hostile",
         "subtitle": "entity.carapace_attack_02",
-        "sounds": [ { "name": "em:entity/carapace_attack_02", "stream": true } ]
+        "sounds": [ { "name": "em:entity/carapace_attack_02", "stream": false } ]
     },
     "entity.carapace_critattack_01": {
         "category": "hostile",
         "subtitle": "entity.carapace_critattack_01",
-        "sounds": [ { "name": "em:entity/carapace_critattack_01", "stream": true } ]
+        "sounds": [ { "name": "em:entity/carapace_critattack_01", "stream": false } ]
     },
     "entity.carapace_critattack_02": {
         "category": "hostile",
         "subtitle": "entity.carapace_critattack_02",
-        "sounds": [ { "name": "em:entity/carapace_critattack_02", "stream": true } ]
+        "sounds": [ { "name": "em:entity/carapace_critattack_02", "stream": false } ]
     },
     "entity.carapace_critattack_03": {
         "category": "hostile",
         "subtitle": "entity.carapace_critattack_03",
-        "sounds": [ { "name": "em:entity/carapace_critattack_03", "stream": true } ]
+        "sounds": [ { "name": "em:entity/carapace_critattack_03", "stream": false } ]
     },
     "entity.carapace_critattack_04": {
         "category": "hostile",
         "subtitle": "entity.carapace_critattack_04",
-        "sounds": [ { "name": "em:entity/carapace_critattack_04", "stream": true } ]
-    },
-    "entity.carapace_critattack_05": {
-        "category": "hostile",
-        "subtitle": "entity.carapace_critattack_05",
-        "sounds": [ { "name": "em:entity/carapace_critattack_05", "stream": true } ]
+        "sounds": [ { "name": "em:entity/carapace_critattack_04", "stream": false } ]
     },
     "entity.carapace_wound_01": {
         "category": "hostile",
         "subtitle": "entity.carapace_wound_01",
-        "sounds": [ { "name": "em:entity/carapace_wound_01", "stream": true } ]
+        "sounds": [ { "name": "em:entity/carapace_wound_01", "stream": false } ]
     },
     "entity.carapace_wound_02": {
         "category": "hostile",
         "subtitle": "entity.carapace_wound_02",
-        "sounds": [ { "name": "em:entity/carapace_wound_02", "stream": true } ]
+        "sounds": [ { "name": "em:entity/carapace_wound_02", "stream": false } ]
     },
     "entity.carapace_wound_03": {
         "category": "hostile",
         "subtitle": "entity.carapace_wound_03",
-        "sounds": [ { "name": "em:entity/carapace_wound_03", "stream": true } ]
+        "sounds": [ { "name": "em:entity/carapace_wound_03", "stream": false } ]
     },
     "spells.impact_01": {
         "category": "hostile",
         "subtitle": "spells.impact_01",
-        "sounds": [ { "name": "em:spells/impact_01", "stream": true } ]
+        "sounds": [ { "name": "em:spells/impact_01", "stream": false } ]
     },
     "spells.impact_02": {
         "category": "hostile",
         "subtitle": "spells.impact_02",
-        "sounds": [ { "name": "em:spells/impact_02", "stream": true } ]
+        "sounds": [ { "name": "em:spells/impact_02", "stream": false } ]
     },
     "spells.impact_03": {
         "category": "hostile",
         "subtitle": "spells.impact_03",
-        "sounds": [ { "name": "em:spells/impact_03", "stream": true } ]
+        "sounds": [ { "name": "em:spells/impact_03", "stream": false } ]
     },
     "spells.voidmagic_cast_01": {
         "category": "hostile",
         "subtitle": "spells.voidmagic_cast_01",
-        "sounds": [ { "name": "em:spells/voidmagic_cast_01", "stream": true } ]
+        "sounds": [ { "name": "em:spells/voidmagic_cast_01", "stream": false } ]
     },
     "spells.voidmagic_cast_02": {
         "category": "hostile",
         "subtitle": "spells.voidmagic_cast_02",
-        "sounds": [ { "name": "em:spells/voidmagic_cast_02", "stream": true } ]
+        "sounds": [ { "name": "em:spells/voidmagic_cast_02", "stream": false } ]
     },
     "spells.voidmagic_cast_03": {
         "category": "hostile",
         "subtitle": "spells.voidmagic_cast_03",
-        "sounds": [ { "name": "em:spells/voidmagic_cast_03", "stream": true } ]
+        "sounds": [ { "name": "em:spells/voidmagic_cast_03", "stream": false } ]
     },
     "spells.voidmagic_explosion_01": {
         "category": "hostile",
         "subtitle": "spells.voidmagic_explosion_01",
-        "sounds": [ { "name": "em:spells/voidmagic_explosion_01", "stream": true } ]
+        "sounds": [ { "name": "em:spells/voidmagic_explosion_01", "stream": false } ]
     },
     "spells.voidmagic_explosion_02": {
         "category": "hostile",
         "subtitle": "spells.voidmagic_explosion_02",
-        "sounds": [ { "name": "em:spells/voidmagic_explosion_02", "stream": true } ]
+        "sounds": [ { "name": "em:spells/voidmagic_explosion_02", "stream": false } ]
     },
     "spells.voidmagic_explosion_03": {
         "category": "hostile",
         "subtitle": "spells.voidmagic_explosion_03",
-        "sounds": [ { "name": "em:spells/voidmagic_explosion_03", "stream": true } ]
+        "sounds": [ { "name": "em:spells/voidmagic_explosion_03", "stream": false } ]
+    },
+    "entity.ve_base_spawn_cast": {
+        "category": "hostile",
+        "subtitle": "entity.ve_base_spawn_cast",
+        "sounds": [ { "name": "em:entity/ve_base_spawn_cast", "stream": false } ]
+    },
+    "entity.ve_base_spawned": {
+        "category": "hostile",
+        "subtitle": "entity.ve_base_spawned",
+        "sounds": [ { "name": "em:entity/ve_base_spawned", "stream": false } ]
+    },
+    "music.carapace_fight_music": {
+        "category": "music",
+        "subtitle": "music.carapace_fight_music",
+        "sounds": [ { "name": "em:music/carapace_fight_music", "stream": true } ]
+    },
+    "music.void_entity_fight_music": {
+        "category": "music",
+        "subtitle": "music.void_entity_fight_music",
+        "sounds": [ { "name": "em:music/void_entity_fight_music", "stream": true } ]
+    },
+    "entity.vo_voidentity_1": {
+        "category": "hostile",
+        "subtitle": "entity.vo_voidentity_1",
+        "sounds": [ { "name": "em:entity/vo_voidentity_1", "stream": true } ]
+    },
+    "entity.vo_voidentity_2": {
+        "category": "hostile",
+        "subtitle": "entity.vo_voidentity_2",
+        "sounds": [ { "name": "em:entity/vo_voidentity_2", "stream": true } ]
+    },
+    "entity.vo_voidentity_3": {
+        "category": "hostile",
+        "subtitle": "entity.vo_voidentity_3",
+        "sounds": [ { "name": "em:entity/vo_voidentity_3", "stream": true } ]
+    },
+    "entity.vo_voidentity_5": {
+        "category": "hostile",
+        "subtitle": "entity.vo_voidentity_5",
+        "sounds": [ { "name": "em:entity/vo_voidentity_5", "stream": false } ]
+    },
+    "entity.vo_voidentity_6": {
+        "category": "hostile",
+        "subtitle": "entity.vo_voidentity_6",
+        "sounds": [ { "name": "em:entity/vo_voidentity_6", "stream": false } ]
+    },
+    "entity.vo_voidentity_8": {
+        "category": "hostile",
+        "subtitle": "entity.vo_voidentity_8",
+        "sounds": [ { "name": "em:entity/vo_voidentity_8", "stream": false } ]
+    },
+    "entity.vo_voidentity_10": {
+        "category": "hostile",
+        "subtitle": "entity.vo_voidentity_10",
+        "sounds": [ { "name": "em:entity/vo_voidentity_10", "stream": false } ]
+    },
+    "entity.vo_voidentity_11": {
+        "category": "hostile",
+        "subtitle": "entity.vo_voidentity_11",
+        "sounds": [ { "name": "em:entity/vo_voidentity_11", "stream": false } ]
     }
 }

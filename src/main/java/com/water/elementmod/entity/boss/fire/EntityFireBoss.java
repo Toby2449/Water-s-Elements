@@ -378,20 +378,6 @@ public class EntityFireBoss extends EntityMob
 			}
     	}
         
-        if(!this.world.isRemote)
-        {
-        	if(this.ticksExisted % 20 == 1)
-        	{
-	        	List<EntityPlayer> playerlist = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.MF_SIZE_X, _ConfigEntityFireBoss.MF_SIZE_Y, _ConfigEntityFireBoss.MF_SIZE_Z).offset(0, -20, 0));
-		        
-		        for (EntityPlayer player : playerlist)
-		        {
-		        	player.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 100, 2));
-		        	player.addPotionEffect(new PotionEffect(MobEffects.HASTE, 100, 1));
-		        }
-        	}
-        }
-        
         
         // Phases and fight mechanics
 	    if(this.isFightActivated())

@@ -65,5 +65,18 @@ public class EMConfig {
 	public static final int ENTITY_BLUE_ORB = 154;
 	public static final int ENTITY_PURPLE_ORB = 155;
 	public static final int ENTITY_CARAPACE_EYE = 156;
+	public static final int ENTITY_ANGUISH = 157;
+	public static final int ENTITY_BLUE_GUARDIAN = 158;
+	public static final int ENTITY_PURPLE_GUARDIAN = 159;
+	public static final int ENTITY_VE_BASE = 160;
+	public static final int ENTITY_VOID_ENTITY = 161;
+	public static final int ENTITY_LUNACY = 162;
+	public static final int ENTITY_VSS = 163;
+	public static final int ENTITY_VSM = 164;
+	public static final int ENTITY_VSL = 165;
+	public static final int ENTITY_SLAVE_MASTER = 166;
+	public static final int ENTITY_GROWING_ANGUISH_SMALL = 167;
+	public static final int ENTITY_GROWING_ANGUISH_MEDIUM = 168;
+	public static final int ENTITY_GROWING_ANGUISH_LARGE = 169;
 	
 }

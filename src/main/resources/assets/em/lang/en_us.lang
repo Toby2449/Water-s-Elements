@@ -51,6 +51,8 @@ container.extractor=Extractor
 container.infuser=Infuser
 
 effect.corruption=§1Corruption§r
+effect.glimpse=§1Glimpse of Mind§r
+effect.insanity=§5Insanity§r
 
 entity.fire_zombie.name=Fire Zombie
 entity.water_zombie.name=Water Zombie
@@ -170,6 +172,15 @@ message.em.voidknight.phase3_1=<§1§lArthur, Guardian of the Void§r> HA HA HA!
 message.em.voidknight.phase4=<§1§lArthur, Guardian of the Void§r> CONSUME!!
 message.em.voidknight.cleansed=<§lArthur, Guardian of the Overworld§r> I have been freed from the control of the void. I will be forever scarred by the great evil of the void.
 message.em.voidknight.ending_message=<§lArthur, Guardian of the Overworld§r> My senses tell me that you're able to save us all from the greater evil. Dive into the void rift and end this once and for all! The world's counting on you.
+
+message.em.voidentity.chat1=<§1§lVoid Entity§r> Hahaha... You have fallen into my trap foolish ones. I've got you. There is no escape. Your only choice is slave for the void.
+message.em.voidentity.chat2=<§1§lVoid Entity§r> You have no idea what you've gotten yourself into mortals! I am the enderdragon! I am the wither! I CONTROL EVERYTHING!!!!!
+message.em.voidentity.chat3=<§1§lVoid Entity§r> Become one of my mind. Now you will see what it's like to live in darkness!
+message.em.voidentity.chat4=<§1§lVoid Entity§r> You will not escape the darkness!
+message.em.voidentity.chat5=<§1§lVoid Entity§r> ENOUGH!!!
+message.em.voidentity.chat6=<§1§lVoid Entity§r> Yes, become one with the void!
+message.em.voidentity.chat7=<§1§lVoid Entity§r> Sanity is forfeit!
+message.em.voidentity.chat8=<§1§lVoid Entity§r> My purpose will put an end to your meaningless lives!
 
 item.fire_sword1.name=Diamond Sword
 item.fire_sword2.name=Diamond Sword

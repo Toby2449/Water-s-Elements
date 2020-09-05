@@ -6,6 +6,7 @@ import java.util.Random;
 
 import com.water.elementmod.EMCorePotionEffects;
 import com.water.elementmod.entity.ai.EntityAIMoveTo;
+import com.water.elementmod.entity.boss._void._ConfigEntityCarapace;
 import com.water.elementmod.entity.boss.fire.EntityFireBoss;
 import com.water.elementmod.entity.boss.nature._ConfigEntityNatureBoss;
 import com.water.elementmod.entity.boss.water.EntityWaterBoss;
@@ -128,7 +129,7 @@ public class EntityVoidKnight extends EntityMob
 	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(450.0F);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(_ConfigEntityVoidKnight.BASE_HP);
 		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(7.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);
 		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(9999999999999.0F);
@@ -266,20 +267,6 @@ public class EntityVoidKnight extends EntityMob
 				}
     		}
     		
-    		if(this.ticksExisted % 20 == 1)
-        	{
-    			if(this.getPhase() != 6)
-    			{
-	            	List<EntityPlayer> playerlist = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidKnight.MF_SIZE_X, _ConfigEntityVoidKnight.MF_SIZE_Y, _ConfigEntityVoidKnight.MF_SIZE_Z).offset(0, -20, 0));
-	    	        
-	    	        for (EntityPlayer player : playerlist)
-	    	        {
-	    	        	player.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 100, 2));
-	    	        	player.addPotionEffect(new PotionEffect(MobEffects.HASTE, 100, 1));
-	    	        }
-    			}
-        	}
-    		
     		// If nobodies in the arena
 	        if(this.isFightActivated())
 	        {
@@ -303,6 +290,26 @@ public class EntityVoidKnight extends EntityMob
 	        	{
 	        		entity.isDead = true;
 	        	}
+	        }
+	        
+	        if(this.getPhase() == 0) //HP Scale
+	        {
+	        	int numOfPlayers = 0;
+	        	List<EntityPlayer> players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+		        if(!players.isEmpty())
+		        {
+		        	for (EntityPlayer entity : players)
+			        {
+		        		numOfPlayers++;
+			        }
+		        }
+		        
+		        if(numOfPlayers > 1)
+		        {
+		        	float scaledHP = _ConfigEntityVoidKnight.BASE_HP + (_ConfigEntityVoidKnight.HP_SCALE_AMOUNT * numOfPlayers);
+		        	this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(scaledHP);
+		        	this.setHealth(scaledHP);
+		        }
 	        }
     	}
     		

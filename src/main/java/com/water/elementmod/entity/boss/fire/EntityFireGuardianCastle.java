@@ -155,12 +155,6 @@ public class EntityFireGuardianCastle extends EntityMob
     {
     	return super.attackEntityFrom(source, amount);
     }
-	
-	@Override
-	public boolean attackEntityAsMob(Entity entityIn)
-    {
-        return false;
-    }
     
     @Override
     public void onDeath(DamageSource cause)

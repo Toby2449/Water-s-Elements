@@ -25,6 +25,7 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -47,6 +48,8 @@ import net.minecraft.world.World;
 
 public class EntityCarapaceEye extends EntityMob
 {
+	public static final float BASE_HP = 40.0F;
+	public static final float HP_SCALE_AMOUNT = 30.0F;
 	public EntityCarapaceEye(World worldIn) 
 	{
 		super(worldIn);
@@ -66,7 +69,7 @@ public class EntityCarapaceEye extends EntityMob
 	protected void applyEntityAttributes()
 	{
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40.0F);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BASE_HP);
 		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(9999999999999.0F);
 	}
 	
@@ -93,6 +96,40 @@ public class EntityCarapaceEye extends EntityMob
     {   
     	super.onLivingUpdate();
 		this.ticksExisted++;
+		
+		if(!this.world.isRemote)
+		{
+			// HP scaling
+			int carapacePhase = 0;
+			List<EntityCarapace> carapace = this.world.<EntityCarapace>getEntitiesWithinAABB(EntityCarapace.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+	        if(!carapace.isEmpty())
+	        {
+	        	for (EntityCarapace entity : carapace)
+		        {
+	        		carapacePhase = entity.getPhase();
+		        }
+	        	
+	        	if(carapacePhase == 0)
+		        {
+					int numOfPlayers = 0;
+		        	List<EntityPlayer> players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+			        if(!players.isEmpty())
+			        {
+			        	for (EntityPlayer entity : players)
+				        {
+			        		numOfPlayers++;
+				        }
+			        }
+			        
+			        if(numOfPlayers > 1)
+			        {
+			        	float scaledHP = BASE_HP + (HP_SCALE_AMOUNT * numOfPlayers);
+			        	this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(scaledHP);
+			        	this.setHealth(scaledHP);
+			        }
+		        }
+	        }
+		}
     }
 	
 	@Override

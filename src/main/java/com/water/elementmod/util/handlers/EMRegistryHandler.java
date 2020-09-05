@@ -43,6 +43,7 @@ public class EMRegistryHandler
 	public static void onModelRegister(ModelRegistryEvent event)
 	{
 		EMRenderHandler.registerEntityRenders();
+		EMRenderHandler.registerCustomMeshesAndStates();
 		
 		for(Item item : EMCoreItems.ITEMS)
 		{
@@ -68,7 +69,6 @@ public class EMRegistryHandler
 		GameRegistry.registerWorldGenerator(new WorldGenCustomStructures(), 0);
 		EMCoreEntities.registerEntities();
 		EMCoreEntities.registerSpawns();
-		EMRenderHandler.registerCustomMeshesAndStates();
 		Utils.getLogger().info("World gens intialized");
 	}
 }

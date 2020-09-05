@@ -320,17 +320,6 @@ public class EntityWaterBoss extends EntityMob implements IRangedAttackMob
 	        		entity.isDead = true;
 	        	}
 	        }
-	        
-	        if(this.ticksExisted % 20 == 1)
-        	{
-	        	List<EntityPlayer> playerlist = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityWaterBoss.MF_SIZE_X, _ConfigEntityWaterBoss.MF_SIZE_Y, _ConfigEntityWaterBoss.MF_SIZE_Z).offset(0, -20, 0));
-		        
-		        for (EntityPlayer player : playerlist)
-		        {
-		        	player.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 100, 2));
-		        	player.addPotionEffect(new PotionEffect(MobEffects.HASTE, 100, 1));
-		        }
-        	}
     	}    
     	
     	switch(this.getPhase())

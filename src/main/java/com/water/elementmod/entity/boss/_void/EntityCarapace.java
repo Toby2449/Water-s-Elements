@@ -7,12 +7,32 @@ import java.util.Random;
 import com.water.elementmod.EMCoreBlocks;
 import com.water.elementmod.EMCorePotionEffects;
 import com.water.elementmod.entity.ai.EntityAIMoveTo;
-import com.water.elementmod.network.PacketCustomParticleData;
+import com.water.elementmod.network.PacketCarapaceBeam;
+import com.water.elementmod.network.PacketCarapaceBeamGrow;
+import com.water.elementmod.network.PacketCarapaceBlueBuffExplosion;
+import com.water.elementmod.network.PacketCarapaceParticleCircle;
+import com.water.elementmod.network.PacketCarapaceParticleRing;
+import com.water.elementmod.network.PacketCarapacePortalParticles;
+import com.water.elementmod.network.PacketCarapacePurpleBuffArea1;
+import com.water.elementmod.network.PacketCarapacePurpleBuffArea2;
+import com.water.elementmod.network.PacketCarapacePurpleBuffArea3;
+import com.water.elementmod.network.PacketCarapacePurpleBuffExplode1;
+import com.water.elementmod.network.PacketCarapacePurpleBuffExplode2;
+import com.water.elementmod.network.PacketCarapacePurpleBuffExplode3;
+import com.water.elementmod.network.PacketCarapaceRingExplosion;
+import com.water.elementmod.network.PacketCarapaceSightAttack;
+import com.water.elementmod.network.PacketCarapaceSightExplode;
 import com.water.elementmod.network.PacketHandler;
+import com.water.elementmod.network.PacketPlayMusic;
+import com.water.elementmod.network.PacketStopMusic;
 import com.water.elementmod.particle.EnumCustomParticleTypes;
 import com.water.elementmod.particle.ParticleSpawner;
+import com.water.elementmod.util.EMConfig;
 import com.water.elementmod.util.handlers.EMSoundHandler;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -23,6 +43,7 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
@@ -33,6 +54,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.datafix.DataFixer;
@@ -64,11 +86,8 @@ public class EntityCarapace extends EntityMob
 	private final EntityAIAttackMelee aiMeleeAttack = new EntityAIAttackMelee(this, 0.5D, true);
 	private BlockPos spawn_location;
 	private static List explosionPoints = new ArrayList();
-	private static List explosionPointTimers = new ArrayList();
+	private int explosionPointTimer = _ConfigEntityCarapace.EXPLOSION_TIMER;
 	private static List explosionPointPlayers = new ArrayList();
-	
-	private static List anguishPoints = new ArrayList();
-	private static List anguishPointTimers = new ArrayList();
 	
 	private int AttackSoundDelay = _ConfigEntityCarapace.ATTACK_SOUND_DELAY;
 	
@@ -84,10 +103,12 @@ public class EntityCarapace extends EntityMob
 	private boolean P2OrbsSpawned = false;
 	private int P3explosionCD = _ConfigEntityCarapace.P3EXPLOSIONTIMER;
 	private int P3Timer = _ConfigEntityCarapace.P3TIMER;
+	private boolean BlueMinionSpawned = false;
 	private int BlueBuffCD = _ConfigEntityCarapace.BLUEBUFFCD;
 	private int BlueBuffSoakTimer = _ConfigEntityCarapace.BLUEBUFFSOAKTIMER;
 	private BlockPos BlueBuffSoakLocation = null;
 	private boolean BlueBuffPosFound = false;
+	private boolean PurpleMinionSpawned = false;
 	private int PurpleBuffCD = _ConfigEntityCarapace.PURPLEBUFFCD;
 	private int PurpleBuffTimer = _ConfigEntityCarapace.PURPLEBUFFTIMER;
 	private int PurpleBuffPosition = 0;
@@ -152,8 +173,8 @@ public class EntityCarapace extends EntityMob
 	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100.0F);
-		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(_ConfigEntityCarapace.BASE_HP);
+		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(10.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);
 		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(9999999999999.0F);
 	}
@@ -220,151 +241,81 @@ public class EntityCarapace extends EntityMob
     {
     	super.onLivingUpdate();
     	
-    	if(this.world.isRemote)
-    	{
-    		if(!this.explosionPoints.isEmpty() && !this.explosionPointTimers.isEmpty())
-    		{
-	    		for(int i = 0; i < this.explosionPoints.size(); i++)
-				{
-					int CircleTimer = (Integer)this.explosionPointTimers.get(i);
-					ArrayList pos = (ArrayList)this.explosionPoints.get(i);
-					
-					if(this.explosionPointTimers.get(i) != null && this.explosionPoints.get(i) != null && this.explosionPointPlayers.get(i) != null)
-					{
-						if((Integer)this.explosionPointTimers.get(i) > 0)
-						{
-							this.DarkPurpleRingAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 2, this.world);
-							
-							if((Integer)this.explosionPointTimers.get(i) <= 1)
-							{
-								this.DarkPurpleExplosionAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 2, 8, this.world);
-								AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - 0.5D, (double)pos.get(1) - 0.5D, (double)pos.get(2) - 0.5D, (double)pos.get(0) + 1.0D, (double)pos.get(1) + 1.0D, (double)pos.get(2) + 1.0D);
-								List<EntityPlayer> AABBPlayer = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
-								if (!AABBPlayer.isEmpty())
-							    {
-							        for (EntityPlayer ent : AABBPlayer)
-							        {
-							        	ent.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 150, 1));
-							        }
-							    }
-							}
-							
-							this.explosionPointTimers.set(i, CircleTimer - 1);
-						}
-						else
-						{
-							if(this.explosionPoints.get(i) != null) this.explosionPoints.remove(i);
-							if(this.explosionPointTimers.get(i) != null) this.explosionPointTimers.remove(i);
-							if(this.explosionPointPlayers.get(i) != null) this.explosionPointPlayers.remove(i);
-						}
-					}
-				}
-    		}
-    		
-    		if(!this.anguishPoints.isEmpty() && !this.anguishPointTimers.isEmpty())
-    		{
-	    		for(int i = 0; i < this.anguishPoints.size(); i++)
-				{
-					int CircleTimer = (Integer)this.anguishPointTimers.get(i);
-					ArrayList pos = (ArrayList)this.anguishPoints.get(i);
-					
-					if((Integer)this.anguishPointTimers.get(i) > 0)
-					{
-						AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - 9.5D, (double)pos.get(1) - 0.5D, (double)pos.get(2) - 9.5D, (double)pos.get(0) + 9.5D, (double)pos.get(1) + 7.0D, (double)pos.get(2) + 9.5D);
-						List<EntityPlayer> AABBPlayer = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
-						if (!AABBPlayer.isEmpty())
-					    {
-					        for (EntityPlayer ent : AABBPlayer)
-					        {
-					        	ent.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_CORRUPTION, 100, 0));
-					        }
-					    }
-						
-						this.anguishPointTimers.set(i, CircleTimer - 1);
-					}
-					else
-					{
-						if(this.anguishPoints.get(i) != null) this.anguishPoints.remove(i);
-						if(this.anguishPointTimers.get(i) != null) this.anguishPointTimers.remove(i);
-					}
-				}
-    		}
-    	}
-    	
     	if(!this.world.isRemote)
     	{
-    		if(!this.explosionPoints.isEmpty() && !this.explosionPointTimers.isEmpty())
+    		if(!this.explosionPoints.isEmpty())
     		{
 	    		for(int i = 0; i < this.explosionPoints.size(); i++)
 				{
-					int CircleTimer = (Integer)this.explosionPointTimers.get(i);
 					ArrayList pos = (ArrayList)this.explosionPoints.get(i);
 					
-					if(this.explosionPointTimers.get(i) != null && this.explosionPoints.get(i) != null && this.explosionPointPlayers.get(i) != null)
+					if(this.explosionPoints.get(i) != null && this.explosionPointPlayers.get(i) != null)
 					{
-						if((Integer)this.explosionPointTimers.get(i) > 0)
+						this.explosionPointTimer--;
+						if(this.explosionPointTimer > 0)
 						{
-							if((Integer)this.explosionPointTimers.get(i) <= 1)
-							{
-								Double x = new Double((double)pos.get(0)); 
-								int x1 = x.intValue();
-								Double y = new Double((double)pos.get(1)); 
-								int y1 = y.intValue();
-								Double z = new Double((double)pos.get(2)); 
-								int z1 = z.intValue();
-								this.playImpactSound((int)x1, (int)y1, (int)z1);
-								AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - 0.5D, (double)pos.get(1) - 0.5D, (double)pos.get(2) - 0.5D, (double)pos.get(0) + 1.0D, (double)pos.get(1) + 1.0D, (double)pos.get(2) + 1.0D);
-								List<EntityPlayer> AABBPlayer = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
-								if (!AABBPlayer.isEmpty())
-							    {
-							        for (EntityPlayer ent : AABBPlayer)
-							        {
-							        	ent.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 150, 1));
-							        	ent.attackEntityFrom(DamageSource.MAGIC, 9.0F);
-							        }
-							    }
-							}
+							PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceParticleRing(this, this.world, 9, (double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 0.0D, 0.0D,0.0D, 2), this.dimension);
 						}
 						else
 						{
-							if(this.explosionPoints.get(i) != null) this.explosionPoints.remove(i);
-							if(this.explosionPointTimers.get(i) != null) this.explosionPointTimers.remove(i);
-							if(this.explosionPointPlayers.get(i) != null) this.explosionPointPlayers.remove(i);
+							Double x = new Double((double)pos.get(0)); 
+							int x1 = x.intValue();
+							Double y = new Double((double)pos.get(1)); 
+							int y1 = y.intValue();
+							Double z = new Double((double)pos.get(2)); 
+							int z1 = z.intValue();
+							this.playImpactSound((int)x1, (int)y1, (int)z1, 3.5F);
+							PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceRingExplosion(this, this.world, 9, (double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 0.0D, 0.0D,0.0D, 2, 8), this.dimension);
+							AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - 2.25D, (double)pos.get(1) - 0.5D, (double)pos.get(2) - 2.25D, (double)pos.get(0) + 2.25D, (double)pos.get(1) + 10.0D, (double)pos.get(2) + 2.25D);
+							List<EntityPlayer> AABBPlayer = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
+							if (!AABBPlayer.isEmpty())
+						    {
+						        for (EntityPlayer ent : AABBPlayer)
+						        {
+						        	ent.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 150, 1));
+						        	PacketHandler.INSTANCE.sendTo(new PacketCarapaceParticleRing(ent, this.world, 9, (double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 0.0D, 0.0D,0.0D, 3), (EntityPlayerMP) ent);
+						        	ent.attackEntityFrom(DamageSource.MAGIC, 20.0F);
+						        }
+						    }
+							
+							this.explosionPoints.clear();
+							this.explosionPointTimer = _ConfigEntityCarapace.EXPLOSION_TIMER;
+							this.explosionPointPlayers.clear();
 						}
 					}
 				}
     		}
     		
-    		if(!this.anguishPoints.isEmpty() && !this.anguishPointTimers.isEmpty())
-    		{
-	    		for(int i = 0; i < this.anguishPoints.size(); i++)
-				{
-					int CircleTimer = (Integer)this.anguishPointTimers.get(i);
-					ArrayList pos = (ArrayList)this.anguishPoints.get(i);
-					
-					if((Integer)this.anguishPointTimers.get(i) > 0)
-					{
-						if(CircleTimer % 80 == 0) this.AnguishAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 11, this.world);
-						AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - 9.5D, (double)pos.get(1) - 0.5D, (double)pos.get(2) - 9.5D, (double)pos.get(0) + 9.5D, (double)pos.get(1) + 7.0D, (double)pos.get(2) + 9.5D);
-						List<EntityPlayer> AABBPlayer = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
-						if (!AABBPlayer.isEmpty())
-					    {
-					        for (EntityPlayer ent : AABBPlayer)
-					        {
-					        	ent.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_CORRUPTION, 100, 0));
-					        	if(CircleTimer % 20 == 1) ent.attackEntityFrom(DamageSource.MAGIC, 4.5F);
-					        }
-					    }
-						
-						this.anguishPointTimers.set(i, CircleTimer - 1);
-					}
-					else
-					{
-						if(this.anguishPoints.get(i) != null) this.anguishPoints.remove(i);
-						if(this.anguishPointTimers.get(i) != null) this.anguishPointTimers.remove(i);
-					}
-				}
-    		}
+    		// If nobodies in the arena
+	        if(this.getPrePhase() > 0 || this.getPhase() > 0)
+	        {
+	        	List<EntityPlayer> players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+		        
+	        	if(players.size() <= 0)
+	        	{
+	        		this.resetFight();
+	        	}
+	        }
+	        
+	        if(this.getPhase() == 0) //HP Scale
+	        {
+	        	int numOfPlayers = 0;
+	        	List<EntityPlayer> players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+		        if(!players.isEmpty())
+		        {
+		        	for (EntityPlayer entity : players)
+			        {
+		        		numOfPlayers++;
+			        }
+		        }
+		        
+		        if(numOfPlayers > 1)
+		        {
+		        	float scaledHP = _ConfigEntityCarapace.BASE_HP + (_ConfigEntityCarapace.HP_SCALE_AMOUNT * numOfPlayers);
+		        	this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(scaledHP);
+		        	this.setHealth(scaledHP);
+		        }
+	        }
     	}
     	
     	switch(this.getPrePhase())
@@ -442,11 +393,15 @@ public class EntityCarapace extends EntityMob
     	 * -------------------------------------------------
     	**/
     	case 2:
-    		this.setInvulState(false);
-    		if(this.getHealth() != this.getMaxHealth())
+    		if(!this.world.isRemote)
     		{
-    			this.setPrePhase(-1);
-    			this.setPhase(1);
+	    		this.setInvulState(false);
+	    		if(this.getHealth() != this.getMaxHealth())
+	    		{
+	    			this.playBossMusic();
+	    			this.setPrePhase(-1);
+	    			this.setPhase(1);
+	    		}
     		}
     		break;
     	}
@@ -549,6 +504,12 @@ public class EntityCarapace extends EntityMob
 		        	this.setPhase(3);
 		        }
 		        
+		        if(this.P2RunToMid <= 0)
+    			{
+    				PacketHandler.INSTANCE.sendToDimension(new PacketCarapacePortalParticles(this, this.world, 6, this.posX, this.posY, this.posZ - 12, 0.0D, 0.0D,0.0D, 3), this.dimension);
+    				PacketHandler.INSTANCE.sendToDimension(new PacketCarapacePortalParticles(this, this.world, 8, this.posX, this.posY, this.posZ + 12, 0.0D, 0.0D,0.0D, 3), this.dimension);
+    			}
+		        
 		        if(this.P2Timer <= 0 && (!this.getBlueBuffActive() || !this.getPurpleBuffActive())) // Fail safe
 		        {
 		        	this.P2Timer = _ConfigEntityCarapace.P2TIMER;
@@ -572,33 +533,45 @@ public class EntityCarapace extends EntityMob
 						ent.setDead();
 			        }
 					
+					List<EntityBlueGuardian> BG = this.world.<EntityBlueGuardian>getEntitiesWithinAABB(EntityBlueGuardian.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+					for (EntityBlueGuardian ent : BG)
+			        {
+						ent.setDead();
+			        }
+					
+					List<EntityPurpleGuardian> PG = this.world.<EntityPurpleGuardian>getEntitiesWithinAABB(EntityPurpleGuardian.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+					for (EntityPurpleGuardian ent : PG)
+			        {
+						ent.setDead();
+			        }
+					
 		        	this.setPhase(4);
 		        }
-    		}
-    		
-    		this.P2explosionCD--;
-    		List<EntityPlayer> P2players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
-			for (EntityPlayer player : P2players)
-	        {
-	    		if(this.P2explosionCD <= 0)
-	    		{
-	    			this.P2explosionCD = _ConfigEntityCarapace.P2EXPLOSIONTIMER;
-	    			this.spawnVoidExplosion(player, player.posX, player.posY, player.posZ);
-	    		}
-	    		
-	    		for(int i = 0; i < this.explosionPointPlayers.size(); i++)
-				{
-	    			EntityPlayer activePlayer = (EntityPlayer)this.explosionPointPlayers.get(i);
-					if(player == activePlayer)
+		        
+		        this.P2explosionCD--;
+	    		List<EntityPlayer> P2players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+				for (EntityPlayer player : P2players)
+		        {
+		    		if(this.P2explosionCD <= 0)
+		    		{
+		    			this.P2explosionCD = _ConfigEntityCarapace.P2EXPLOSIONTIMER;
+		    			this.spawnVoidExplosion(player, player.posX, player.posY, player.posZ);
+		    		}
+		    		
+		    		for(int i = 0; i < this.explosionPointPlayers.size(); i++)
 					{
-						List pos = new ArrayList();
-						pos.add(player.posX);
-						pos.add(player.posY);
-						pos.add(player.posZ);
-						this.explosionPoints.set(i, pos);
+		    			EntityPlayer activePlayer = (EntityPlayer)this.explosionPointPlayers.get(i);
+						if(player == activePlayer)
+						{
+							List pos = new ArrayList();
+							pos.add(player.posX);
+							pos.add(player.posY);
+							pos.add(player.posZ);
+							this.explosionPoints.set(i, pos);
+						}
 					}
-				}
-	        }
+		        }
+    		}
     		break;
     		
     		
@@ -623,6 +596,16 @@ public class EntityCarapace extends EntityMob
     			if(this.getBlueBuffActive())
     			{
     				this.BlueBuffCD--;
+    				
+    				if(!this.BlueMinionSpawned)
+    				{
+    					this.BlueMinionSpawned = true;
+    					EntityBlueGuardian entity = new EntityBlueGuardian(this.world);
+    			       	entity.setPosition(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ() + 12D);
+    			       	entity.enablePersistence();
+    			   		this.world.spawnEntity(entity);
+    				}
+    				
     				if(this.BlueBuffCD <= 0)
     				{
     					this.BlueBuffSoakTimer--;
@@ -650,41 +633,41 @@ public class EntityCarapace extends EntityMob
 							
     						if(this.BlueBuffSoakTimer % 3 == 1) 
     						{
-    							this.BlueBuffRingAnimation(this.BlueBuffSoakLocation.getX(), this.BlueBuffSoakLocation.getY(), this.BlueBuffSoakLocation.getZ(), 3, this.world);
+    							PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceParticleCircle(this, this.world, 8, (double)this.BlueBuffSoakLocation.getX(), (double)this.BlueBuffSoakLocation.getY(), (double)this.BlueBuffSoakLocation.getZ(), 0.0D, 0.0D,0.0D, 3), this.dimension);
     							if(!playerInAOE)
     							{
-    								this.BlueBuffExplosionAnimation(this.BlueBuffSoakLocation.getX(), this.BlueBuffSoakLocation.getY(), this.BlueBuffSoakLocation.getZ(), 1, 7, this.world);
-    							}
+    								PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceBlueBuffExplosion(this, this.world, 8, (double)this.BlueBuffSoakLocation.getX(), (double)this.BlueBuffSoakLocation.getY(), (double)this.BlueBuffSoakLocation.getZ(), 0.0D, 0.0D,0.0D, 1, 7), this.dimension);
+            					}
     						}
     					}
     					
     					if(this.BlueBuffSoakTimer <= 0)
     					{
     						boolean playerInAOE = false;
-    						this.playImpactSound(this.BlueBuffSoakLocation.getX(), this.BlueBuffSoakLocation.getY(), this.BlueBuffSoakLocation.getZ());
+    						this.playImpactSound(this.BlueBuffSoakLocation.getX(), this.BlueBuffSoakLocation.getY(), this.BlueBuffSoakLocation.getZ(), 3.5F);
     						AxisAlignedBB AoePoint = new AxisAlignedBB(this.BlueBuffSoakLocation.getX() - 2.6D, this.BlueBuffSoakLocation.getY() - 0.5D, this.BlueBuffSoakLocation.getZ() - 2.6D, this.BlueBuffSoakLocation.getX() + 2.6D, this.BlueBuffSoakLocation.getY() + 7.5D, this.BlueBuffSoakLocation.getZ() + 2.6D);
 							List<EntityPlayer> AABBPlayer = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
 							if (!AABBPlayer.isEmpty())
 						    {
 						        for (EntityPlayer ent : AABBPlayer)
 						        {
-						        	ent.attackEntityFrom(DamageSource.causeMobDamage(this), 20.0f);
+						        	ent.attackEntityFrom(DamageSource.causeMobDamage(this), 35.0f);
 						        	playerInAOE = true;
 						        }
 						    }
 							if(playerInAOE)
 							{
-								this.BlueBuffExplosionAnimation(this.BlueBuffSoakLocation.getX(), this.BlueBuffSoakLocation.getY(), this.BlueBuffSoakLocation.getZ(), 3, 7, this.world);
-							}
+								PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceBlueBuffExplosion(this, this.world, 8, (double)this.BlueBuffSoakLocation.getX(), (double)this.BlueBuffSoakLocation.getY(), (double)this.BlueBuffSoakLocation.getZ(), 0.0D, 0.0D,0.0D, 3, 7), this.dimension);
+            				}
 							else
 							{
 								List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
 						        for (EntityPlayer entity : list)
 						        {
-						        	entity.attackEntityFrom(DamageSource.causeMobDamage(this), 20.0f);
+						        	entity.attackEntityFrom(DamageSource.causeMobDamage(this), 65.0f);
 						        }
-								this.BlueBuffRingAnimation(this.BlueBuffSoakLocation.getX(), this.BlueBuffSoakLocation.getY(), this.BlueBuffSoakLocation.getZ(), 15, this.world);
-							}
+						        PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceParticleCircle(this, this.world, 8, (double)this.BlueBuffSoakLocation.getX(), (double)this.BlueBuffSoakLocation.getY(), (double)this.BlueBuffSoakLocation.getZ(), 0.0D, 0.0D,0.0D, 15), this.dimension);
+    						}
     						this.BlueBuffPosFound = false;
     						this.BlueBuffSoakLocation = null;
     						this.BlueBuffCD = _ConfigEntityCarapace.BLUEBUFFCD;
@@ -698,6 +681,15 @@ public class EntityCarapace extends EntityMob
     				this.PurpleBuffCD--;
     				if(this.PurpleBuffCD <= 0)
     				{
+    					if(!this.PurpleMinionSpawned)
+        				{
+        					this.PurpleMinionSpawned = true;
+        					EntityPurpleGuardian entity = new EntityPurpleGuardian(this.world);
+        			       	entity.setPosition(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ() - 12D);
+        			       	entity.enablePersistence();
+        			   		this.world.spawnEntity(entity);
+        				}
+    					
     					this.PurpleBuffTimer--;
     					if(!this.PurpleBuffPosFound)
 						{
@@ -727,13 +719,13 @@ public class EntityCarapace extends EntityMob
     					switch(this.PurpleBuffPosition)
     					{
     					case 0:
-    						this.PurpleBuffArea1(this.posX, this.posY, this.posZ, this.world);
+    						PacketHandler.INSTANCE.sendToDimension(new PacketCarapacePurpleBuffArea1(this, this.world, 6, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D), this.dimension);
     						break;
     					case 1:
-    						this.PurpleBuffArea2(this.posX, this.posY, this.posZ, this.world);
+    						PacketHandler.INSTANCE.sendToDimension(new PacketCarapacePurpleBuffArea2(this, this.world, 6, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D), this.dimension);
     						break;
     					case 2:
-    						this.PurpleBuffArea3(this.posX, this.posY, this.posZ, this.world);
+    						PacketHandler.INSTANCE.sendToDimension(new PacketCarapacePurpleBuffArea3(this, this.world, 6, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D), this.dimension);
     						break;
     					}
     					
@@ -742,13 +734,13 @@ public class EntityCarapace extends EntityMob
     						switch(this.PurpleBuffPosition2)
         					{
         					case 0:
-        						this.PurpleBuffArea1(this.posX, this.posY, this.posZ, this.world);
+        						PacketHandler.INSTANCE.sendToDimension(new PacketCarapacePurpleBuffArea1(this, this.world, 6, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D), this.dimension);
         						break;
         					case 1:
-        						this.PurpleBuffArea2(this.posX, this.posY, this.posZ, this.world);
+        						PacketHandler.INSTANCE.sendToDimension(new PacketCarapacePurpleBuffArea2(this, this.world, 6, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D), this.dimension);
         						break;
         					case 2:
-        						this.PurpleBuffArea3(this.posX, this.posY, this.posZ, this.world);
+        						PacketHandler.INSTANCE.sendToDimension(new PacketCarapacePurpleBuffArea3(this, this.world, 6, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D), this.dimension);
         						break;
         					}
     					}
@@ -758,8 +750,8 @@ public class EntityCarapace extends EntityMob
     						switch(this.PurpleBuffPosition)
 	    					{
 	    					case 0:
-	    						this.PurpleBuffExplode1(this.posX, this.posY, this.posZ, this.world);
-	    						this.playImpactSound(this.getPosition().getX() + 12, this.getPosition().getY(), this.getPosition().getZ());
+	    						PacketHandler.INSTANCE.sendToDimension(new PacketCarapacePurpleBuffExplode1(this, this.world, 6, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D), this.dimension);
+	    						this.playImpactSound(this.getPosition().getX() + 12, this.getPosition().getY(), this.getPosition().getZ(), 3.5F);
 	    						AxisAlignedBB AoePoint1 = new AxisAlignedBB(this.posX + 6, this.posY, this.posZ - 15, this.posX + 15, this.posY + 20, this.posZ + 30);
 								List<EntityPlayer> AABBPlayer1 = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint1);
 								if (!AABBPlayer1.isEmpty())
@@ -767,13 +759,13 @@ public class EntityCarapace extends EntityMob
 							        for (EntityPlayer ent : AABBPlayer1)
 							        {
 							        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 100));
-							        	ent.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_CORRUPTION, 100, 0));
+							        	ent.attackEntityFrom(DamageSource.causeMobDamage(this), 70.0f);
 							        }
 							    }
 	    						break;
 	    					case 1:
-	    						this.PurpleBuffExplode2(this.posX, this.posY, this.posZ, this.world);
-	    						this.playImpactSound(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+	    						PacketHandler.INSTANCE.sendToDimension(new PacketCarapacePurpleBuffExplode2(this, this.world, 6, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D), this.dimension);
+	    						this.playImpactSound(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ(), 3.5F);
 	    						AxisAlignedBB AoePoint2 = new AxisAlignedBB(this.posX - 5, this.posY, this.posZ - 15, this.posX + 6, this.posY + 20, this.posZ + 30);
 								List<EntityPlayer> AABBPlayer2 = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint2);
 								if (!AABBPlayer2.isEmpty())
@@ -781,13 +773,13 @@ public class EntityCarapace extends EntityMob
 							        for (EntityPlayer ent : AABBPlayer2)
 							        {
 							        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 100));
-							        	ent.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_CORRUPTION, 100, 0));
+							        	ent.attackEntityFrom(DamageSource.causeMobDamage(this), 70.0f);
 							        }
 							    }
 	    						break;
 	    					case 2:
-	    						this.PurpleBuffExplode3(this.posX, this.posY, this.posZ, this.world);
-	    						this.playImpactSound(this.getPosition().getX() - 12, this.getPosition().getY(), this.getPosition().getZ());
+	    						PacketHandler.INSTANCE.sendToDimension(new PacketCarapacePurpleBuffExplode3(this, this.world, 6, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D), this.dimension);
+	    						this.playImpactSound(this.getPosition().getX() - 12, this.getPosition().getY(), this.getPosition().getZ(), 3.5F);
 	    						AxisAlignedBB AoePoint3 = new AxisAlignedBB(this.posX - 5, this.posY, this.posZ - 15, this.posX - 15, this.posY + 20, this.posZ + 30);
 								List<EntityPlayer> AABBPlayer3 = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint3);
 								if (!AABBPlayer3.isEmpty())
@@ -795,7 +787,7 @@ public class EntityCarapace extends EntityMob
 							        for (EntityPlayer ent : AABBPlayer3)
 							        {
 							        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 100));
-							        	ent.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_CORRUPTION, 100, 0));
+							        	ent.attackEntityFrom(DamageSource.causeMobDamage(this), 70.0f);
 							        }
 							    }
 	    						break;
@@ -806,8 +798,8 @@ public class EntityCarapace extends EntityMob
         						switch(this.PurpleBuffPosition2)
             					{
             					case 0:
-            						this.PurpleBuffExplode1(this.posX, this.posY, this.posZ, this.world);
-            						this.playImpactSound(this.getPosition().getX() + 12, this.getPosition().getY(), this.getPosition().getZ());
+            						PacketHandler.INSTANCE.sendToDimension(new PacketCarapacePurpleBuffExplode1(this, this.world, 6, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D), this.dimension);
+            						this.playImpactSound(this.getPosition().getX() + 12, this.getPosition().getY(), this.getPosition().getZ(), 3.5F);
             						AxisAlignedBB AoePoint1 = new AxisAlignedBB(this.posX + 6, this.posY, this.posZ - 15, this.posX + 15, this.posY + 20, this.posZ + 30);
     								List<EntityPlayer> AABBPlayer1 = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint1);
     								if (!AABBPlayer1.isEmpty())
@@ -815,13 +807,13 @@ public class EntityCarapace extends EntityMob
     							        for (EntityPlayer ent : AABBPlayer1)
     							        {
     							        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 100));
-    							        	ent.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_CORRUPTION, 100, 0));
+    							        	ent.attackEntityFrom(DamageSource.causeMobDamage(this), 70.0f);
     							        }
     							    }
             						break;
             					case 1:
-            						this.PurpleBuffExplode2(this.posX, this.posY, this.posZ, this.world);
-            						this.playImpactSound(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+            						PacketHandler.INSTANCE.sendToDimension(new PacketCarapacePurpleBuffExplode2(this, this.world, 6, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D), this.dimension);
+            						this.playImpactSound(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ(), 3.5F);
             						AxisAlignedBB AoePoint2 = new AxisAlignedBB(this.posX - 6, this.posY, this.posZ - 15, this.posX + 12, this.posY + 20, this.posZ + 30);
     								List<EntityPlayer> AABBPlayer2 = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint2);
     								if (!AABBPlayer2.isEmpty())
@@ -829,13 +821,13 @@ public class EntityCarapace extends EntityMob
     							        for (EntityPlayer ent : AABBPlayer2)
     							        {
     							        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 100));
-    							        	ent.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_CORRUPTION, 100, 0));
+    							        	ent.attackEntityFrom(DamageSource.causeMobDamage(this), 70.0f);
     							        }
     							    }
             						break;
             					case 2:
-            						this.PurpleBuffExplode3(this.posX, this.posY, this.posZ, this.world);
-            						this.playImpactSound(this.getPosition().getX() - 12, this.getPosition().getY(), this.getPosition().getZ());
+            						PacketHandler.INSTANCE.sendToDimension(new PacketCarapacePurpleBuffExplode3(this, this.world, 6, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D), this.dimension);
+            						this.playImpactSound(this.getPosition().getX() - 12, this.getPosition().getY(), this.getPosition().getZ(), 3.5F);
             						AxisAlignedBB AoePoint3 = new AxisAlignedBB(this.posX - 5, this.posY, this.posZ - 15, this.posX - 15, this.posY + 20, this.posZ + 30);
     								List<EntityPlayer> AABBPlayer3 = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint3);
     								if (!AABBPlayer3.isEmpty())
@@ -843,7 +835,7 @@ public class EntityCarapace extends EntityMob
     							        for (EntityPlayer ent : AABBPlayer3)
     							        {
     							        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 100));
-    							        	ent.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_CORRUPTION, 100, 0));
+    							        	ent.attackEntityFrom(DamageSource.causeMobDamage(this), 70.0f);
     							        }
     							    }
             						break;
@@ -862,6 +854,8 @@ public class EntityCarapace extends EntityMob
     			
     			if(this.P3Timer <= 0) 
     			{
+    				this.BlueMinionSpawned = false;
+    				this.PurpleMinionSpawned = false;
     				this.BlueBuffPosFound = false;
 					this.BlueBuffSoakLocation = null;
 					this.BlueBuffCD = _ConfigEntityCarapace.BLUEBUFFCD;
@@ -880,32 +874,47 @@ public class EntityCarapace extends EntityMob
     				this.setPhase(1);
     			}
     			
-    			if(this.getHealth() <= (this.getMaxHealth() / 10) * 6) this.setPhase(4);
+    			if(this.getHealth() <= (this.getMaxHealth() / 10) * 6) 
+    			{
+    				List<EntityBlueGuardian> BG = this.world.<EntityBlueGuardian>getEntitiesWithinAABB(EntityBlueGuardian.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+					for (EntityBlueGuardian ent : BG)
+			        {
+						ent.setDead();
+			        }
+					
+					List<EntityPurpleGuardian> PG = this.world.<EntityPurpleGuardian>getEntitiesWithinAABB(EntityPurpleGuardian.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+					for (EntityPurpleGuardian ent : PG)
+			        {
+						ent.setDead();
+			        }
+					
+    				this.setPhase(4);
+    			}
+    			
+    			this.P3explosionCD--;
+        		List<EntityPlayer> P3players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+    			for (EntityPlayer player : P3players)
+    	        {
+    	    		if(this.P3explosionCD <= 0)
+    	    		{
+    	    			this.P3explosionCD = _ConfigEntityCarapace.P3EXPLOSIONTIMER;
+    	    			this.spawnVoidExplosion(player, player.posX, player.posY, player.posZ);
+    	    		}
+    	    		
+    	    		for(int i = 0; i < this.explosionPointPlayers.size(); i++)
+    				{
+    	    			EntityPlayer activePlayer = (EntityPlayer)this.explosionPointPlayers.get(i);
+    					if(player == activePlayer)
+    					{
+    						List pos = new ArrayList();
+    						pos.add(player.posX);
+    						pos.add(player.posY);
+    						pos.add(player.posZ);
+    						this.explosionPoints.set(i, pos);
+    					}
+    				}
+    	        }
     		}
-    		
-    		this.P3explosionCD--;
-    		List<EntityPlayer> P3players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
-			for (EntityPlayer player : P3players)
-	        {
-	    		if(this.P3explosionCD <= 0)
-	    		{
-	    			this.P3explosionCD = _ConfigEntityCarapace.P3EXPLOSIONTIMER;
-	    			this.spawnVoidExplosion(player, player.posX, player.posY, player.posZ);
-	    		}
-	    		
-	    		for(int i = 0; i < this.explosionPointPlayers.size(); i++)
-				{
-	    			EntityPlayer activePlayer = (EntityPlayer)this.explosionPointPlayers.get(i);
-					if(player == activePlayer)
-					{
-						List pos = new ArrayList();
-						pos.add(player.posX);
-						pos.add(player.posY);
-						pos.add(player.posZ);
-						this.explosionPoints.set(i, pos);
-					}
-				}
-	        }
     		break;
     		
     		
@@ -1014,8 +1023,8 @@ public class EntityCarapace extends EntityMob
 					{
 						this.P6WeaknessTimer = _ConfigEntityCarapace.P6WEAKNESSTIMER;
 						this.P6WeaknessCastTimer = _ConfigEntityCarapace.P6WEAKNESSCASTTIME;
-						this.playImpactSound(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
-						this.WeaknessAnimation(this.posX, this.posY, this.posZ, 15, this.world);
+						this.playImpactSound(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ(), 3.5F);
+						PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceParticleCircle(this, this.world, 9, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, 15), this.dimension);
 						List<EntityPlayer> players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
 						for (EntityPlayer player : players)
 				        {
@@ -1056,6 +1065,18 @@ public class EntityCarapace extends EntityMob
 						this.WeaknessCasting = false;
 					}
 				}
+				
+				int numOfEyes = 0;
+				List<EntityCarapaceEye> eyes = this.world.<EntityCarapaceEye>getEntitiesWithinAABB(EntityCarapaceEye.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+				for (EntityCarapaceEye entity : eyes)
+		        {
+					numOfEyes++;
+		        }
+				
+				if(numOfEyes == 0)
+				{
+					this.WeaknessCasting = false;
+				}
 			}
     		break;
     		
@@ -1085,13 +1106,13 @@ public class EntityCarapace extends EntityMob
 					{
 						this.P7WeaknessTimer = _ConfigEntityCarapace.P7WEAKNESSTIMER;
 						this.P7WeaknessCastTimer = _ConfigEntityCarapace.P7WEAKNESSCASTTIME;
-						this.playImpactSound(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
-						this.WeaknessAnimation(this.posX, this.posY, this.posZ, 15, this.world);
+						this.playImpactSound(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ(), 3.5F);
+						PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceParticleCircle(this, this.world, 9, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, 15), this.dimension);
 						List<EntityPlayer> players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
 						for (EntityPlayer player : players)
 				        {
 							player.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 140, 0));
-							player.attackEntityFrom(DamageSource.MAGIC, 5.0f);
+							player.attackEntityFrom(DamageSource.MAGIC, 20.0f);
 				        }
 					}
 				}
@@ -1256,23 +1277,19 @@ public class EntityCarapace extends EntityMob
     			{
     			case 0:
     				this.getLookHelper().setLookPosition(this.posX + 1, this.posY + (double)this.getEyeHeight(), this.posZ + 1, 100.0f, 100.0f);
-    				this.SightAttackAnimation(this.posX, this.posY, this.posZ, 0, world);
-    				this.SightAttackBeamAnimation(this.posX, this.posY + 2.6, this.posZ, 0, world);
+    				PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceSightAttack(this, this.world, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, 0), this.dimension);
     				break;
     			case 1:
     				this.getLookHelper().setLookPosition(this.posX - 1, this.posY + (double)this.getEyeHeight(), this.posZ + 1, 100.0f, 100.0f);
-    				this.SightAttackAnimation(this.posX, this.posY, this.posZ, 1, world);
-    				this.SightAttackBeamAnimation(this.posX, this.posY + 2.6, this.posZ, 1, world);
+    				PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceSightAttack(this, this.world, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, 1), this.dimension);
     				break;
     			case 2:
     				this.getLookHelper().setLookPosition(this.posX - 1, this.posY + (double)this.getEyeHeight(), this.posZ - 1, 100.0f, 100.0f);
-    				this.SightAttackAnimation(this.posX, this.posY, this.posZ, 2, world);
-    				this.SightAttackBeamAnimation(this.posX, this.posY + 2.6, this.posZ, 2, world);
+    				PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceSightAttack(this, this.world, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, 2), this.dimension);
     				break;
     			case 3:
     				this.getLookHelper().setLookPosition(this.posX + 1, this.posY + (double)this.getEyeHeight(), this.posZ - 1, 100.0f, 100.0f);
-    				this.SightAttackAnimation(this.posX, this.posY, this.posZ, 3, world);
-    				this.SightAttackBeamAnimation(this.posX, this.posY + 2.6, this.posZ, 3, world);
+    				PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceSightAttack(this, this.world, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, 3), this.dimension);
     				break;
     			}
     			if(this.P8CastTime <= 0)
@@ -1280,56 +1297,56 @@ public class EntityCarapace extends EntityMob
     				switch(this.P8Facing)
         			{
         			case 0:
-        				this.SightAttackExplodeAnimation(this.posX, this.posY, this.posZ, 11, 0, world);
+        				PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceSightExplode(this, this.world, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, 0, 11), this.dimension);
         				AxisAlignedBB AoePoint1 = new AxisAlignedBB(this.posX, this.posY, this.posZ, this.posX + 100, this.posY + 50, this.posZ + 100);
         				List<EntityPlayer> AABBPlayer1 = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint1);
         				if (!AABBPlayer1.isEmpty())
         			    {
         			        for (EntityPlayer ent : AABBPlayer1)
         			        {
-        			        	ent.attackEntityFrom(DamageSource.MAGIC, 15.0f);
+        			        	ent.attackEntityFrom(DamageSource.MAGIC, 40.0f);
         			        	ent.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100, 0));
         			        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 1));
         			        }
         			    }
         				break;
         			case 1:
-        				this.SightAttackExplodeAnimation(this.posX, this.posY, this.posZ, 11, 1, world);
+        				PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceSightExplode(this, this.world, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, 1, 11), this.dimension);
         				AxisAlignedBB AoePoint2 = new AxisAlignedBB(this.posX, this.posY, this.posZ, this.posX - 100, this.posY + 50, this.posZ + 100);
         				List<EntityPlayer> AABBPlayer2 = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint2);
         				if (!AABBPlayer2.isEmpty())
         			    {
         			        for (EntityPlayer ent : AABBPlayer2)
         			        {
-        			        	ent.attackEntityFrom(DamageSource.MAGIC, 15.0f);
+        			        	ent.attackEntityFrom(DamageSource.MAGIC, 40.0f);
         			        	ent.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100, 0));
         			        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 1));
         			        }
         			    }
         				break;
         			case 2:
-        				this.SightAttackExplodeAnimation(this.posX, this.posY, this.posZ, 11, 2, world);
+        				PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceSightExplode(this, this.world, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, 2, 11), this.dimension);
         				AxisAlignedBB AoePoint3 = new AxisAlignedBB(this.posX, this.posY, this.posZ, this.posX - 100, this.posY + 50, this.posZ - 100);
         				List<EntityPlayer> AABBPlayer3 = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint3);
         				if (!AABBPlayer3.isEmpty())
         			    {
         			        for (EntityPlayer ent : AABBPlayer3)
         			        {
-        			        	ent.attackEntityFrom(DamageSource.MAGIC, 15.0f);
+        			        	ent.attackEntityFrom(DamageSource.MAGIC, 40.0f);
         			        	ent.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100, 0));
         			        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 1));
         			        }
         			    }
         				break;
         			case 3:
-        				this.SightAttackExplodeAnimation(this.posX, this.posY, this.posZ, 11, 3, world);
+        				PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceSightExplode(this, this.world, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, 3, 11), this.dimension);
         				AxisAlignedBB AoePoint4 = new AxisAlignedBB(this.posX, this.posY, this.posZ, this.posX + 100, this.posY + 50, this.posZ - 100);
         				List<EntityPlayer> AABBPlayer4 = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint4);
         				if (!AABBPlayer4.isEmpty())
         			    {
         			        for (EntityPlayer ent : AABBPlayer4)
         			        {
-        			        	ent.attackEntityFrom(DamageSource.MAGIC, 15.0f);
+        			        	ent.attackEntityFrom(DamageSource.MAGIC, 40.0f);
         			        	ent.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100, 0));
         			        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 1));
         			        }
@@ -1460,6 +1477,7 @@ public class EntityCarapace extends EntityMob
     				if(!this.PurpleBeamPosFound)
     				{
     					this.PurpleBeamPosFound = true;
+    					this.playVoidMagicCastSound(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
     					for(int i = 0; i <= 9; i++)
     					{
     						int randX = (this.getPosition().getX() - 12) + this.rand.nextInt(24);
@@ -1483,8 +1501,27 @@ public class EntityCarapace extends EntityMob
     							{
     								if(this.PurpleBeamTimer <= 20)
     								{
-    									if(this.PurpleBeamTimer == 20) this.playImpactSound((Integer)pos.get(0), (Integer)pos.get(1), (Integer)pos.get(2));
-    									this.DarkPurpleBeamAnimation((Integer)pos.get(0), (Integer)pos.get(1), (Integer)pos.get(2), 2, this.world);
+    									if(this.PurpleBeamTimer == 20) 
+    									{
+    										this.playImpactSound((Integer)pos.get(0), (Integer)pos.get(1), (Integer)pos.get(2), 1.0F);
+    										AxisAlignedBB AoePoint = new AxisAlignedBB((Integer)pos.get(0) - 2.25D, (Integer)pos.get(1) - 0.5D, (Integer)pos.get(2) - 2.25D, (Integer)pos.get(0) + 2.25D, (Integer)pos.get(1) + 10.0D, (Integer)pos.get(2) + 2.25D);
+    										List<EntityPlayer> AABBPlayer = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
+    										if (!AABBPlayer.isEmpty())
+    									    {
+    									        for (EntityPlayer ent : AABBPlayer)
+    									        {
+    									        	ent.attackEntityFrom(DamageSource.MAGIC, 45.5F);
+    									        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 150, 1));
+    									        }
+    									    }
+    									}
+    									Integer x = new Integer((int)pos.get(0)); 
+    									double x1 = x.intValue();
+    									Integer y = new Integer((int)pos.get(1)); 
+    									double y1 = y.intValue();
+    									Integer z = new Integer((int)pos.get(2)); 
+    									double z1 = z.intValue();
+    									PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceBeam(this, this.world, 9, x1, y1, z1, 0.0D, 0.0D, 0.0D, 3), this.dimension);
     									if(this.PurpleBeamTimer <= 0)
     									{
     										this.PurpleBeamCD = _ConfigEntityCarapace.PURPLEBEAMCD;
@@ -1495,18 +1532,24 @@ public class EntityCarapace extends EntityMob
     								}
     								else
     								{
-    									this.DarkPurpleRingAnimation((Integer)pos.get(0), (Integer)pos.get(1), (Integer)pos.get(2), 3, this.world);
+    									Integer x = new Integer((int)pos.get(0)); 
+    									double x1 = x.intValue();
+    									Integer y = new Integer((int)pos.get(1)); 
+    									double y1 = y.intValue();
+    									Integer z = new Integer((int)pos.get(2)); 
+    									double z1 = z.intValue();
+    									PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceParticleRing(this, this.world, 9, x1, y1, z1, 0.0D, 0.0D, 0.0D, 3), this.dimension);
     									if(this.PurpleBeamTimer >= 60)
     									{
-    										if(this.PurpleBeamTimer % 3 == 1) this.DarkPurpleBeamGrowAnimation((Integer)pos.get(0), (Integer)pos.get(1), (Integer)pos.get(2), 1, this.world);
+    										if(this.PurpleBeamTimer % 3 == 1) PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceBeamGrow(this, this.world, 9, x1, y1, z1, 0.0D, 0.0D, 0.0D, 1), this.dimension);
     									}
     									else if(this.PurpleBeamTimer <= 60 && this.PurpleBeamTimer >= 40)
     									{
-    										if(this.PurpleBeamTimer % 3 == 1) this.DarkPurpleBeamGrowAnimation((Integer)pos.get(0), (Integer)pos.get(1), (Integer)pos.get(2), 2, this.world);
+    										if(this.PurpleBeamTimer % 3 == 1) PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceBeamGrow(this, this.world, 9, x1, y1, z1, 0.0D, 0.0D, 0.0D, 2), this.dimension);
     									}
     									else if(this.PurpleBeamTimer <= 40 && this.PurpleBeamTimer >= 20)
     									{
-    										if(this.PurpleBeamTimer % 3 == 1) this.DarkPurpleBeamGrowAnimation((Integer)pos.get(0), (Integer)pos.get(1), (Integer)pos.get(2), 3, this.world);
+    										if(this.PurpleBeamTimer % 3 == 1) PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceBeamGrow(this, this.world, 9, x1, y1, z1, 0.0D, 0.0D, 0.0D, 3), this.dimension);
     									}
     								}
     							}
@@ -1514,39 +1557,39 @@ public class EntityCarapace extends EntityMob
     					}
     				}
     			}
+    			
+    			this.P10BigGroundAOE--;
+        		if(this.P10BigGroundAOE <= 0)
+        		{
+        			this.P10BigGroundAOE = _ConfigEntityCarapace.P10BIGGROUNDAOE;
+        			this.spawnAnguish(this.posX, this.posY, this.posZ);
+        			this.playVoidMagicCastSound(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+        		}
+        		
+        		this.P10ExplosionTimer--;
+        		List<EntityPlayer> P10players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+    			for (EntityPlayer player : P10players)
+    	        {
+    	    		if(this.P10ExplosionTimer <= 0)
+    	    		{
+    	    			this.P10ExplosionTimer = _ConfigEntityCarapace.P10EXPLOSIONTIMER;
+    	    			this.spawnVoidExplosion(player, player.posX, player.posY, player.posZ);
+    	    		}
+    	    		
+    	    		for(int i = 0; i < this.explosionPointPlayers.size(); i++)
+    				{
+    	    			EntityPlayer activePlayer = (EntityPlayer)this.explosionPointPlayers.get(i);
+    					if(player == activePlayer)
+    					{
+    						List pos = new ArrayList();
+    						pos.add(player.posX);
+    						pos.add(player.posY);
+    						pos.add(player.posZ);
+    						this.explosionPoints.set(i, pos);
+    					}
+    				}
+    	        }
     		}
-    		
-    		this.P10BigGroundAOE--;
-    		this.P10ExplosionTimer--;
-    		if(this.P10BigGroundAOE <= 0)
-    		{
-    			this.P10BigGroundAOE = _ConfigEntityCarapace.P10BIGGROUNDAOE;
-    			this.spawnAnguish(this.posX, this.posY, this.posZ);
-    			this.playVoidMagicCastSound(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
-    		}
-    		
-    		List<EntityPlayer> P10players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
-			for (EntityPlayer player : P10players)
-	        {
-	    		if(this.P10ExplosionTimer <= 0)
-	    		{
-	    			this.P10ExplosionTimer = _ConfigEntityCarapace.P10EXPLOSIONTIMER;
-	    			this.spawnVoidExplosion(player, player.posX, player.posY, player.posZ);
-	    		}
-	    		
-	    		for(int i = 0; i < this.explosionPointPlayers.size(); i++)
-				{
-	    			EntityPlayer activePlayer = (EntityPlayer)this.explosionPointPlayers.get(i);
-					if(player == activePlayer)
-					{
-						List pos = new ArrayList();
-						pos.add(player.posX);
-						pos.add(player.posY);
-						pos.add(player.posZ);
-						this.explosionPoints.set(i, pos);
-					}
-				}
-	        }
     		break;
     	}
     	
@@ -1579,7 +1622,8 @@ public class EntityCarapace extends EntityMob
 			this.tasks.addTask(1, aiMoveToRoom1Mid);
 			break;
 		case 3:
-			this.tasks.removeTask(aiMoveToRoom1Mid);
+			this.tasks.removeTask(aiMeleeAttack);
+			this.tasks.addTask(1, aiMoveToRoom1Mid);
 			break;
 		case 4:
 			this.tasks.removeTask(aiMoveToRoom1Mid);
@@ -1715,315 +1759,208 @@ public class EntityCarapace extends EntityMob
     @Override
     public void onDeath(DamageSource cause)
     {
+    	List<EntityAnguish> anguish = this.world.<EntityAnguish>getEntitiesWithinAABB(EntityAnguish.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+		for (EntityAnguish ent : anguish)
+        {
+			ent.isDead = true;
+        }
+		
+		this.openDoorDeath1(this.getSpawnLocation().getX() + 47, this.getSpawnLocation().getY() - 2, this.getSpawnLocation().getZ() - 1);
+		this.openDoorDeath2(this.getSpawnLocation().getX() + 1, this.getSpawnLocation().getY() + 1, this.getSpawnLocation().getZ() - 1);
+		if(!this.world.isRemote) PacketHandler.INSTANCE.sendToDimension(new PacketStopMusic(this, this.world), this.dimension);
+		
         super.onDeath(cause);
-        
     }
     
-    public void BlueBuffRingAnimation(double x, double y, double z, double radius, World world)
-	{
-		Random rand = new Random();
-		for(double r = 0.6D; r <= radius; r += 0.45D)
-		{
-			for(float i = 0.0F; i < 360.0F; i += 15.0F)
-			{
-				double deltaX = Math.cos(Math.toRadians(i))*r + rand.nextDouble();
-				double deltaZ = -Math.sin(Math.toRadians(i))*r + rand.nextDouble();
-				double finalX = x - 0.5D + deltaX;
-				double finalZ = z - 0.5D + deltaZ;
-			    
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 8, finalX, y + 0.15D, finalZ, 0.0D, 0.0D, 0.0D, -1), this.dimension);
-			}
-		}
-	}
-    
-    public void BlueBuffExplosionAnimation(double x, double y, double z, double radius, int height, World world)
-	{
-		Random rand = new Random();
-		for(int m = 0; m < 20; m++)
-		{
-			for(double r = 0.6D; r <= radius; r += 0.45D)
-			{
-				for(float i = 0.0F; i < 360.0F; i += 15.0F)
-				{
-					double deltaX = Math.cos(Math.toRadians(i))*r + rand.nextDouble();
-					double deltaZ = -Math.sin(Math.toRadians(i))*r + rand.nextDouble();
-					double finalX = x - 0.5D + deltaX;
-					double finalZ = z - 0.5D + deltaZ;
-				    
-					PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 8, finalX, (y + this.rand.nextInt(height) + this.rand.nextDouble()) + 0.15D, finalZ, 0.0D, 0.0D, 0.0D, -1), this.dimension);
-				}
-			}
-		}
-	}
-    
-    public void DarkPurpleRingAnimation(double x, double y, double z, double radius, World world)
-	{
-    	Random rand = new Random();
-		for(float i = 0.0F; i < 360.0F; i += 2.0F)
-		{
-			double deltaX = Math.cos(Math.toRadians(i))*radius;
-			double deltaZ = -Math.sin(Math.toRadians(i))*radius;
-			double finalX = x + deltaX;
-			double finalZ = z + deltaZ;
-		    
-			for(double p = radius; p >= 0.0D; p -= 0.5D)
-			{
-				if(rand.nextInt(99) > 92)
-		    	{
-					PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 9, finalX, y + 0.15D, finalZ, 0.0D, 0.0D, 0.0D, -1), this.dimension);
-		    	}
-			}
-		}
-	}
-    
-    public void DarkPurpleExplosionAnimation(double x, double y, double z, double radius, int height, World world)
-	{
-		Random rand = new Random();
-		for(int m = 0; m < 20; m++)
-		{
-			for(double r = 0.6D; r <= radius; r += 0.45D)
-			{
-				for(float i = 0.0F; i < 360.0F; i += 15.0F)
-				{
-					double deltaX = Math.cos(Math.toRadians(i))*r + rand.nextDouble();
-					double deltaZ = -Math.sin(Math.toRadians(i))*r + rand.nextDouble();
-					double finalX = x - 0.5D + deltaX;
-					double finalZ = z - 0.5D + deltaZ;
-				    
-					PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 9, finalX, (y + this.rand.nextInt(height) + this.rand.nextDouble()) + 0.15D, finalZ, 0.0D, 0.0D, 0.0D, -1), this.dimension);
-				}
-			}
-		}
-	}
-    
-    public void PurpleBuffArea1(double x, double y, double z, World world)
-	{
-		Random rand = new Random();
-		for(int m = 0; m < 200; m++)
-		{
-			PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 6, (x + 6) + rand.nextInt(15) + rand.nextDouble(), y, (z - 15) + rand.nextInt(30) + rand.nextDouble(), 0.0D, 0.0D, 0.0D, -1), this.dimension);
-		}
-	}
-    
-    public void PurpleBuffArea2(double x, double y, double z, World world)
-	{
-		Random rand = new Random();
-		for(int m = 0; m < 200; m++)
-		{
-			PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 6, (x - 6) + rand.nextInt(12) + rand.nextDouble(), y, (z - 15) + rand.nextInt(30) + rand.nextDouble(), 0.0D, 0.0D, 0.0D, -1), this.dimension);
-		}
-	}
-    
-    public void PurpleBuffArea3(double x, double y, double z, World world)
-	{
-		Random rand = new Random();
-		for(int m = 0; m < 200; m++)
-		{
-			PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 6, (x - 6) - rand.nextInt(12) + rand.nextDouble(), y, (z - 15) + rand.nextInt(30) + rand.nextDouble(), 0.0D, 0.0D, 0.0D, -1), this.dimension);
-		}
-	}
-	
-	public void PurpleBuffExplode1(double x, double y, double z, World world)
-	{
-		Random rand = new Random();
-		for(int m = 0; m < 6000; m++)
-		{
-			PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 6, (x + 6) + rand.nextInt(15) + rand.nextDouble(), y + rand.nextInt(11) + rand.nextDouble(), (z - 15) + rand.nextInt(30) + rand.nextDouble(), 0.0D, 0.0D, 0.0D, -1), this.dimension);
-		}
-	}
-	
-	public void PurpleBuffExplode2(double x, double y, double z, World world)
-	{
-		Random rand = new Random();
-		for(int m = 0; m < 6000; m++)
-		{
-			PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 6, (x - 6) + rand.nextInt(12) + rand.nextDouble(), y + rand.nextInt(11) + rand.nextDouble(), (z - 15) + rand.nextInt(30) + rand.nextDouble(), 0.0D, 0.0D, 0.0D, -1), this.dimension);
-		}
-	}
-	
-	public void PurpleBuffExplode3(double x, double y, double z, World world)
-	{
-		Random rand = new Random();
-		for(int m = 0; m < 6000; m++)
-		{
-			PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 6, (x - 6) - rand.nextInt(12) + rand.nextDouble(), y + rand.nextInt(11) + rand.nextDouble(), (z - 15) + rand.nextInt(30) + rand.nextDouble(), 0.0D, 0.0D, 0.0D, -1), this.dimension);
-		}
-	}
-	
-	public void WeaknessAnimation(double x, double y, double z, double radius, World world)
-	{
-		Random rand = new Random();
-		for(int m = 0; m < 10; m++)
-		{
-			for(double r = 0.6D; r <= radius; r += 0.45D)
-			{
-				for(float i = 0.0F; i < 360.0F; i += 15.0F)
-				{
-					double deltaX = Math.cos(Math.toRadians(i))*r + rand.nextDouble();
-					double deltaZ = -Math.sin(Math.toRadians(i))*r + rand.nextDouble();
-					double finalX = x - 0.5D + deltaX;
-					double finalZ = z - 0.5D + deltaZ;
-				    
-					PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 9, finalX, y + 0.15D, finalZ, 0.0D, 0.0D, 0.0D, -1), this.dimension);
-				}
-			}
-		}
-	}
-	
-	public void SightAttackAnimation(double x, double y, double z, int facing, World world)
-	{
-		Random rand = new Random();
-		switch(facing)
-		{
-		case 0:
-			for(int m = 0; m < 350; m++)
-			{
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 9, x + rand.nextInt(30) + rand.nextDouble(), y, z + rand.nextInt(30) + rand.nextDouble(), 0.0D, 0.0D, 0.0D, -1), this.dimension);
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 10, x + rand.nextInt(30) + rand.nextDouble(), y, z + rand.nextInt(30) + rand.nextDouble(), 0.0D, 0.0D, 0.0D, -1), this.dimension);
-				
-			}
-			break;
-		case 1:
-			for(int m = 0; m < 350; m++)
-			{
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 9, x - rand.nextInt(30) + rand.nextDouble(), y, z + rand.nextInt(30) + rand.nextDouble(), 0.0D, 0.0D, 0.0D, -1), this.dimension);
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 10, x - rand.nextInt(30) + rand.nextDouble(), y, z + rand.nextInt(30) + rand.nextDouble(), 0.0D, 0.0D, 0.0D, -1), this.dimension);
-			}
-			break;
-		case 2:
-			for(int m = 0; m < 350; m++)
-			{
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 9, x - rand.nextInt(30) + rand.nextDouble(), y, z - rand.nextInt(30) + rand.nextDouble(), 0.0D, 0.0D, 0.0D, -1), this.dimension);
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 10, x - rand.nextInt(30) + rand.nextDouble(), y, z - rand.nextInt(30) + rand.nextDouble(), 0.0D, 0.0D, 0.0D, -1), this.dimension);
-			}
-			break;
-		case 3:
-			for(int m = 0; m < 350; m++)
-			{
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 9, x + rand.nextInt(30) + rand.nextDouble(), y, z - rand.nextInt(30) + rand.nextDouble(), 0.0D, 0.0D, 0.0D, -1), this.dimension);
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 10, x + rand.nextInt(30) + rand.nextDouble(), y, z - rand.nextInt(30) + rand.nextDouble(), 0.0D, 0.0D, 0.0D, -1), this.dimension);
-			}
-			break;
-		}
-	}
-	
-	public void SightAttackBeamAnimation(double x, double y, double z, int facing, World world)
-	{
-		Random rand = new Random();
-		switch(facing)
-		{
-		case 0:
-			for(int m = 0; m < 100; m++)
-			{
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 9, x + rand.nextDouble(), y + rand.nextDouble(), z + rand.nextDouble(), 0.35D, 0.0D, 0.35D, -1), this.dimension);
-			}
-			break;
-		case 1:
-			for(int m = 0; m < 100; m++)
-			{
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 9, x - rand.nextDouble(), y + rand.nextDouble(), z + rand.nextDouble(), -0.35D, 0.0D, 0.35D, -1), this.dimension);
-			}
-			break;
-		case 2:
-			for(int m = 0; m < 100; m++)
-			{
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 9, x - rand.nextDouble(), y + rand.nextDouble(), z - rand.nextDouble(), -0.35D, 0.0D, -0.35D, -1), this.dimension);
-			}
-			break;
-		case 3:
-			for(int m = 0; m < 100; m++)
-			{
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 9, x + rand.nextDouble(), y + rand.nextDouble(), z - rand.nextDouble(), 0.35D, 0.0D, -0.35D, -1), this.dimension);
-			}
-			break;
-		}
-	}
-	
-	public void SightAttackExplodeAnimation(double x, double y, double z, int height, int facing, World world)
-	{
-		Random rand = new Random();
-		switch(facing)
-		{
-		case 0:
-			for(int m = 0; m < 15000; m++)
-			{
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 9, x + rand.nextInt(30) + rand.nextDouble(), y + rand.nextInt(height) + rand.nextDouble(), z + rand.nextInt(30) + rand.nextDouble(), 0.0D, 0.0D, 0.0D, -1), this.dimension);
-			}
-			break;
-		case 1:
-			for(int m = 0; m < 15000; m++)
-			{
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 9, x - rand.nextInt(30) + rand.nextDouble(), y + rand.nextInt(height) + rand.nextDouble(), z + rand.nextInt(30) + rand.nextDouble(), 0.0D, 0.0D, 0.0D, -1), this.dimension);
-			}
-			break;
-		case 2:
-			for(int m = 0; m < 15000; m++)
-			{
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 9, x - rand.nextInt(30) + rand.nextDouble(), y + rand.nextInt(height) + rand.nextDouble(), z - rand.nextInt(30) + rand.nextDouble(), 0.0D, 0.0D, 0.0D, -1), this.dimension);
-			}
-			break;
-		case 3:
-			for(int m = 0; m < 15000; m++)
-			{
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 9, x + rand.nextInt(30) + rand.nextDouble(), y + rand.nextInt(height) + rand.nextDouble(), z - rand.nextInt(30) + rand.nextDouble(), 0.0D, 0.0D, 0.0D, -1), this.dimension);
-			}
-			break;
-		}
-	}
-	
-	public void AnguishAnimation(double x, double y, double z, double radius, World world)
-	{
-		Random rand = new Random();
-		for(int m = 0; m < 3; m++)
-		{
-			for(double r = 0.6D; r <= radius; r += 0.45D)
-			{
-				for(float i = 0.0F; i < 360.0F; i += 10.0F)
-				{
-					double deltaX = Math.cos(Math.toRadians(i))*r + rand.nextDouble();
-					double deltaZ = -Math.sin(Math.toRadians(i))*r + rand.nextDouble();
-					double finalX = x - 0.5D + deltaX;
-					double finalZ = z - 0.5D + deltaZ;
-				    
-					PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 11, finalX, y + 0.15D, finalZ, 0.0D, 0.0D, 0.0D, -1), this.dimension);
-				}
-			}
-		}
-	}
-	
-	public void DarkPurpleBeamGrowAnimation(double x, double y, double z, double radius, World world)
-	{
-		Random rand = new Random();
-		for(double r = 0.6D; r <= radius; r += 0.45D)
-		{
-			for(float i = 0.0F; i < 360.0F; i += 15.0F)
-			{
-				double deltaX = Math.cos(Math.toRadians(i))*r + rand.nextDouble();
-				double deltaZ = -Math.sin(Math.toRadians(i))*r + rand.nextDouble();
-				double finalX = x - 0.5D + deltaX;
-				double finalZ = z - 0.5D + deltaZ;
-			    
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 9, finalX, y + 0.15D, finalZ, 0.0D, 0.0D, 0.0D, -1), this.dimension);
-			}
-		}
-	}
-	
-	public void DarkPurpleBeamAnimation(double x, double y, double z, double radius, World world)
-	{
-		Random rand = new Random();
-		for(double r = 0.6D; r <= radius; r += 0.45D)
-		{
-			for(float i = 0.0F; i < 360.0F; i += 15.0F)
-			{
-				double deltaX = Math.cos(Math.toRadians(i))*r + rand.nextDouble();
-				double deltaZ = -Math.sin(Math.toRadians(i))*r + rand.nextDouble();
-				double finalX = x - 0.5D + deltaX;
-				double finalZ = z - 0.5D + deltaZ;
-			    
-				PacketHandler.INSTANCE.sendToDimension(new PacketCustomParticleData(this, world, 9, finalX, y + 6D, finalZ, 0.0D, -0.625D, 0.0D, -1), this.dimension);
-			}
-		}
-	}
+    public void resetFight()
+    {
+    	this.openDoorDeath1(this.getSpawnLocation().getX() + 47, this.getSpawnLocation().getY() - 2, this.getSpawnLocation().getZ() - 1);
+		this.openDoorDeath2(this.getSpawnLocation().getX() + 1, this.getSpawnLocation().getY() + 1, this.getSpawnLocation().getZ() - 1);
+		this.resetDoor1(this.getSpawnLocation().getX() - 8, this.getSpawnLocation().getY() + 3, this.getSpawnLocation().getZ() - 1);
+		this.resetDoor2(this.getSpawnLocation().getX() + 2, this.getSpawnLocation().getY() + 1, this.getSpawnLocation().getZ() - 1);
+		this.resetDoor3(this.getSpawnLocation().getX() + 40, this.getSpawnLocation().getY() + 1, this.getSpawnLocation().getZ() - 1);
+    	this.setPosition(this.getSpawnLocation().getX() + 1.0D, this.getSpawnLocation().getY() + 0.5D, this.getSpawnLocation().getZ() + 1.0D);
+    	this.setHealth(this.getMaxHealth());
+    	this.setPrePhase(0);
+    	this.setPhase(0);
+    	this.setPurpleBuff(false);
+    	this.setBlueBuff(false);
+    	explosionPoints = new ArrayList();
+    	explosionPointTimer = _ConfigEntityCarapace.EXPLOSION_TIMER;
+    	explosionPointPlayers = new ArrayList();
+    	AttackSoundDelay = _ConfigEntityCarapace.ATTACK_SOUND_DELAY;
+    	prefighttimer1 = _ConfigEntityCarapace.PREFIGHTTIMER1;
+    	prefightdooranimdelay = _ConfigEntityCarapace.PREFIGHTDOORANIMDELAY;
+    	doorPhase = 0;
+    	P1explosionCD = _ConfigEntityCarapace.P1EXPLOSIONTIMER;
+    	P1TTimer = _ConfigEntityCarapace.P1TIMER;
+    	P2explosionCD = _ConfigEntityCarapace.P2EXPLOSIONTIMER;
+    	P2Timer = _ConfigEntityCarapace.P2TIMER;
+    	P2RunToMid = _ConfigEntityCarapace.RUNTOMIDTIMER;
+    	P2OrbsSpawned = false;
+    	P3explosionCD = _ConfigEntityCarapace.P3EXPLOSIONTIMER;
+    	P3Timer = _ConfigEntityCarapace.P3TIMER;
+    	BlueMinionSpawned = false;
+    	BlueBuffCD = _ConfigEntityCarapace.BLUEBUFFCD;
+    	BlueBuffSoakTimer = _ConfigEntityCarapace.BLUEBUFFSOAKTIMER;
+    	BlueBuffSoakLocation = null;
+    	BlueBuffPosFound = false;
+    	PurpleMinionSpawned = false;
+    	PurpleBuffCD = _ConfigEntityCarapace.PURPLEBUFFCD;
+    	PurpleBuffTimer = _ConfigEntityCarapace.PURPLEBUFFTIMER;
+    	PurpleBuffPosition = 0;
+    	PurpleBuffDoublePosition = false;
+    	PurpleBuffPosition2 = 0;
+    	PurpleBuffPosFound = false;
+    	P5DoorAnimDelay = _ConfigEntityCarapace.P5DOORANIMDELAY;
+    	P5Timer = _ConfigEntityCarapace.P5TIMER;
+    	P6WeaknessTimer = _ConfigEntityCarapace.P6WEAKNESSTIMER;
+    	P6WeaknessCastTimer = _ConfigEntityCarapace.P6WEAKNESSCASTTIME;
+    	WeaknessCasting = false;
+    	P7DoorAnimDelay = _ConfigEntityCarapace.P7DOORANIMDELAY;
+    	P7WeaknessTimer = _ConfigEntityCarapace.P7WEAKNESSTIMER;
+    	P7WeaknessCastTimer = _ConfigEntityCarapace.P7WEAKNESSCASTTIME;
+    	P7Timer = _ConfigEntityCarapace.P7TIMER;
+    	P8CastTime = _ConfigEntityCarapace.P8CASTTIME;
+    	P8FacingFound = false;
+    	P8Facing = 0;
+    	P8FacingPlayer = null;
+    	P8PlayerFound = false;
+    	P9Teleported = false;
+    	P9DoorAnimDelay = _ConfigEntityCarapace.P9DOORANIMDELAY;
+    	P9Timer = _ConfigEntityCarapace.P9TIMER;
+    	P10DoorAnimDelay = _ConfigEntityCarapace.P10DOORANIMDELAY;
+    	P10BigGroundAOE = _ConfigEntityCarapace.P10BIGGROUNDAOE;
+    	P10ExplosionTimer = _ConfigEntityCarapace.P10EXPLOSIONTIMER;
+    	PurpleBeamCD = _ConfigEntityCarapace.PURPLEBEAMCD;
+    	PurpleBeamTimer = _ConfigEntityCarapace.PURPLEBEAMTIMER;
+    	PurpleBeamLocations = new ArrayList();
+    	PurpleBeamPosFound = false;
+    	
+    	List<EntityCarapaceEye> list = this.world.<EntityCarapaceEye>getEntitiesWithinAABB(EntityCarapaceEye.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+    	if(!list.isEmpty())
+    	{
+	    	for (EntityCarapaceEye entity : list)
+	        {
+	    		entity.isDead = true;
+	        }
+    	}
+    	
+    	List<EntityBlueGuardian> list2 = this.world.<EntityBlueGuardian>getEntitiesWithinAABB(EntityBlueGuardian.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+    	if(!list2.isEmpty())
+    	{
+	    	for (EntityBlueGuardian entity : list2)
+	        {
+	    		entity.isDead = true;
+	        }
+    	}
+    	
+    	List<EntityPurpleGuardian> list3 = this.world.<EntityPurpleGuardian>getEntitiesWithinAABB(EntityPurpleGuardian.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+    	if(!list3.isEmpty())
+    	{
+	    	for (EntityPurpleGuardian entity : list3)
+	        {
+	    		entity.isDead = true;
+	        }
+    	}
+    	
+    	List<EntityPurpleOrb> list4 = this.world.<EntityPurpleOrb>getEntitiesWithinAABB(EntityPurpleOrb.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+    	if(!list4.isEmpty())
+    	{
+	    	for (EntityPurpleOrb entity : list4)
+	        {
+	    		entity.isDead = true;
+	        }
+    	}
+    	
+    	List<EntityBlueOrb> list5 = this.world.<EntityBlueOrb>getEntitiesWithinAABB(EntityBlueOrb.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+    	if(!list5.isEmpty())
+    	{
+	    	for (EntityBlueOrb entity : list5)
+	        {
+	    		entity.isDead = true;
+	        }
+    	}
+    	
+    	List<EntityAnguish> list6 = this.world.<EntityAnguish>getEntitiesWithinAABB(EntityAnguish.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+    	if(!list6.isEmpty())
+    	{
+	    	for (EntityAnguish entity : list6)
+	        {
+	    		entity.isDead = true;
+	        }
+    	}
+    	
+    	EntityCarapaceEye entity = new EntityCarapaceEye(this.world);
+       	entity.setPosition(85 + 1.0D, 55, -21);
+       	entity.enablePersistence();
+   		this.world.spawnEntity(entity);
+   		
+   		EntityCarapaceEye entity2 = new EntityCarapaceEye(this.world);
+       	entity2.setPosition(80 + 1.0D, 55, -20);
+       	entity2.enablePersistence();
+   		this.world.spawnEntity(entity2);
+   		
+   		EntityCarapaceEye entity3 = new EntityCarapaceEye(this.world);
+       	entity3.setPosition(81 + 1.0D, 55, -16);
+       	entity3.enablePersistence();
+   		this.world.spawnEntity(entity3);
+   		
+   		EntityCarapaceEye entity4 = new EntityCarapaceEye(this.world);
+       	entity4.setPosition(85 + 1.0D, 55, -13);
+       	entity4.enablePersistence();
+   		this.world.spawnEntity(entity4);
+   		
+   		EntityCarapaceEye entity5 = new EntityCarapaceEye(this.world);
+   		entity5.setPosition(75 + 1.0D, 55, -15);
+   		entity5.enablePersistence();
+   		this.world.spawnEntity(entity5);
+   		
+   		EntityCarapaceEye entity6 = new EntityCarapaceEye(this.world);
+   		entity6.setPosition(80 + 1.0D, 55, -11);
+   		entity6.enablePersistence();
+   		this.world.spawnEntity(entity6);
+   		
+   		EntityCarapaceEye entity7 = new EntityCarapaceEye(this.world);
+   		entity7.setPosition(84 + 1.0D, 55, -9);
+   		entity7.enablePersistence();
+   		this.world.spawnEntity(entity7);
+   		
+   		EntityCarapaceEye entity8 = new EntityCarapaceEye(this.world);
+   		entity8.setPosition(86 + 1.0D, 55, 11);
+   		entity8.enablePersistence();
+   		this.world.spawnEntity(entity8);
+   		
+   		EntityCarapaceEye entity9 = new EntityCarapaceEye(this.world);
+   		entity9.setPosition(81 + 1.0D, 55, 11);
+   		entity9.enablePersistence();
+   		this.world.spawnEntity(entity9);
+   		
+   		EntityCarapaceEye entity10 = new EntityCarapaceEye(this.world);
+   		entity10.setPosition(83 + 1.0D, 55, 15);
+   		entity10.enablePersistence();
+   		this.world.spawnEntity(entity10);
+   		
+   		EntityCarapaceEye entity11 = new EntityCarapaceEye(this.world);
+   		entity11.setPosition(76 + 1.0D, 55, 14);
+   		entity11.enablePersistence();
+   		this.world.spawnEntity(entity11);
+   		
+   		EntityCarapaceEye entity12 = new EntityCarapaceEye(this.world);
+   		entity12.setPosition(79 + 1.0D, 55, 17);
+   		entity12.enablePersistence();
+   		this.world.spawnEntity(entity12);
+   		
+   		EntityCarapaceEye entity13 = new EntityCarapaceEye(this.world);
+   		entity13.setPosition(86 + 1.0D, 55, 18);
+   		entity13.enablePersistence();
+   		this.world.spawnEntity(entity13);
+   		
+   		EntityCarapaceEye entity14 = new EntityCarapaceEye(this.world);
+   		entity14.setPosition(84 + 1.0D, 55, 22);
+   		entity14.enablePersistence();
+   		this.world.spawnEntity(entity14);
+    }
     
     public void openDoor1(int x, int y, int z)
     {
@@ -2243,6 +2180,136 @@ public class EntityCarapace extends EntityMob
     	this.world.setBlockState(doorpos.add(1, 4, 2), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
     }
     
+
+    public void openDoorDeath1(int x, int y, int z)
+    {
+    	BlockPos doorpos = new BlockPos(x, y, z);
+    	this.world.setBlockToAir(doorpos.add(1, 3, 0));
+    	this.world.setBlockToAir(doorpos.add(1, 3, 3));
+    	this.world.setBlockToAir(doorpos.add(1, 2, 0));
+    	this.world.setBlockToAir(doorpos.add(1, 2, 3));
+    	this.world.setBlockToAir(doorpos.add(1, 1, 0));
+    	this.world.setBlockToAir(doorpos.add(1, 1, 3));
+    	this.world.setBlockToAir(doorpos.add(1, 0, 0));
+    	this.world.setBlockToAir(doorpos.add(1, 0, 3));
+    	this.world.setBlockToAir(doorpos.add(0, 4, 1));
+    	this.world.setBlockToAir(doorpos.add(0, 4, 2));
+    	this.world.setBlockToAir(doorpos.add(0, 3, 1));
+    	this.world.setBlockToAir(doorpos.add(0, 3, 2));
+    	this.world.setBlockToAir(doorpos.add(0, 2, 1));
+    	this.world.setBlockToAir(doorpos.add(0, 2, 2));
+    	this.world.setBlockToAir(doorpos.add(0, 1, 1));
+    	this.world.setBlockToAir(doorpos.add(0, 1, 2));
+    	this.world.setBlockToAir(doorpos.add(0, 0, 1));
+    	this.world.setBlockToAir(doorpos.add(0, 0, 2));
+    	this.world.setBlockToAir(doorpos.add(1, 4, 1));
+    	this.world.setBlockToAir(doorpos.add(1, 4, 2));
+    }
+    
+    public void openDoorDeath2(int x, int y, int z)
+    {
+    	BlockPos doorpos = new BlockPos(x, y, z);
+    	this.world.setBlockToAir(doorpos.add(1, 2, 0));
+    	this.world.setBlockToAir(doorpos.add(1, 2, 3));
+    	this.world.setBlockToAir(doorpos.add(1, 1, 0));
+    	this.world.setBlockToAir(doorpos.add(1, 1, 3));
+    	this.world.setBlockToAir(doorpos.add(1, 0, 0));
+    	this.world.setBlockToAir(doorpos.add(1, 0, 3));
+    	this.world.setBlockToAir(doorpos.add(1, -1, 0));
+    	this.world.setBlockToAir(doorpos.add(1, -1, 3));
+    	this.world.setBlockToAir(doorpos.add(0, 3, 1));
+    	this.world.setBlockToAir(doorpos.add(0, 3, 2));
+    	this.world.setBlockToAir(doorpos.add(0, 2, 1));
+    	this.world.setBlockToAir(doorpos.add(0, 2, 2));
+    	this.world.setBlockToAir(doorpos.add(0, 1, 1));
+    	this.world.setBlockToAir(doorpos.add(0, 1, 2));
+    	this.world.setBlockToAir(doorpos.add(0, 0, 1));
+    	this.world.setBlockToAir(doorpos.add(0, 0, 2));
+    	this.world.setBlockToAir(doorpos.add(0, -1, 1));
+    	this.world.setBlockToAir(doorpos.add(0, -1, 2));
+    	this.world.setBlockToAir(doorpos.add(1, 3, 1));
+    	this.world.setBlockToAir(doorpos.add(1, 3, 2));
+    }
+    
+    public void resetDoor1(int x, int y, int z)
+    {
+    	BlockPos doorpos = new BlockPos(x, y, z);
+    	this.world.setBlockState(doorpos.add(0, 4, 1), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 4, 2), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 4, 1), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 4, 2), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 3, 1), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 3, 2), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 2, 1), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 2, 2), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 1, 1), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 1, 2), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 0, 1), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 0, 2), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, -1, 1), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, -1, 2), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 3, 0), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 3, 3), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 2, 0), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 2, 3), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 1, 0), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 1, 3), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 0, 0), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 0, 3), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, -1, 0), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, -1, 3), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    }
+    
+    public void resetDoor2(int x, int y, int z)
+    {
+    	BlockPos doorpos = new BlockPos(x, y, z);
+    	this.world.setBlockState(doorpos.add(0, 3, 1), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 3, 2), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 3, 1), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 3, 2), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 2, 1), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 2, 2), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 1, 1), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 1, 2), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 0, 1), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 0, 2), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, -1, 1), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, -1, 2), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 2, 0), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 2, 3), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 1, 0), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 1, 3), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 0, 0), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 0, 3), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, -1, 0), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, -1, 3), EMCoreBlocks.CORRUPTED_FLESH2.getDefaultState());
+    }
+    
+    public void resetDoor3(int x, int y, int z)
+    {
+    	BlockPos doorpos = new BlockPos(x, y, z);
+    	this.world.setBlockState(doorpos.add(0, 3, 1), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 3, 2), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 3, 1), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 3, 2), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 2, 1), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 2, 2), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 1, 1), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 1, 2), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 0, 1), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, 0, 2), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, -1, 1), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(1, -1, 2), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 2, 0), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 2, 3), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 1, 0), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 1, 3), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 0, 0), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, 0, 3), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, -1, 0), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    	this.world.setBlockState(doorpos.add(0, -1, 3), EMCoreBlocks.CORRUPTED_VOID_FLESH2.getDefaultState());
+    }
+    
     public void spawnVoidExplosion(EntityPlayer player, double x, double y, double z)
 	{
 		List pos = new ArrayList();
@@ -2250,25 +2317,22 @@ public class EntityCarapace extends EntityMob
 		pos.add(y);
 		pos.add(z);
 		this.explosionPoints.add(pos);
-		this.explosionPointTimers.add(_ConfigEntityCarapace.EXPLOSION_TIMER);
+		this.explosionPointTimer = _ConfigEntityCarapace.EXPLOSION_TIMER;
 		this.explosionPointPlayers.add(player);
 	}
     
     public void spawnAnguish(double x, double y, double z)
 	{
-		List pos = new ArrayList();
-		pos.add(x);
-		pos.add(y);
-		pos.add(z);
-		this.anguishPoints.add(pos);
-		this.anguishPointTimers.add(_ConfigEntityCarapace.ANGUISHTIMER);
-		this.AnguishAnimation(x, y, z, 11, this.world);
+    	EntityAnguish entity = new EntityAnguish(this.world, true);
+       	entity.setPosition(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+       	entity.enablePersistence();
+   		this.world.spawnEntity(entity);
 	}
     
     public void playAttackSound()
     {
     	Random rand = new Random();
-    	int r = rand.nextInt(7);
+    	int r = rand.nextInt(6);
     	switch(r)
     	{
     	case 0:
@@ -2289,26 +2353,23 @@ public class EntityCarapace extends EntityMob
     	case 5:
     		this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_CRITATTACK_04, SoundCategory.HOSTILE, 3.5F, 1.0f);
     		break;
-    	case 6:
-    		this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_CRITATTACK_05, SoundCategory.HOSTILE, 3.5F, 1.0f);
-    		break;
     	}
     }
     
-    public void playImpactSound(int x, int y, int z)
+    public void playImpactSound(int x, int y, int z, float volume)
     {
     	Random rand = new Random();
     	int r = rand.nextInt(3);
     	switch(r)
     	{
     	case 0:
-    		this.world.playSound((EntityPlayer)null, new BlockPos(x, y, z), EMSoundHandler.SPELL_IMPACT_01, SoundCategory.HOSTILE, 3.5F, 1.0f);
+    		this.world.playSound((EntityPlayer)null, new BlockPos(x, y, z), EMSoundHandler.SPELL_IMPACT_01, SoundCategory.HOSTILE, volume, 1.0f);
     		break;
     	case 1:
-    		this.world.playSound((EntityPlayer)null, new BlockPos(x, y, z), EMSoundHandler.SPELL_IMPACT_02, SoundCategory.HOSTILE, 3.5F, 1.0f);
+    		this.world.playSound((EntityPlayer)null, new BlockPos(x, y, z), EMSoundHandler.SPELL_IMPACT_02, SoundCategory.HOSTILE, volume, 1.0f);
     		break;
     	case 2:
-    		this.world.playSound((EntityPlayer)null, new BlockPos(x, y, z), EMSoundHandler.SPELL_IMPACT_03, SoundCategory.HOSTILE, 3.5F, 1.0f);
+    		this.world.playSound((EntityPlayer)null, new BlockPos(x, y, z), EMSoundHandler.SPELL_IMPACT_03, SoundCategory.HOSTILE, volume, 1.0f);
     		break;
     	}
     }
@@ -2364,6 +2425,20 @@ public class EntityCarapace extends EntityMob
         }
 
         return angle + f;
+    }
+    
+    public void playBossMusic()
+    {
+    	List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+    	if(!list.isEmpty())
+    	{
+    		for (EntityPlayer entity : list)
+	        {
+    			//PacketHandler.INSTANCE.sendToDimension(new PacketPlayMusic(entity, this.world, 0), this.dimension);
+    		}
+    	}
+    	
+    	PacketHandler.INSTANCE.sendToDimension(new PacketPlayMusic(this, this.world, 0), this.dimension);
     }
     
     public boolean getInvulState()
@@ -2447,6 +2522,12 @@ public class EntityCarapace extends EntityMob
     public BlockPos getSpawnLocation()
     {
     	return this.spawn_location;
+    }
+    
+    @Override
+    protected int getExperiencePoints(EntityPlayer player)
+    {
+    	return 750;
     }
     
     /**

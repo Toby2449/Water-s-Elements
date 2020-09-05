@@ -9,6 +9,9 @@ public class _ConfigEntityVoidKnight
 	public static final double MF_SIZE_Y = 50.0D;
 	public static final double MF_SIZE_Z = 25.0D;
 	
+	public static final float BASE_HP = 450.0F;
+	public static final float HP_SCALE_AMOUNT = 400.0F;
+	
 	public static final int FIGHT_STARTER_TIMER = 300;
 	
 	public static final int EXPLOSION_TIMER = 80;

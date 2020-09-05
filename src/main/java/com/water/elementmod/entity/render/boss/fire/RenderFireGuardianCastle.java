@@ -2,7 +2,7 @@ package com.water.elementmod.entity.render.boss.fire;
 
 import com.water.elementmod.entity.boss.fire.EntityFireGuardian;
 import com.water.elementmod.entity.boss.fire.EntityFireGuardianCastle;
-import com.water.elementmod.entity.models.boss.fire.ModelFireGuardian;
+import com.water.elementmod.entity.models.boss.fire.ModelGuardian;
 import com.water.elementmod.util.EMConfig;
 
 import net.minecraft.client.renderer.GlStateManager;
@@ -19,7 +19,7 @@ public class RenderFireGuardianCastle extends RenderLiving<EntityFireGuardianCas
 	
 	public RenderFireGuardianCastle(RenderManager manager) 
 	{
-		super(manager, new ModelFireGuardian(), 0.5F);
+		super(manager, new ModelGuardian(), 0.5F);
     }
 	
     public void transformHeldFull3DItemLayer()

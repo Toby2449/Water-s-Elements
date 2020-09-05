@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Random;
 
 import com.water.elementmod.entity.ai.EntityAIMoveTo;
+import com.water.elementmod.network.PacketCarapaceParticleCircle;
+import com.water.elementmod.network.PacketCarapacePortalParticles;
 import com.water.elementmod.network.PacketCustomParticleData;
 import com.water.elementmod.network.PacketHandler;
 import com.water.elementmod.particle.EnumCustomParticleTypes;
@@ -89,7 +91,7 @@ public class EntityBlueOrb extends EntityMob
         	entity.setBlueBuff(true);
         	SoundEvent soundevent = this.getDeathSound();
             this.playSound(soundevent, this.getSoundVolume(), this.getSoundPitch());
-        	this.RingExplosionAnimation(this.posX, this.posY, this.posZ, 15, this.world);
+            PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceParticleCircle(this, this.world, 8, this.posX, this.posY, this.posZ, 0.0D, 0.0D,0.0D, 15), this.dimension);
         	this.setDead();
         }
     }
@@ -138,7 +140,7 @@ public class EntityBlueOrb extends EntityMob
         }
     	SoundEvent soundevent = this.getDeathSound();
         this.playSound(soundevent, this.getSoundVolume(), this.getSoundPitch());
-    	this.RingExplosionAnimation(this.posX, this.posY, this.posZ, 15, this.world);
+        PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceParticleCircle(this, this.world, 8, this.posX, this.posY, this.posZ, 0.0D, 0.0D,0.0D, 15), this.dimension);
     	this.setDead();
     }
     

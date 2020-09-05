@@ -1,11 +1,24 @@
 package com.water.elementmod.util.handlers;
 
 import com.water.elementmod.EMCoreBlocks;
+import com.water.elementmod.entity.boss._void.EntityAnguish;
+import com.water.elementmod.entity.boss._void.EntityBlueGuardian;
 import com.water.elementmod.entity.boss._void.EntityBlueOrb;
 import com.water.elementmod.entity.boss._void.EntityCarapace;
 import com.water.elementmod.entity.boss._void.EntityCarapaceEye;
 import com.water.elementmod.entity.boss._void.EntityEnergyOrb;
+import com.water.elementmod.entity.boss._void.EntityGrowingAnguishLarge;
+import com.water.elementmod.entity.boss._void.EntityGrowingAnguishMedium;
+import com.water.elementmod.entity.boss._void.EntityGrowingAnguishSmall;
+import com.water.elementmod.entity.boss._void.EntityLunacy;
+import com.water.elementmod.entity.boss._void.EntityPurpleGuardian;
 import com.water.elementmod.entity.boss._void.EntityPurpleOrb;
+import com.water.elementmod.entity.boss._void.EntitySlaveMaster;
+import com.water.elementmod.entity.boss._void.EntityVEBase;
+import com.water.elementmod.entity.boss._void.EntityVoidEntity;
+import com.water.elementmod.entity.boss._void.EntityVoidSpectralLarge;
+import com.water.elementmod.entity.boss._void.EntityVoidSpectralMedium;
+import com.water.elementmod.entity.boss._void.EntityVoidSpectralSmall;
 import com.water.elementmod.entity.boss.fire.EntityFireBoss;
 import com.water.elementmod.entity.boss.fire.EntityFireBossMinion;
 import com.water.elementmod.entity.boss.fire.EntityFireCrystal;
@@ -38,11 +51,24 @@ import com.water.elementmod.entity.projectile.EntityIceBall2;
 import com.water.elementmod.entity.projectile.EntityNatureArrow;
 import com.water.elementmod.entity.projectile.EntityPoisonBall;
 import com.water.elementmod.entity.projectile.EntityWaterArrow;
+import com.water.elementmod.entity.render.boss._void.RenderAnguish;
+import com.water.elementmod.entity.render.boss._void.RenderBlueGuardian;
 import com.water.elementmod.entity.render.boss._void.RenderBlueOrb;
 import com.water.elementmod.entity.render.boss._void.RenderCarapace;
 import com.water.elementmod.entity.render.boss._void.RenderCarapaceEye;
 import com.water.elementmod.entity.render.boss._void.RenderEnergyOrb;
+import com.water.elementmod.entity.render.boss._void.RenderGrowingAnguishLarge;
+import com.water.elementmod.entity.render.boss._void.RenderGrowingAnguishMedium;
+import com.water.elementmod.entity.render.boss._void.RenderGrowingAnguishSmall;
+import com.water.elementmod.entity.render.boss._void.RenderLunacy;
+import com.water.elementmod.entity.render.boss._void.RenderPurpleGuardian;
 import com.water.elementmod.entity.render.boss._void.RenderPurpleOrb;
+import com.water.elementmod.entity.render.boss._void.RenderSlaveMaster;
+import com.water.elementmod.entity.render.boss._void.RenderVEBase;
+import com.water.elementmod.entity.render.boss._void.RenderVoidEntity;
+import com.water.elementmod.entity.render.boss._void.RenderVoidSpectralLarge;
+import com.water.elementmod.entity.render.boss._void.RenderVoidSpectralMedium;
+import com.water.elementmod.entity.render.boss._void.RenderVoidSpectralSmall;
 import com.water.elementmod.entity.render.boss.fire.RenderFireBoss;
 import com.water.elementmod.entity.render.boss.fire.RenderFireBossMinion;
 import com.water.elementmod.entity.render.boss.fire.RenderFireCrystal;
@@ -398,6 +424,110 @@ public class EMRenderHandler
 			public Render<? super EntityCarapaceEye> createRenderFor(RenderManager manager)
 			{
 				return new RenderCarapaceEye(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityAnguish.class, new IRenderFactory<EntityAnguish>()
+		{
+			@Override
+			public Render<? super EntityAnguish> createRenderFor(RenderManager manager)
+			{
+				return new RenderAnguish(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityBlueGuardian.class, new IRenderFactory<EntityBlueGuardian>()
+		{
+			@Override
+			public Render<? super EntityBlueGuardian> createRenderFor(RenderManager manager)
+			{
+				return new RenderBlueGuardian(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityPurpleGuardian.class, new IRenderFactory<EntityPurpleGuardian>()
+		{
+			@Override
+			public Render<? super EntityPurpleGuardian> createRenderFor(RenderManager manager)
+			{
+				return new RenderPurpleGuardian(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityVEBase.class, new IRenderFactory<EntityVEBase>()
+		{
+			@Override
+			public Render<? super EntityVEBase> createRenderFor(RenderManager manager)
+			{
+				return new RenderVEBase(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityVoidEntity.class, new IRenderFactory<EntityVoidEntity>()
+		{
+			@Override
+			public Render<? super EntityVoidEntity> createRenderFor(RenderManager manager)
+			{
+				return new RenderVoidEntity(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityLunacy.class, new IRenderFactory<EntityLunacy>()
+		{
+			@Override
+			public Render<? super EntityLunacy> createRenderFor(RenderManager manager)
+			{
+				return new RenderLunacy(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityVoidSpectralSmall.class, new IRenderFactory<EntityVoidSpectralSmall>()
+		{
+			@Override
+			public Render<? super EntityVoidSpectralSmall> createRenderFor(RenderManager manager)
+			{
+				return new RenderVoidSpectralSmall(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityVoidSpectralMedium.class, new IRenderFactory<EntityVoidSpectralMedium>()
+		{
+			@Override
+			public Render<? super EntityVoidSpectralMedium> createRenderFor(RenderManager manager)
+			{
+				return new RenderVoidSpectralMedium(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityVoidSpectralLarge.class, new IRenderFactory<EntityVoidSpectralLarge>()
+		{
+			@Override
+			public Render<? super EntityVoidSpectralLarge> createRenderFor(RenderManager manager)
+			{
+				return new RenderVoidSpectralLarge(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntitySlaveMaster.class, new IRenderFactory<EntitySlaveMaster>()
+		{
+			@Override
+			public Render<? super EntitySlaveMaster> createRenderFor(RenderManager manager)
+			{
+				return new RenderSlaveMaster(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityGrowingAnguishSmall.class, new IRenderFactory<EntityGrowingAnguishSmall>()
+		{
+			@Override
+			public Render<? super EntityGrowingAnguishSmall> createRenderFor(RenderManager manager)
+			{
+				return new RenderGrowingAnguishSmall(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityGrowingAnguishMedium.class, new IRenderFactory<EntityGrowingAnguishMedium>()
+		{
+			@Override
+			public Render<? super EntityGrowingAnguishMedium> createRenderFor(RenderManager manager)
+			{
+				return new RenderGrowingAnguishMedium(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityGrowingAnguishLarge.class, new IRenderFactory<EntityGrowingAnguishLarge>()
+		{
+			@Override
+			public Render<? super EntityGrowingAnguishLarge> createRenderFor(RenderManager manager)
+			{
+				return new RenderGrowingAnguishLarge(manager);
 			}
 		});
 	}

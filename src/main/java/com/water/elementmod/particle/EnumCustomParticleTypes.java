@@ -20,7 +20,7 @@ public enum EnumCustomParticleTypes
 	BLUE_SMOKE("blue_smoke", 8, false),
 	DARK_PURPLE_SMOKE("dark_purple_smoke", 9, false),
 	DARK_PURPLE_SMOKE_BLOCK("dark_purple_smoke_block", 10, false),
-	ANGUISH("Anguish", 11, false);
+	DARK_PURPLE_SMOKE_VE_SPAWN("ve_spawn_particle", 11, false);
 	
 	private final String particleName;
     private final int particleID;

@@ -1,9 +1,11 @@
 package com.water.elementmod.particle;
 
-import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class ParticleSpawner 
 {
 	private static Minecraft mc = Minecraft.getMinecraft();
@@ -79,9 +81,9 @@ public class ParticleSpawner
 				{
 					var21 = new ParticleDarkPurpleSmokeBlock(mc.world, par2, par4, par6, par8, par10, par12);
 				}
-				else if (type == EnumCustomParticleTypes.ANGUISH)
+				else if (type == EnumCustomParticleTypes.DARK_PURPLE_SMOKE_VE_SPAWN)
 				{
-					var21 = new ParticleAnguish(mc.world, par2, par4, par6, Material.PORTAL);
+					var21 = new ParticleVESpawn(mc.world, par2, par4, par6, par8, par10, par12);
 				}
 
 				mc.effectRenderer.addEffect(var21);
