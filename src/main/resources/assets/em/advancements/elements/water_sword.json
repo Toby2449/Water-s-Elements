@@ -1,0 +1,27 @@
+{
+    "display": {
+        "icon": {
+            "item": "em:water_sword10"
+        },
+        "title": {
+            "translate": "advancements.elements.water_sword.title"
+        },
+        "description": {
+            "translate": "advancements.elements.water_sword.description"
+        },
+        "frame": "goal"
+    },
+    "parent": "em:elements/level_5",
+    "criteria": {
+        "water_sword": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:water_sword10"
+                    }
+                ]
+            }
+        }
+    }
+}

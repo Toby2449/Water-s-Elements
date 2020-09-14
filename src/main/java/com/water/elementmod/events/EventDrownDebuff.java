@@ -61,12 +61,21 @@ public class EventDrownDebuff
 		}
 	}
 	
-	public static boolean playerHitEntity(EntityLivingBase target, Integer drownDuration, int iLevel)
+	public static void playerHitEntity(EntityLivingBase target, Integer drownDuration, int iLevel)
 	{
+		for(int i = 0; i < drowndingEntities.size(); i++)
+		{
+			if(drowndingEntities.get(i) == target) 
+			{
+				drowndingTime.remove(i);
+				drowndingEntities.remove(i);
+				itemLevel.remove(i);
+			}
+		}
+		
 		drowndingTime.add(drownDuration * 20);
 		drowndingEntities.add(target);
 		itemLevel.add(iLevel);
-		return true;
 	}
 	
 	public void WaterParticleEffect(EntityLivingBase target, World world, int level)

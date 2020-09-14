@@ -1,55 +1,34 @@
 package com.water.elementmod.entity.boss._void;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.water.elementmod.EMCorePotionEffects;
-import com.water.elementmod.entity.ai.EntityAIMoveTo;
-import com.water.elementmod.entity.ai.EntityAIWanderNoCD;
+import com.water.elementmod.entity.EntityBossMob;
 import com.water.elementmod.network.PacketCarapaceParticleCircle;
 import com.water.elementmod.network.PacketHandler;
 import com.water.elementmod.particle.EnumCustomParticleTypes;
 import com.water.elementmod.particle.ParticleSpawner;
 
-import net.minecraft.block.BlockSlab.EnumBlockHalf;
-import net.minecraft.block.BlockStairs;
-import net.minecraft.block.BlockStairs.EnumHalf;
-import net.minecraft.block.BlockStoneSlab;
-import net.minecraft.block.BlockStoneSlab.EnumType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.datafix.DataFixer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.BossInfo;
-import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
 
-public class EntityVoidSpectralLarge extends EntityMob
+public class EntityVoidSpectralLarge extends EntityBossMob
 {
 	public EntityVoidSpectralLarge(World worldIn) 
 	{

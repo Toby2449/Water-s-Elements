@@ -5,11 +5,8 @@ import java.util.List;
 import java.util.Random;
 
 import com.water.elementmod.EMCoreItems;
-import com.water.elementmod.entity.boss.nature.EntityNatureBossMinion;
-import com.water.elementmod.entity.boss.nature.EntityPhotoSynthesizerCrystal;
-import com.water.elementmod.entity.friendly.EntityAlyxFire;
-import com.water.elementmod.entity.projectile.EntityPoisonBall;
-import com.water.elementmod.network.PacketCustomParticleData;
+import com.water.elementmod.network.PacketFlameTrail;
+import com.water.elementmod.network.PacketFlameTrailSpit;
 import com.water.elementmod.network.PacketHandler;
 import com.water.elementmod.particle.EnumCustomParticleTypes;
 import com.water.elementmod.particle.ParticleSpawner;
@@ -22,9 +19,7 @@ import net.minecraft.block.BlockStoneSlab;
 import net.minecraft.block.BlockStoneSlab.EnumType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
-import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
@@ -34,10 +29,8 @@ import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.projectile.EntityLargeFireball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
@@ -55,7 +48,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
@@ -81,6 +73,7 @@ public class EntityFireBoss extends EntityMob
 	private int spawnMinionCooldownP1 = 0;
 	private static List trailPoints = new ArrayList();
 	private static List trailPointTimers = new ArrayList();
+	private static List trailPointEntity = new ArrayList();
 	private int spawnMinionCooldownP2 = 0;
 	private int minionWaves;
 	private int spawnMinionCooldownP3 = 0;
@@ -285,97 +278,53 @@ public class EntityFireBoss extends EntityMob
         
     	if(!this.world.isRemote)
     	{
-	        // Update trail nodes
-	        for(int i = 0; i < this.trailPoints.size(); i++)
-			{
-				int CircleTimer = (Integer)this.trailPointTimers.get(i);
-				ArrayList pos = (ArrayList)this.trailPoints.get(i);
-				
-				AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - 0.5D, (double)pos.get(1) - 0.5D, (double)pos.get(2) - 0.5D, (double)pos.get(0) + 1.0D, (double)pos.get(1) + 1.0D, (double)pos.get(2) + 1.0D);
-				List<EntityMob> AABBMob = this.world.<EntityMob>getEntitiesWithinAABB(EntityMob.class, AoePoint);
-				List<EntityAnimal> AABBAnimal = this.world.<EntityAnimal>getEntitiesWithinAABB(EntityAnimal.class, AoePoint);
-				List<EntityPlayer> AABBPlayer = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
-				if (!AABBMob.isEmpty())
+    		if(!this.trailPoints.isEmpty())
+    		{
+    			boolean isCurrentEntity = false;
+    			for(int i = 0; i < this.trailPointEntity.size(); i++)
 				{
-				    for (EntityMob ent : AABBMob)
-				    {
-				            
-				        ent.setFire(8);
-				        if(!ent.isPotionActive(MobEffects.SLOWNESS) && !(ent instanceof EntityFireGuardian)) 
-				        {
-				        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 250, 1));
-				        }
-				    }
+    				if(this.trailPointEntity.get(i) == this) isCurrentEntity = true;
 				}
-						
-				if (!AABBAnimal.isEmpty())
-				{
-				    for (EntityAnimal ent : AABBAnimal)
-				    {
-				        ent.setFire(8);
-				        if(!ent.isPotionActive(MobEffects.SLOWNESS)) 
-				        {
-				        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 250, 1));
-				        }
-				    }
-				}
-						
-				if (!AABBPlayer.isEmpty())
-				{
-				    for (EntityPlayer ent : AABBPlayer)
-				    {
-				        ent.setFire(8);
-				        if(!ent.isPotionActive(MobEffects.SLOWNESS)) 
-				        {
-				        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 250, 1));
-				        }
-				    }
-				}
-				if((Integer)this.trailPointTimers.get(i) > 0)
-				{
-					if((Integer)this.trailPointTimers.get(i) % 8 == 0)
+    			if(isCurrentEntity)
+    			{
+	    			for(int i = 0; i < this.trailPoints.size(); i++)
 					{
-						FireTrail((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 1, this.world);
+	    				ArrayList pos = (ArrayList)this.trailPoints.get(i);
+	    				
+	    				if(this.trailPoints.get(i) != null && this.trailPointEntity.get(i) != null)
+						{
+	    					int instanced_timer = (Integer)this.trailPointTimers.get(i);
+	    					this.trailPointTimers.set(i, instanced_timer - 1);
+	    					
+	    					if(instanced_timer - 1 > 0)
+	    					{
+	    						if((Integer)this.trailPointTimers.get(i) % 8 == 0) PacketHandler.INSTANCE.sendToDimension(new PacketFlameTrail(this, this.world, (double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 0.0D, 0.0D, 0.0D, 1), this.dimension);
+	    						if((Integer)this.trailPointTimers.get(i) % 50 == 0) PacketHandler.INSTANCE.sendToDimension(new PacketFlameTrailSpit(this, this.world, (double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 0.0D, 0.0D, 0.0D), this.dimension);
+	    						
+	    						AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - 0.5D, (double)pos.get(1) - 0.5D, (double)pos.get(2) - 0.5D, (double)pos.get(0) + 1.0D, (double)pos.get(1) + 1.0D, (double)pos.get(2) + 1.0D);
+	    						List<EntityPlayer> AABBPlayer = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
+	    						if (!AABBPlayer.isEmpty())
+	    						{
+	    						    for (EntityPlayer ent : AABBPlayer)
+	    						    {
+	    						        ent.setFire(8);
+	    						        if(!ent.isPotionActive(MobEffects.SLOWNESS)) 
+	    						        {
+	    						        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 250, 1));
+	    						        }
+	    						    }
+	    						}
+	    					}
+	    					else
+	    					{
+	    						this.trailPoints.remove(i);
+	    						this.trailPointTimers.remove(i);
+	    						this.trailPointEntity.remove(i);
+	    					}
+						}
 					}
-						
-					if((Integer)this.trailPointTimers.get(i) % 50 == 0)
-					{
-						FireSpitAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), this.world);
-					}
-					this.trailPointTimers.set(i, CircleTimer - 1);
-				}
-				else
-				{
-					this.trailPoints.remove(i);
-					this.trailPointTimers.remove(i);
-				}
-			}
-    	}
-    	else
-    	{
-    		for(int i = 0; i < this.trailPoints.size(); i++)
-			{
-				int CircleTimer = (Integer)this.trailPointTimers.get(i);
-				ArrayList pos = (ArrayList)this.trailPoints.get(i);
-				if((Integer)this.trailPointTimers.get(i) > 0)
-				{
-					if((Integer)this.trailPointTimers.get(i) % 8 == 0)
-					{
-						FireTrail((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 1, this.world);
-					}
-						
-					if((Integer)this.trailPointTimers.get(i) % 50 == 0)
-					{
-						FireSpitAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), this.world);
-					}
-					this.trailPointTimers.set(i, CircleTimer - 1);
-				}
-				else
-				{
-					this.trailPoints.remove(i);
-					this.trailPointTimers.remove(i);
-				}
-			}
+    			}
+    		}
     	}
         
         
@@ -389,7 +338,7 @@ public class EntityFireBoss extends EntityMob
 	        	{
 		        	this.setInvulState(false);
 		        	
-		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
+		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ, this);
 		        	
 		        	this.minionsAlive = 0;
 		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
@@ -489,7 +438,7 @@ public class EntityFireBoss extends EntityMob
 	        	{
 		        	this.setInvulState(false);
 		        	
-		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
+		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ, this);
 		        	
 		        	this.minionsAlive = 0;
 		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z).offset(0, -1, 0));
@@ -526,8 +475,6 @@ public class EntityFireBoss extends EntityMob
 	        	}
 	        	else
 	        	{
-	        		if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
-	        		
 	        		if(!this.chatted2)
 	        		{
 	        			this.chatted2 = true;
@@ -613,7 +560,7 @@ public class EntityFireBoss extends EntityMob
 	        	{
 		        	this.setInvulState(false);
 		        	
-		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
+		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ, this);
 		        	
 		        	this.minionsAlive = 0;
 		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
@@ -650,8 +597,6 @@ public class EntityFireBoss extends EntityMob
 	        	}
 	        	else
 	        	{
-	        		if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
-	        		
 	        		if(!this.chatted4)
 	        		{
 	        			this.chatted4 = true;
@@ -735,7 +680,7 @@ public class EntityFireBoss extends EntityMob
 	        	{
 		        	this.setInvulState(false);
 		        	
-		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
+		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ, this);
 		        	
 		        	this.minionsAlive = 0;
 		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
@@ -772,8 +717,6 @@ public class EntityFireBoss extends EntityMob
 	        	}
 	        	else
 	        	{
-	        		if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
-	        		
 	        		if(!this.chatted6)
 	        		{
 	        			this.chatted6 = true;
@@ -858,7 +801,7 @@ public class EntityFireBoss extends EntityMob
 	        	{
 		        	this.setInvulState(false);
 		        	
-		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
+		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ, this);
 		        	
 		        	this.minionsAlive = 0;
 		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
@@ -895,8 +838,6 @@ public class EntityFireBoss extends EntityMob
 	        	}
 	        	else
 	        	{
-	        		if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
-	        		
 	        		if(!this.chatted8)
 	        		{
 	        			this.chatted8 = true;
@@ -974,7 +915,7 @@ public class EntityFireBoss extends EntityMob
 	        	{
 		        	this.setInvulState(false);
 		        	
-		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
+		        	if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ, this);
 		        	
 		        	this.minionsAlive = 0;
 		        	List<EntityFireBossMinion> list = this.world.<EntityFireBossMinion>getEntitiesWithinAABB(EntityFireBossMinion.class, this.getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
@@ -1005,8 +946,6 @@ public class EntityFireBoss extends EntityMob
 	        	}
 	        	else
 	        	{
-	        		if(this.ticksExisted % 10 == 1) this.spawnTrailNode(this.posX, this.posY, this.posZ);
-	        		
 	        		if(!this.chatted10)
 	        		{
 	        			this.chatted10 = true;
@@ -1125,14 +1064,15 @@ public class EntityFireBoss extends EntityMob
     	}
     }
 	
-	public void spawnTrailNode(double x, double y, double z)
+	public void spawnTrailNode(double x, double y, double z, EntityFireBoss entity)
 	{
 		List pos = new ArrayList();
 		pos.add(x);
 		pos.add(y);
 		pos.add(z);
 		this.trailPoints.add(pos);
-		this.trailPointTimers.add(2400); // 1 Minute
+		this.trailPointTimers.add(_ConfigEntityFireBoss.FIRE_TRAIL_DESPAWN); // 1 Minute
+		this.trailPointEntity.add(entity);
 	}
 	
 	public void FireTrail(double x, double y, double z, double radius, World world)
@@ -1391,11 +1331,6 @@ public class EntityFireBoss extends EntityMob
     public void onDeath(DamageSource cause)
     {
         super.onDeath(cause);
-        
-        BlockPos spawnPos = this.getSpawnLocation().add(0, 0, 16);
-        EntityAlyxFire alyx = new EntityAlyxFire(this.world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ() - 4);
-        alyx.setPosition(spawnPos.getX() + 0.5D, spawnPos.getY(), spawnPos.getZ() + 0.5D);
-        this.world.spawnEntity(alyx);
         
         this.sayChatLine(11);
         this.sayChatLine(12);

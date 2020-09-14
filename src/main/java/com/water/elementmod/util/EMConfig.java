@@ -78,5 +78,7 @@ public class EMConfig {
 	public static final int ENTITY_GROWING_ANGUISH_SMALL = 167;
 	public static final int ENTITY_GROWING_ANGUISH_MEDIUM = 168;
 	public static final int ENTITY_GROWING_ANGUISH_LARGE = 169;
+	public static final int ENTITY_VOID_ENTITY_CHEST = 170;
+	public static final int ENTITY_VE_ANGUISH = 171;
 	
 }

@@ -15,9 +15,11 @@ import com.water.elementmod.items.arrow.ItemWaterArrow;
 import com.water.elementmod.items.special.ItemCorrodedHardware;
 import com.water.elementmod.items.special.ItemEternalFire;
 import com.water.elementmod.items.special.ItemHeartOfTheWild;
-import com.water.elementmod.items.special.ItemTeleporter;
+import com.water.elementmod.items.special.ItemInterdimentionalRiftStone;
+import com.water.elementmod.items.special.ItemVoidEntitySoul;
 import com.water.elementmod.items.weapons.FireSword;
 import com.water.elementmod.items.weapons.NatureSword;
+import com.water.elementmod.items.weapons.VoidSword;
 import com.water.elementmod.items.weapons.WaterSword;
 import com.water.elementmod.util.EMConfig;
 
@@ -35,50 +37,51 @@ public class EMCoreItems
 	public static final List<Item> ITEMS = new ArrayList<Item>();
 	
 	// Void Materials
+	public static final ToolMaterial MATERIAL_VOID = EnumHelper.addToolMaterial("material_void", 3, 3000, 8.0F, 12.0F, 0);
 	public static final ArmorMaterial MATERIAL_ARMOR_VOID = EnumHelper.addArmorMaterial("material_armor_void", EMConfig.MOD_ID + ":void_armor", 16, 
-			new int[] {7, 0, 0, 7}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.0F);
+			new int[] {5, 0, 0, 5}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 3.0F);
 	
 	// Fire Materials
 	public static final ToolMaterial MATERIAL_FIRE1 = EnumHelper.addToolMaterial("material_fire1", 3, 1561, 8.0F, 5.0F, 10);
-	public static final ToolMaterial MATERIAL_FIRE2 = EnumHelper.addToolMaterial("material_fire2", 3, 1561, 8.0F, 6.0F, 10);
-	public static final ToolMaterial MATERIAL_FIRE3 = EnumHelper.addToolMaterial("material_fire3", 3, 1561, 8.0F, 6.0F, 10);
-	public static final ToolMaterial MATERIAL_FIRE4 = EnumHelper.addToolMaterial("material_fire4", 3, 1561, 8.0F, 7.0F, 10);
-	public static final ToolMaterial MATERIAL_FIRE5 = EnumHelper.addToolMaterial("material_fire5", 3, 1561, 8.0F, 8.0F, 10);
-	public static final ToolMaterial MATERIAL_FIRE6 = EnumHelper.addToolMaterial("material_fire6", 3, 1561, 8.0F, 8.0F, 10);
-	public static final ToolMaterial MATERIAL_FIRE7 = EnumHelper.addToolMaterial("material_fire7", 3, 1561, 8.0F, 9.0F, 10);
-	public static final ToolMaterial MATERIAL_FIRE8 = EnumHelper.addToolMaterial("material_fire8", 3, 1561, 8.0F, 9.0F, 10);
-	public static final ToolMaterial MATERIAL_FIRE9 = EnumHelper.addToolMaterial("material_fire9", 3, 1561, 8.0F, 10.0F, 10);
-	public static final ToolMaterial MATERIAL_FIRE10 = EnumHelper.addToolMaterial("material_fire10", 3, 1561, 8.0F, 11.0F, 10);
+	public static final ToolMaterial MATERIAL_FIRE2 = EnumHelper.addToolMaterial("material_fire2", 3, 1561, 8.0F, 5.33F, 10);
+	public static final ToolMaterial MATERIAL_FIRE3 = EnumHelper.addToolMaterial("material_fire3", 3, 1561, 8.0F, 5.66F, 10);
+	public static final ToolMaterial MATERIAL_FIRE4 = EnumHelper.addToolMaterial("material_fire4", 3, 1561, 8.0F, 6.0F, 10);
+	public static final ToolMaterial MATERIAL_FIRE5 = EnumHelper.addToolMaterial("material_fire5", 3, 1561, 8.0F, 6.33F, 10);
+	public static final ToolMaterial MATERIAL_FIRE6 = EnumHelper.addToolMaterial("material_fire6", 3, 1561, 8.0F, 6.66F, 10);
+	public static final ToolMaterial MATERIAL_FIRE7 = EnumHelper.addToolMaterial("material_fire7", 3, 1561, 8.0F, 7.0F, 10);
+	public static final ToolMaterial MATERIAL_FIRE8 = EnumHelper.addToolMaterial("material_fire8", 3, 1561, 8.0F, 7.25F, 10);
+	public static final ToolMaterial MATERIAL_FIRE9 = EnumHelper.addToolMaterial("material_fire9", 3, 1561, 8.0F, 7.5F, 10);
+	public static final ToolMaterial MATERIAL_FIRE10 = EnumHelper.addToolMaterial("material_fire10", 3, 1561, 8.0F, 7.75F, 10);
 	public static final ArmorMaterial MATERIAL_ARMOR_FIRE = EnumHelper.addArmorMaterial("material_armor_fire", EMConfig.MOD_ID + ":fire_armor", 16, 
-			new int[] {0, 9, 9, 0}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.0F);
+			new int[] {0, 9, 9, 0}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.5F);
 	
 	// Water Materials
 	public static final ToolMaterial MATERIAL_WATER1 = EnumHelper.addToolMaterial("material_water1", 3, 1561, 8.0F, 3.0F, 10);
-	public static final ToolMaterial MATERIAL_WATER2 = EnumHelper.addToolMaterial("material_water2", 3, 1561, 8.0F, 4.0F, 10);
-	public static final ToolMaterial MATERIAL_WATER3 = EnumHelper.addToolMaterial("material_water3", 3, 1561, 8.0F, 4.0F, 10);
-	public static final ToolMaterial MATERIAL_WATER4 = EnumHelper.addToolMaterial("material_water4", 3, 1561, 8.0F, 5.0F, 10);
-	public static final ToolMaterial MATERIAL_WATER5 = EnumHelper.addToolMaterial("material_water5", 3, 1561, 8.0F, 6.0F, 10);
-	public static final ToolMaterial MATERIAL_WATER6 = EnumHelper.addToolMaterial("material_water6", 3, 1561, 8.0F, 6.0F, 10);
-	public static final ToolMaterial MATERIAL_WATER7 = EnumHelper.addToolMaterial("material_water7", 3, 1561, 8.0F, 7.0F, 10);
-	public static final ToolMaterial MATERIAL_WATER8 = EnumHelper.addToolMaterial("material_water8", 3, 1561, 8.0F, 7.0F, 10);
-	public static final ToolMaterial MATERIAL_WATER9 = EnumHelper.addToolMaterial("material_water9", 3, 1561, 8.0F, 8.0F, 10);
-	public static final ToolMaterial MATERIAL_WATER10 = EnumHelper.addToolMaterial("material_water10", 3, 1561, 8.0F, 9.0F, 10);
+	public static final ToolMaterial MATERIAL_WATER2 = EnumHelper.addToolMaterial("material_water2", 3, 1561, 8.0F, 3.33F, 10);
+	public static final ToolMaterial MATERIAL_WATER3 = EnumHelper.addToolMaterial("material_water3", 3, 1561, 8.0F, 3.66F, 10);
+	public static final ToolMaterial MATERIAL_WATER4 = EnumHelper.addToolMaterial("material_water4", 3, 1561, 8.0F, 4.0F, 10);
+	public static final ToolMaterial MATERIAL_WATER5 = EnumHelper.addToolMaterial("material_water5", 3, 1561, 8.0F, 4.33F, 10);
+	public static final ToolMaterial MATERIAL_WATER6 = EnumHelper.addToolMaterial("material_water6", 3, 1561, 8.0F, 4.66F, 10);
+	public static final ToolMaterial MATERIAL_WATER7 = EnumHelper.addToolMaterial("material_water7", 3, 1561, 8.0F, 5.0F, 10);
+	public static final ToolMaterial MATERIAL_WATER8 = EnumHelper.addToolMaterial("material_water8", 3, 1561, 8.0F, 5.25F, 10);
+	public static final ToolMaterial MATERIAL_WATER9 = EnumHelper.addToolMaterial("material_water9", 3, 1561, 8.0F, 5.5F, 10);
+	public static final ToolMaterial MATERIAL_WATER10 = EnumHelper.addToolMaterial("material_water10", 3, 1561, 8.0F, 5.75F, 10);
 	public static final ArmorMaterial MATERIAL_ARMOR_WATER = EnumHelper.addArmorMaterial("material_armor_water", EMConfig.MOD_ID + ":water_armor", 16, 
-			new int[] {0, 9, 9, 0}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.0F);
+			new int[] {0, 9, 9, 0}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.5F);
 	
 	// Nature Materials
 	public static final ToolMaterial MATERIAL_NATURE1 = EnumHelper.addToolMaterial("material_nature1", 3, 1561, 8.0F, 4.0F, 10);
-	public static final ToolMaterial MATERIAL_NATURE2 = EnumHelper.addToolMaterial("material_nature2", 3, 1561, 8.0F, 5.0F, 10);
-	public static final ToolMaterial MATERIAL_NATURE3 = EnumHelper.addToolMaterial("material_nature3", 3, 1561, 8.0F, 5.0F, 10);
-	public static final ToolMaterial MATERIAL_NATURE4 = EnumHelper.addToolMaterial("material_nature4", 3, 1561, 8.0F, 6.0F, 10);
-	public static final ToolMaterial MATERIAL_NATURE5 = EnumHelper.addToolMaterial("material_nature5", 3, 1561, 8.0F, 7.0F, 10);
-	public static final ToolMaterial MATERIAL_NATURE6 = EnumHelper.addToolMaterial("material_nature6", 3, 1561, 8.0F, 7.0F, 10);
-	public static final ToolMaterial MATERIAL_NATURE7 = EnumHelper.addToolMaterial("material_nature7", 3, 1561, 8.0F, 8.0F, 10);
-	public static final ToolMaterial MATERIAL_NATURE8 = EnumHelper.addToolMaterial("material_nature8", 3, 1561, 8.0F, 8.0F, 10);
-	public static final ToolMaterial MATERIAL_NATURE9 = EnumHelper.addToolMaterial("material_nature9", 3, 1561, 8.0F, 9.0F, 10);
-	public static final ToolMaterial MATERIAL_NATURE10 = EnumHelper.addToolMaterial("material_nature10", 3, 1561, 8.0F, 10.0F, 10);
+	public static final ToolMaterial MATERIAL_NATURE2 = EnumHelper.addToolMaterial("material_nature2", 3, 1561, 8.0F, 4.33F, 10);
+	public static final ToolMaterial MATERIAL_NATURE3 = EnumHelper.addToolMaterial("material_nature3", 3, 1561, 8.0F, 4.66F, 10);
+	public static final ToolMaterial MATERIAL_NATURE4 = EnumHelper.addToolMaterial("material_nature4", 3, 1561, 8.0F, 5.0F, 10);
+	public static final ToolMaterial MATERIAL_NATURE5 = EnumHelper.addToolMaterial("material_nature5", 3, 1561, 8.0F, 5.33F, 10);
+	public static final ToolMaterial MATERIAL_NATURE6 = EnumHelper.addToolMaterial("material_nature6", 3, 1561, 8.0F, 5.66F, 10);
+	public static final ToolMaterial MATERIAL_NATURE7 = EnumHelper.addToolMaterial("material_nature7", 3, 1561, 8.0F, 6.0F, 10);
+	public static final ToolMaterial MATERIAL_NATURE8 = EnumHelper.addToolMaterial("material_nature8", 3, 1561, 8.0F, 6.25F, 10);
+	public static final ToolMaterial MATERIAL_NATURE9 = EnumHelper.addToolMaterial("material_nature9", 3, 1561, 8.0F, 6.5F, 10);
+	public static final ToolMaterial MATERIAL_NATURE10 = EnumHelper.addToolMaterial("material_nature10", 3, 1561, 8.0F, 6.75F, 10);
 	public static final ArmorMaterial MATERIAL_ARMOR_NATURE = EnumHelper.addArmorMaterial("material_armor_nature", EMConfig.MOD_ID + ":nature_armor", 16, 
-			new int[] {0, 9, 9, 0}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.0F);
+			new int[] {0, 9, 9, 0}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.5F);
 	
 	
 	public static final ItemSword FIRE_SWORD1 = new FireSword("fire_sword1", 1, MATERIAL_FIRE1);
@@ -91,7 +94,6 @@ public class EMCoreItems
 	public static final ItemSword FIRE_SWORD8 = new FireSword("fire_sword8", 8, MATERIAL_FIRE8);
 	public static final ItemSword FIRE_SWORD9 = new FireSword("fire_sword9", 9, MATERIAL_FIRE9);
 	public static final ItemSword FIRE_SWORD10 = new FireSword("fire_sword10", 10, MATERIAL_FIRE10);
-	public static final Item FIRE_CHESTPLATE = new FireArmor("item_fire_chestplate", MATERIAL_ARMOR_FIRE, 1, EntityEquipmentSlot.CHEST);
 	
 	public static final ItemSword WATER_SWORD1 = new WaterSword("water_sword1", 1, MATERIAL_WATER1);
 	public static final ItemSword WATER_SWORD2 = new WaterSword("water_sword2", 2, MATERIAL_WATER2);
@@ -103,7 +105,6 @@ public class EMCoreItems
 	public static final ItemSword WATER_SWORD8 = new WaterSword("water_sword8", 8, MATERIAL_WATER8);
 	public static final ItemSword WATER_SWORD9 = new WaterSword("water_sword9", 9, MATERIAL_WATER9);
 	public static final ItemSword WATER_SWORD10 = new WaterSword("water_sword10", 10, MATERIAL_WATER10);
-	public static final Item WATER_ROBE = new WaterArmor("item_water_robe", MATERIAL_ARMOR_WATER, 1, EntityEquipmentSlot.CHEST);
 	
 	public static final ItemSword NATURE_SWORD1 = new NatureSword("nature_sword1", 1, MATERIAL_NATURE1);
 	public static final ItemSword NATURE_SWORD2 = new NatureSword("nature_sword2", 2, MATERIAL_NATURE2);
@@ -115,9 +116,8 @@ public class EMCoreItems
 	public static final ItemSword NATURE_SWORD8 = new NatureSword("nature_sword8", 8, MATERIAL_NATURE8);
 	public static final ItemSword NATURE_SWORD9 = new NatureSword("nature_sword9", 9, MATERIAL_NATURE9);
 	public static final ItemSword NATURE_SWORD10 = new NatureSword("nature_sword10", 10, MATERIAL_NATURE10);
-	public static final Item LEAF_ARMOR = new LeafArmor("item_leaf_armor", MATERIAL_ARMOR_NATURE, 1, EntityEquipmentSlot.CHEST);
 	
-	public static final Item VOID_HELMET = new VoidHelmet("item_void_helmet", MATERIAL_ARMOR_VOID, 1, EntityEquipmentSlot.HEAD);
+	public static final ItemSword VOID_SWORD = new VoidSword("item_void_sword", MATERIAL_VOID);
 	
 	public static final Item VOIDESS = new EMShinyItemBase("item_void_essence", 16);
 	public static final Item VOIDSING = new EMShinyItemBase("item_void_singularity", 1);
@@ -148,10 +148,17 @@ public class EMCoreItems
 	public static final Item PERPETUAL_DRP = new EMShinyItemBase("item_perpetual_droplet", 16);
 	public static final Item CORRODED_HARDWARE = new ItemCorrodedHardware("item_corroded_hardware");
 	
-	public static final Item TELEPORTER_PLACEHOLDER = new ItemTeleporter("item_placeholder");
+	public static final Item INTERDIMENTIONAL_RIFT_STONE = new ItemInterdimentionalRiftStone("item_interdimentional_rift_stone");
+	
+	public static final Item VE_SOUL = new ItemVoidEntitySoul("item_void_entity_soul");
 	
 	public static final Item NATURE_ARROW = new ItemNatureArrow("item_nature_arrow", 64);
 	public static final Item WATER_ARROW = new ItemWaterArrow("item_water_arrow", 64);
 	public static final Item FIRE_ARROW = new ItemFireArrow("item_fire_arrow", 64);
+	
+	public static final Item FIRE_CHESTPLATE = new FireArmor("item_fire_chestplate", MATERIAL_ARMOR_FIRE, 1, EntityEquipmentSlot.CHEST);
+	public static final Item WATER_ROBE = new WaterArmor("item_water_robe", MATERIAL_ARMOR_WATER, 1, EntityEquipmentSlot.CHEST);
+public static final Item LEAF_ARMOR = new LeafArmor("item_leaf_armor", MATERIAL_ARMOR_NATURE, 1, EntityEquipmentSlot.CHEST);
+	public static final Item VOID_HELMET = new VoidHelmet("item_void_helmet", MATERIAL_ARMOR_VOID, 1, EntityEquipmentSlot.HEAD);
 	
 }

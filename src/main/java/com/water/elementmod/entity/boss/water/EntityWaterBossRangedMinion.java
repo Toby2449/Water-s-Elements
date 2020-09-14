@@ -1,26 +1,10 @@
 package com.water.elementmod.entity.boss.water;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.water.elementmod.entity.ai.EntityAIMoveTo;
-import com.water.elementmod.entity.boss.fire.EntityFireBoss;
-import com.water.elementmod.entity.boss.fire.EntityFireBossMinion;
-import com.water.elementmod.entity.boss.fire.EntityFireGuardian;
-import com.water.elementmod.entity.friendly.EntityAlyxFire;
 import com.water.elementmod.entity.projectile.EntityIceBall;
-import com.water.elementmod.entity.projectile.EntityPoisonBall;
-import com.water.elementmod.particle.EnumCustomParticleTypes;
-import com.water.elementmod.particle.ParticleSpawner;
-import com.water.elementmod.util.handlers.EMSoundHandler;
 
-import net.minecraft.block.BlockStairs;
-import net.minecraft.block.BlockStoneSlab;
-import net.minecraft.block.BlockSlab.EnumBlockHalf;
-import net.minecraft.block.BlockStairs.EnumHalf;
-import net.minecraft.block.BlockStoneSlab.EnumType;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -31,32 +15,19 @@ import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.datafix.DataFixer;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.BossInfo;
-import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
 
 public class EntityWaterBossRangedMinion extends EntityMob implements IRangedAttackMob

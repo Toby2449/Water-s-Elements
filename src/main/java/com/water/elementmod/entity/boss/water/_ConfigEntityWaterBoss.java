@@ -9,7 +9,8 @@ public class _ConfigEntityWaterBoss
 	public static final double MF_SIZE_Y = 60.0D;
 	public static final double MF_SIZE_Z = 60.0D;
 	
-	public static final int EXPLOSION_CD = 120;
+	public static final int EXPLOSION_CD = 140;
+	public static final int EXPLOSION_TIMER = 80;
 	public static final int WALL_CD = 105;
 	public static final int P1_TIMER = 160;
 	public static final int P2_TIMER = 900;

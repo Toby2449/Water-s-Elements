@@ -12,6 +12,8 @@ public class _ConfigEntityFireBoss
 	public static final double MF_SIZE_Y = 65.0D;
 	public static final double MF_SIZE_Z = 105.0D;
 	
+	public static final int FIRE_TRAIL_DESPAWN = 2400;
+	
 	public static final int MINION_SPAWN_COOLDOWN = 400;
 	public static final int MINION_WAVES = 2;
 	public static final int GUARDIAN_RESET_TIMER = 1350;

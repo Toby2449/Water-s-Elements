@@ -1,0 +1,27 @@
+{
+    "display": {
+        "icon": {
+            "item": "em:fire_sword10"
+        },
+        "title": {
+            "translate": "advancements.elements.fire_sword.title"
+        },
+        "description": {
+            "translate": "advancements.elements.fire_sword.description"
+        },
+        "frame": "goal"
+    },
+    "parent": "em:elements/level_5",
+    "criteria": {
+        "fire_sword": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:fire_sword10"
+                    }
+                ]
+            }
+        }
+    }
+}

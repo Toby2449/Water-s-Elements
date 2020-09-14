@@ -1,6 +1,6 @@
 package com.water.elementmod.entity.render.boss._void;
 
-import com.water.elementmod.entity.boss._void.EntityAnguish;
+import com.water.elementmod.entity.boss._void.EntityCarapaceAnguish;
 import com.water.elementmod.entity.models.boss._void.ModelAnguish;
 import com.water.elementmod.util.EMConfig;
 
@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 
-public class RenderAnguish extends RenderLiving<EntityAnguish>
+public class RenderAnguish extends RenderLiving<EntityCarapaceAnguish>
 {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(EMConfig.MOD_ID + ":textures/entity/anguish.png");
 	private static final ResourceLocation TEXTURE_INVISIBLE = new ResourceLocation(EMConfig.MOD_ID + ":textures/entity/anguish_invisible.png");
@@ -25,12 +25,12 @@ public class RenderAnguish extends RenderLiving<EntityAnguish>
     }
 	
 	@Override
-	protected ResourceLocation getEntityTexture(EntityAnguish entity)
+	protected ResourceLocation getEntityTexture(EntityCarapaceAnguish entity)
 	{
 		return entity.isInvisible() ? TEXTURE_INVISIBLE : TEXTURE;
 	}
 	
-	protected void preRenderCallback(EntityAnguish entitylivingbaseIn, float partialTickTime)
+	protected void preRenderCallback(EntityCarapaceAnguish entitylivingbaseIn, float partialTickTime)
     {
         float f = 2.8F;
 

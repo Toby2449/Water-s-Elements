@@ -1,52 +1,41 @@
 package com.water.elementmod.entity.boss._void;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.water.elementmod.entity.ai.EntityAIMoveTo;
-import com.water.elementmod.entity.ai.EntityAIWanderNoCD;
+import com.water.elementmod.entity.EntityBossMob;
 import com.water.elementmod.particle.EnumCustomParticleTypes;
 import com.water.elementmod.particle.ParticleSpawner;
 
-import net.minecraft.block.BlockSlab.EnumBlockHalf;
-import net.minecraft.block.BlockStairs;
-import net.minecraft.block.BlockStairs.EnumHalf;
-import net.minecraft.block.BlockStoneSlab;
-import net.minecraft.block.BlockStoneSlab.EnumType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.datafix.DataFixer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
 
-public class EntityPurpleGuardian extends EntityMob
+public class EntityPurpleGuardian extends EntityBossMob
 {
+	private static final DataParameter<Integer> NUM_OF_PLAYERS = EntityDataManager.<Integer>createKey(EntityPurpleGuardian.class, DataSerializers.VARINT);
+	private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName(), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
+	private boolean scaledHP = false;
+	
 	public EntityPurpleGuardian(World worldIn) 
 	{
 		super(worldIn);
@@ -74,7 +63,7 @@ public class EntityPurpleGuardian extends EntityMob
 	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(40.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(250.0F);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1000.0F);
 		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(6.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.55D);
 		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(9999999999999.0F);
@@ -84,18 +73,36 @@ public class EntityPurpleGuardian extends EntityMob
 	protected void entityInit()
     {
         super.entityInit();
+        this.dataManager.register(NUM_OF_PLAYERS, Integer.valueOf(1));
     }
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound compound)
     {
         super.writeEntityToNBT(compound);
+        compound.setInteger("NumOfPlayers", this.getNumOfPlayers());
     }
 	
 	@Override
 	public void readEntityFromNBT(NBTTagCompound compound)
     {
         super.readEntityFromNBT(compound);
+        this.setNumOfPlayers(compound.getInteger("NumOfPlayers"));
+        
+        if (this.hasCustomName())
+        {
+            this.bossInfo.setName(this.getDisplayName());
+        }
+    }
+
+    /**
+     * Sets the custom name tag for this entity
+     */
+	@Override
+    public void setCustomNameTag(String name)
+    {
+        super.setCustomNameTag(name);
+        this.bossInfo.setName(this.getDisplayName());
     }
 	
     @Override
@@ -112,8 +119,28 @@ public class EntityPurpleGuardian extends EntityMob
         		ParticleSpawner.spawnParticle(EnumCustomParticleTypes.DARK_PURPLE_SMOKE, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * 1.25D, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 0.0D);
             }
         }
+    	
+    	if(!this.world.isRemote)
+    	{
+    		if(!this.scaledHP)
+    		{
+    			this.scaledHP = true;
+	    		int numOfPlayers = 0;
+	        	List<EntityPlayer> players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE).offset(0, -5, 0));
+		        if(!players.isEmpty())
+		        {
+		        	for (EntityPlayer entity : players)
+			        {
+		        		numOfPlayers++;
+			        }
+		        }
+		        
+		        this.setNumOfPlayers(numOfPlayers);
+    		}
+    	}
 		
 		this.ticksExisted++;
+		this.bossInfo.setPercent(this.getHealth() / this.getMaxHealth());
     }
 	
 	@Override
@@ -145,6 +172,28 @@ public class EntityPurpleGuardian extends EntityMob
     {
         return SoundEvents.ENTITY_BLAZE_DEATH;
     }
+	
+	/**
+     * Add the given player to the list of players tracking this entity. For instance, a player may track a boss in
+     * order to view its associated boss bar.
+     */
+	@Override
+    public void addTrackingPlayer(EntityPlayerMP player)
+    {
+        super.addTrackingPlayer(player);
+        this.bossInfo.addPlayer(player);
+    }
+
+    /**
+     * Removes the given player from the list of players tracking this entity. See {@link Entity#addTrackingPlayer} for
+     * more information on tracking.
+     */
+	@Override
+    public void removeTrackingPlayer(EntityPlayerMP player)
+    {
+        super.removeTrackingPlayer(player);
+        this.bossInfo.removePlayer(player);
+    }
     
     /**
      * Called when the entity is attacked.
@@ -152,13 +201,28 @@ public class EntityPurpleGuardian extends EntityMob
 	@Override
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
-    	return super.attackEntityFrom(source, amount);
+    	return super.attackEntityFrom(source, this.calculateHealthReduction(amount));
+    }
+	
+	public float calculateHealthReduction(float amount)
+    {
+    	return amount * (1000 / (175.0F + (175.0F * (this.getNumOfPlayers() - 1))));
     }
     
     @Override
     public void onDeath(DamageSource cause)
     {
         super.onDeath(cause);
+    }
+    
+    public int getNumOfPlayers()
+    {
+        return ((Integer)this.dataManager.get(NUM_OF_PLAYERS)).intValue();
+    }
+    
+    public void setNumOfPlayers(int state)
+    {
+        this.dataManager.set(NUM_OF_PLAYERS, Integer.valueOf(state));
     }
     
     @Override

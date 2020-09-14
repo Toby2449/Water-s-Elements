@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.water.elementmod.EMCoreBlocks;
-import com.water.elementmod.EMCorePotionEffects;
+import com.water.elementmod.entity.EntityBossMob;
 import com.water.elementmod.entity.ai.EntityAIMoveTo;
 import com.water.elementmod.network.PacketCarapaceBeam;
 import com.water.elementmod.network.PacketCarapaceBeamGrow;
@@ -27,12 +27,8 @@ import com.water.elementmod.network.PacketPlayMusic;
 import com.water.elementmod.network.PacketStopMusic;
 import com.water.elementmod.particle.EnumCustomParticleTypes;
 import com.water.elementmod.particle.ParticleSpawner;
-import com.water.elementmod.util.EMConfig;
 import com.water.elementmod.util.handlers.EMSoundHandler;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -42,8 +38,6 @@ import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
@@ -54,7 +48,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.datafix.DataFixer;
@@ -65,7 +58,7 @@ import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
 
-public class EntityCarapace extends EntityMob
+public class EntityCarapace extends EntityBossMob
 {
 	private static final DataParameter<Boolean> INITIATE = EntityDataManager.<Boolean>createKey(EntityCarapace.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> IS_INVURNERABLE = EntityDataManager.<Boolean>createKey(EntityCarapace.class, DataSerializers.BOOLEAN);
@@ -73,6 +66,7 @@ public class EntityCarapace extends EntityMob
 	private static final DataParameter<Integer> PRE_PHASE = EntityDataManager.<Integer>createKey(EntityCarapace.class, DataSerializers.VARINT);
 	private static final DataParameter<Boolean> BLUE_BUFF = EntityDataManager.<Boolean>createKey(EntityCarapace.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> PURPLE_BUFF = EntityDataManager.<Boolean>createKey(EntityCarapace.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Integer> NUM_OF_PLAYERS = EntityDataManager.<Integer>createKey(EntityCarapace.class, DataSerializers.VARINT);
 	private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName(), BossInfo.Color.PINK, BossInfo.Overlay.PROGRESS)).setDarkenSky(true);
 	private EntityAIMoveTo aiMoveToMainArea = null;
 	private EntityAIMoveTo aiMoveToRoom1Mid = null;
@@ -88,6 +82,8 @@ public class EntityCarapace extends EntityMob
 	private static List explosionPoints = new ArrayList();
 	private int explosionPointTimer = _ConfigEntityCarapace.EXPLOSION_TIMER;
 	private static List explosionPointPlayers = new ArrayList();
+	private int musicDuration = _ConfigEntityCarapace.MUSIC_DURATION;
+	private boolean musicPlaying = false;
 	
 	private int AttackSoundDelay = _ConfigEntityCarapace.ATTACK_SOUND_DELAY;
 	
@@ -121,9 +117,11 @@ public class EntityCarapace extends EntityMob
 	private int P6WeaknessTimer = _ConfigEntityCarapace.P6WEAKNESSTIMER;
 	private int P6WeaknessCastTimer = _ConfigEntityCarapace.P6WEAKNESSCASTTIME;
 	public boolean WeaknessCasting = false;
+	private int P6explosionCD = _ConfigEntityCarapace.P6EXPLOSIONTIMER;
 	private int P7DoorAnimDelay = _ConfigEntityCarapace.P7DOORANIMDELAY;
 	private int P7WeaknessTimer = _ConfigEntityCarapace.P7WEAKNESSTIMER;
 	private int P7WeaknessCastTimer = _ConfigEntityCarapace.P7WEAKNESSCASTTIME;
+	private int P7explosionCD = _ConfigEntityCarapace.P7EXPLOSIONTIMER;
 	private int P7Timer = _ConfigEntityCarapace.P7TIMER;
 	private int P8CastTime = _ConfigEntityCarapace.P8CASTTIME;
 	private boolean P8FacingFound = false;
@@ -173,7 +171,7 @@ public class EntityCarapace extends EntityMob
 	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(_ConfigEntityCarapace.BASE_HP);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1000.0F);
 		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(10.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);
 		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(9999999999999.0F);
@@ -189,6 +187,7 @@ public class EntityCarapace extends EntityMob
         this.dataManager.register(PRE_PHASE, Integer.valueOf(0));
         this.dataManager.register(BLUE_BUFF, Boolean.valueOf(false));
         this.dataManager.register(PURPLE_BUFF, Boolean.valueOf(false));
+        this.dataManager.register(NUM_OF_PLAYERS, Integer.valueOf(1));
     }
 	
 	@Override
@@ -202,6 +201,7 @@ public class EntityCarapace extends EntityMob
         compound.setInteger("PrePhase", this.getPrePhase());
         compound.setBoolean("BlueBuff", this.getBlueBuffActive());
         compound.setBoolean("PurpleBuff", this.getPurpleBuffActive());
+        compound.setInteger("NumOfPlayers", this.getNumOfPlayers());
     }
 	
 	@Override
@@ -219,6 +219,7 @@ public class EntityCarapace extends EntityMob
         this.setPrePhase(compound.getInteger("PrePhase"));
         this.setBlueBuff(compound.getBoolean("BlueBuff"));
         this.setPurpleBuff(compound.getBoolean("PurpleBuff"));
+        this.setNumOfPlayers(compound.getInteger("NumOfPlayers"));
         
         if (this.hasCustomName())
         {
@@ -308,12 +309,16 @@ public class EntityCarapace extends EntityMob
 		        		numOfPlayers++;
 			        }
 		        }
-		        
-		        if(numOfPlayers > 1)
+		        this.setNumOfPlayers(numOfPlayers);
+	        }
+	        
+	        if(this.musicPlaying)
+    		{
+	    		this.musicDuration--;
+		        if(this.musicDuration <= 0)
 		        {
-		        	float scaledHP = _ConfigEntityCarapace.BASE_HP + (_ConfigEntityCarapace.HP_SCALE_AMOUNT * numOfPlayers);
-		        	this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(scaledHP);
-		        	this.setHealth(scaledHP);
+		        	this.musicDuration = _ConfigEntityCarapace.MUSIC_DURATION;
+		        	this.playBossMusic();
 		        }
 	        }
     	}
@@ -399,6 +404,7 @@ public class EntityCarapace extends EntityMob
 	    		if(this.getHealth() != this.getMaxHealth())
 	    		{
 	    			this.playBossMusic();
+	    			this.musicPlaying = true;
 	    			this.setPrePhase(-1);
 	    			this.setPhase(1);
 	    		}
@@ -433,32 +439,32 @@ public class EntityCarapace extends EntityMob
 	    			this.setPhase(2);
 	    		}
 	    		
+	    		this.P1explosionCD--;
+	    		List<EntityPlayer> P1players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+				for (EntityPlayer player : P1players)
+		        {
+		    		if(this.P1explosionCD <= 0)
+		    		{
+		    			this.P1explosionCD = _ConfigEntityCarapace.P1EXPLOSIONTIMER;
+		    			this.spawnVoidExplosion(player, player.posX, player.posY, player.posZ);
+		    		}
+		    		
+		    		for(int i = 0; i < this.explosionPointPlayers.size(); i++)
+					{
+		    			EntityPlayer activePlayer = (EntityPlayer)this.explosionPointPlayers.get(i);
+						if(player == activePlayer)
+						{
+							List pos = new ArrayList();
+							pos.add(player.posX);
+							pos.add(player.posY);
+							pos.add(player.posZ);
+							this.explosionPoints.set(i, pos);
+						}
+					}
+		        }
+	    		
 	    		if(this.getHealth() <= (this.getMaxHealth() / 10) * 6) this.setPhase(4);
     		}
-    		
-    		this.P1explosionCD--;
-    		List<EntityPlayer> P1players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
-			for (EntityPlayer player : P1players)
-	        {
-	    		if(this.P1explosionCD <= 0)
-	    		{
-	    			this.P1explosionCD = _ConfigEntityCarapace.P1EXPLOSIONTIMER;
-	    			this.spawnVoidExplosion(player, player.posX, player.posY, player.posZ);
-	    		}
-	    		
-	    		for(int i = 0; i < this.explosionPointPlayers.size(); i++)
-				{
-	    			EntityPlayer activePlayer = (EntityPlayer)this.explosionPointPlayers.get(i);
-					if(player == activePlayer)
-					{
-						List pos = new ArrayList();
-						pos.add(player.posX);
-						pos.add(player.posY);
-						pos.add(player.posZ);
-						this.explosionPoints.set(i, pos);
-					}
-				}
-	        }
     		break;
     		
     		
@@ -1046,6 +1052,30 @@ public class EntityCarapace extends EntityMob
 					this.doorPhase = 0;
 					this.setPhase(7);
 				}
+				
+				this.P6explosionCD--;
+        		List<EntityPlayer> P6players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+    			for (EntityPlayer player : P6players)
+    	        {
+    	    		if(this.P6explosionCD <= 0)
+    	    		{
+    	    			this.P6explosionCD = _ConfigEntityCarapace.P6EXPLOSIONTIMER;
+    	    			this.spawnVoidExplosion(player, player.posX, player.posY, player.posZ);
+    	    		}
+    	    		
+    	    		for(int i = 0; i < this.explosionPointPlayers.size(); i++)
+    				{
+    	    			EntityPlayer activePlayer = (EntityPlayer)this.explosionPointPlayers.get(i);
+    					if(player == activePlayer)
+    					{
+    						List pos = new ArrayList();
+    						pos.add(player.posX);
+    						pos.add(player.posY);
+    						pos.add(player.posZ);
+    						this.explosionPoints.set(i, pos);
+    					}
+    				}
+    	        }
 			}
 			if(this.world.isRemote)
 			{
@@ -1157,6 +1187,30 @@ public class EntityCarapace extends EntityMob
     				this.doorPhase = 0;
     				this.setPhase(9);
     			}
+				
+				this.P7explosionCD--;
+        		List<EntityPlayer> P7players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+    			for (EntityPlayer player : P7players)
+    	        {
+    	    		if(this.P7explosionCD <= 0)
+    	    		{
+    	    			this.P7explosionCD = _ConfigEntityCarapace.P7EXPLOSIONTIMER;
+    	    			this.spawnVoidExplosion(player, player.posX, player.posY, player.posZ);
+    	    		}
+    	    		
+    	    		for(int i = 0; i < this.explosionPointPlayers.size(); i++)
+    				{
+    	    			EntityPlayer activePlayer = (EntityPlayer)this.explosionPointPlayers.get(i);
+    					if(player == activePlayer)
+    					{
+    						List pos = new ArrayList();
+    						pos.add(player.posX);
+    						pos.add(player.posY);
+    						pos.add(player.posZ);
+    						this.explosionPoints.set(i, pos);
+    					}
+    				}
+    	        }
 			}
 			if(this.world.isRemote)
 			{
@@ -1688,6 +1742,13 @@ public class EntityCarapace extends EntityMob
 		}
     }
 	
+	public void onUpdate()
+    {
+        super.onUpdate();
+
+       
+    }
+	
 	@Override
 	public float getEyeHeight()
 	{
@@ -1748,7 +1809,7 @@ public class EntityCarapace extends EntityMob
     {
 		if(this.getInvulState() == false)
 		{
-			return super.attackEntityFrom(source, amount);
+			return super.attackEntityFrom(source, this.calculateHealthReduction(amount));
 		}
 		else
 		{
@@ -1759,8 +1820,8 @@ public class EntityCarapace extends EntityMob
     @Override
     public void onDeath(DamageSource cause)
     {
-    	List<EntityAnguish> anguish = this.world.<EntityAnguish>getEntitiesWithinAABB(EntityAnguish.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
-		for (EntityAnguish ent : anguish)
+    	List<EntityCarapaceAnguish> anguish = this.world.<EntityCarapaceAnguish>getEntitiesWithinAABB(EntityCarapaceAnguish.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+		for (EntityCarapaceAnguish ent : anguish)
         {
 			ent.isDead = true;
         }
@@ -1785,57 +1846,59 @@ public class EntityCarapace extends EntityMob
     	this.setPhase(0);
     	this.setPurpleBuff(false);
     	this.setBlueBuff(false);
-    	explosionPoints = new ArrayList();
-    	explosionPointTimer = _ConfigEntityCarapace.EXPLOSION_TIMER;
-    	explosionPointPlayers = new ArrayList();
-    	AttackSoundDelay = _ConfigEntityCarapace.ATTACK_SOUND_DELAY;
-    	prefighttimer1 = _ConfigEntityCarapace.PREFIGHTTIMER1;
-    	prefightdooranimdelay = _ConfigEntityCarapace.PREFIGHTDOORANIMDELAY;
-    	doorPhase = 0;
-    	P1explosionCD = _ConfigEntityCarapace.P1EXPLOSIONTIMER;
-    	P1TTimer = _ConfigEntityCarapace.P1TIMER;
-    	P2explosionCD = _ConfigEntityCarapace.P2EXPLOSIONTIMER;
-    	P2Timer = _ConfigEntityCarapace.P2TIMER;
-    	P2RunToMid = _ConfigEntityCarapace.RUNTOMIDTIMER;
-    	P2OrbsSpawned = false;
-    	P3explosionCD = _ConfigEntityCarapace.P3EXPLOSIONTIMER;
-    	P3Timer = _ConfigEntityCarapace.P3TIMER;
-    	BlueMinionSpawned = false;
-    	BlueBuffCD = _ConfigEntityCarapace.BLUEBUFFCD;
-    	BlueBuffSoakTimer = _ConfigEntityCarapace.BLUEBUFFSOAKTIMER;
-    	BlueBuffSoakLocation = null;
-    	BlueBuffPosFound = false;
-    	PurpleMinionSpawned = false;
-    	PurpleBuffCD = _ConfigEntityCarapace.PURPLEBUFFCD;
-    	PurpleBuffTimer = _ConfigEntityCarapace.PURPLEBUFFTIMER;
-    	PurpleBuffPosition = 0;
-    	PurpleBuffDoublePosition = false;
-    	PurpleBuffPosition2 = 0;
-    	PurpleBuffPosFound = false;
-    	P5DoorAnimDelay = _ConfigEntityCarapace.P5DOORANIMDELAY;
-    	P5Timer = _ConfigEntityCarapace.P5TIMER;
-    	P6WeaknessTimer = _ConfigEntityCarapace.P6WEAKNESSTIMER;
-    	P6WeaknessCastTimer = _ConfigEntityCarapace.P6WEAKNESSCASTTIME;
-    	WeaknessCasting = false;
-    	P7DoorAnimDelay = _ConfigEntityCarapace.P7DOORANIMDELAY;
-    	P7WeaknessTimer = _ConfigEntityCarapace.P7WEAKNESSTIMER;
-    	P7WeaknessCastTimer = _ConfigEntityCarapace.P7WEAKNESSCASTTIME;
-    	P7Timer = _ConfigEntityCarapace.P7TIMER;
-    	P8CastTime = _ConfigEntityCarapace.P8CASTTIME;
-    	P8FacingFound = false;
-    	P8Facing = 0;
-    	P8FacingPlayer = null;
-    	P8PlayerFound = false;
-    	P9Teleported = false;
-    	P9DoorAnimDelay = _ConfigEntityCarapace.P9DOORANIMDELAY;
-    	P9Timer = _ConfigEntityCarapace.P9TIMER;
-    	P10DoorAnimDelay = _ConfigEntityCarapace.P10DOORANIMDELAY;
-    	P10BigGroundAOE = _ConfigEntityCarapace.P10BIGGROUNDAOE;
-    	P10ExplosionTimer = _ConfigEntityCarapace.P10EXPLOSIONTIMER;
-    	PurpleBeamCD = _ConfigEntityCarapace.PURPLEBEAMCD;
-    	PurpleBeamTimer = _ConfigEntityCarapace.PURPLEBEAMTIMER;
-    	PurpleBeamLocations = new ArrayList();
-    	PurpleBeamPosFound = false;
+    	this.explosionPoints = new ArrayList();
+    	this.explosionPointTimer = _ConfigEntityCarapace.EXPLOSION_TIMER;
+    	this.explosionPointPlayers = new ArrayList();
+    	this.musicDuration = _ConfigEntityCarapace.MUSIC_DURATION;
+    	this.musicPlaying = false;
+    	this.AttackSoundDelay = _ConfigEntityCarapace.ATTACK_SOUND_DELAY;
+    	this.prefighttimer1 = _ConfigEntityCarapace.PREFIGHTTIMER1;
+    	this.prefightdooranimdelay = _ConfigEntityCarapace.PREFIGHTDOORANIMDELAY;
+    	this.doorPhase = 0;
+    	this.P1explosionCD = _ConfigEntityCarapace.P1EXPLOSIONTIMER;
+    	this.P1TTimer = _ConfigEntityCarapace.P1TIMER;
+    	this.P2explosionCD = _ConfigEntityCarapace.P2EXPLOSIONTIMER;
+    	this.P2Timer = _ConfigEntityCarapace.P2TIMER;
+    	this.P2RunToMid = _ConfigEntityCarapace.RUNTOMIDTIMER;
+    	this.P2OrbsSpawned = false;
+    	this.P3explosionCD = _ConfigEntityCarapace.P3EXPLOSIONTIMER;
+    	this.P3Timer = _ConfigEntityCarapace.P3TIMER;
+    	this.BlueMinionSpawned = false;
+    	this.BlueBuffCD = _ConfigEntityCarapace.BLUEBUFFCD;
+    	this.BlueBuffSoakTimer = _ConfigEntityCarapace.BLUEBUFFSOAKTIMER;
+    	this.BlueBuffSoakLocation = null;
+    	this.BlueBuffPosFound = false;
+    	this.PurpleMinionSpawned = false;
+    	this.PurpleBuffCD = _ConfigEntityCarapace.PURPLEBUFFCD;
+    	this.PurpleBuffTimer = _ConfigEntityCarapace.PURPLEBUFFTIMER;
+    	this.PurpleBuffPosition = 0;
+    	this.PurpleBuffDoublePosition = false;
+    	this.PurpleBuffPosition2 = 0;
+    	this.PurpleBuffPosFound = false;
+    	this.P5DoorAnimDelay = _ConfigEntityCarapace.P5DOORANIMDELAY;
+    	this.P5Timer = _ConfigEntityCarapace.P5TIMER;
+    	this.P6WeaknessTimer = _ConfigEntityCarapace.P6WEAKNESSTIMER;
+    	this.P6WeaknessCastTimer = _ConfigEntityCarapace.P6WEAKNESSCASTTIME;
+    	this.WeaknessCasting = false;
+    	this.P7DoorAnimDelay = _ConfigEntityCarapace.P7DOORANIMDELAY;
+    	this.P7WeaknessTimer = _ConfigEntityCarapace.P7WEAKNESSTIMER;
+    	this.P7WeaknessCastTimer = _ConfigEntityCarapace.P7WEAKNESSCASTTIME;
+    	this.P7Timer = _ConfigEntityCarapace.P7TIMER;
+    	this.P8CastTime = _ConfigEntityCarapace.P8CASTTIME;
+    	this.P8FacingFound = false;
+    	this.P8Facing = 0;
+    	this.P8FacingPlayer = null;
+    	this.P8PlayerFound = false;
+    	this.P9Teleported = false;
+    	this.P9DoorAnimDelay = _ConfigEntityCarapace.P9DOORANIMDELAY;
+    	this.P9Timer = _ConfigEntityCarapace.P9TIMER;
+    	this.P10DoorAnimDelay = _ConfigEntityCarapace.P10DOORANIMDELAY;
+    	this.P10BigGroundAOE = _ConfigEntityCarapace.P10BIGGROUNDAOE;
+    	this.P10ExplosionTimer = _ConfigEntityCarapace.P10EXPLOSIONTIMER;
+    	this.PurpleBeamCD = _ConfigEntityCarapace.PURPLEBEAMCD;
+    	this.PurpleBeamTimer = _ConfigEntityCarapace.PURPLEBEAMTIMER;
+    	this.PurpleBeamLocations = new ArrayList();
+    	this.PurpleBeamPosFound = false;
     	
     	List<EntityCarapaceEye> list = this.world.<EntityCarapaceEye>getEntitiesWithinAABB(EntityCarapaceEye.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
     	if(!list.isEmpty())
@@ -1882,10 +1945,10 @@ public class EntityCarapace extends EntityMob
 	        }
     	}
     	
-    	List<EntityAnguish> list6 = this.world.<EntityAnguish>getEntitiesWithinAABB(EntityAnguish.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+    	List<EntityCarapaceAnguish> list6 = this.world.<EntityCarapaceAnguish>getEntitiesWithinAABB(EntityCarapaceAnguish.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
     	if(!list6.isEmpty())
     	{
-	    	for (EntityAnguish entity : list6)
+	    	for (EntityCarapaceAnguish entity : list6)
 	        {
 	    		entity.isDead = true;
 	        }
@@ -2323,7 +2386,7 @@ public class EntityCarapace extends EntityMob
     
     public void spawnAnguish(double x, double y, double z)
 	{
-    	EntityAnguish entity = new EntityAnguish(this.world, true);
+    	EntityCarapaceAnguish entity = new EntityCarapaceAnguish(this.world, true);
        	entity.setPosition(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
        	entity.enablePersistence();
    		this.world.spawnEntity(entity);
@@ -2429,16 +2492,12 @@ public class EntityCarapace extends EntityMob
     
     public void playBossMusic()
     {
-    	List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
-    	if(!list.isEmpty())
-    	{
-    		for (EntityPlayer entity : list)
-	        {
-    			//PacketHandler.INSTANCE.sendToDimension(new PacketPlayMusic(entity, this.world, 0), this.dimension);
-    		}
-    	}
-    	
     	PacketHandler.INSTANCE.sendToDimension(new PacketPlayMusic(this, this.world, 0), this.dimension);
+    }
+    
+    public float calculateHealthReduction(float amount)
+    {
+    	return amount * (1000 / (_ConfigEntityCarapace.BASE_HP + (_ConfigEntityCarapace.HP_SCALE_AMOUNT * (this.getNumOfPlayers() - 1))));
     }
     
     public boolean getInvulState()
@@ -2522,6 +2581,16 @@ public class EntityCarapace extends EntityMob
     public BlockPos getSpawnLocation()
     {
     	return this.spawn_location;
+    }
+    
+    public int getNumOfPlayers()
+    {
+        return ((Integer)this.dataManager.get(NUM_OF_PLAYERS)).intValue();
+    }
+    
+    public void setNumOfPlayers(int state)
+    {
+        this.dataManager.set(NUM_OF_PLAYERS, Integer.valueOf(state));
     }
     
     @Override

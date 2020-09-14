@@ -69,11 +69,18 @@ public class EventSuperPoison
 		}
 	}
 	
-	public static boolean playerHitEntity(EntityLivingBase target, int posionDuration)
+	public static void playerHitEntity(EntityLivingBase target, int posionDuration)
 	{
+		for(int i = 0; i < superPoisonEntities.size(); i++)
+		{
+			if(superPoisonEntities.get(i) == target) 
+			{
+				superPoisonTime.remove(i);
+				superPoisonEntities.remove(i);
+			}
+		}
 		superPoisonEntities.add(target);
 		superPoisonTime.add(posionDuration * 25);
-		return true;
 	}
 	
 	public void NatureParticleEffect(EntityLivingBase target, World world)

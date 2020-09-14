@@ -46,5 +46,18 @@ public class PacketHandler
 		INSTANCE.registerMessage(PacketPlayMusic.Handler.class, PacketPlayMusic.class, nextID(), Side.CLIENT);
 		INSTANCE.registerMessage(PacketStopMusic.Handler.class, PacketStopMusic.class, nextID(), Side.CLIENT);
 		INSTANCE.registerMessage(PacketVEGlimpseAnimation.Handler.class, PacketVEGlimpseAnimation.class, nextID(), Side.CLIENT);
+		INSTANCE.registerMessage(PacketVESightExplode.Handler.class, PacketVESightExplode.class, nextID(), Side.CLIENT);
+		INSTANCE.registerMessage(PacketVESightAttack.Handler.class, PacketVESightAttack.class, nextID(), Side.CLIENT);
+		
+		INSTANCE.registerMessage(PacketParticleCircle.Handler.class, PacketParticleCircle.class, nextID(), Side.CLIENT);
+		INSTANCE.registerMessage(PacketParticleCircleExplosion.Handler.class, PacketParticleCircleExplosion.class, nextID(), Side.CLIENT);
+		INSTANCE.registerMessage(PacketVoidKnightLargeCircle.Handler.class, PacketVoidKnightLargeCircle.class, nextID(), Side.CLIENT);
+		INSTANCE.registerMessage(PacketVoidKnightLargeCircleExplosion.Handler.class, PacketVoidKnightLargeCircleExplosion.class, nextID(), Side.CLIENT);
+		
+		INSTANCE.registerMessage(PacketParticleCircleVanilla.Handler.class, PacketParticleCircleVanilla.class, nextID(), Side.CLIENT);
+		INSTANCE.registerMessage(PacketParticleCircleExplosionVanilla.Handler.class, PacketParticleCircleExplosionVanilla.class, nextID(), Side.CLIENT);
+		
+		INSTANCE.registerMessage(PacketFlameTrail.Handler.class, PacketFlameTrail.class, nextID(), Side.CLIENT);
+		INSTANCE.registerMessage(PacketFlameTrailSpit.Handler.class, PacketFlameTrailSpit.class, nextID(), Side.CLIENT);
 	}
 }

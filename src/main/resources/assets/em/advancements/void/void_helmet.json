@@ -1,0 +1,27 @@
+{
+    "display": {
+        "icon": {
+            "item": "em:item_void_helmet"
+        },
+        "title": {
+            "translate": "advancements.void.void_helmet.title"
+        },
+        "description": {
+            "translate": "advancements.void.void_helmet.description"
+        },
+        "frame": "challenge"
+    },
+    "parent": "em:void/kill_void_entity",
+    "criteria": {
+        "void_helmet": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:item_void_helmet"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -160,6 +160,15 @@ public class EntityVEBase extends EntityLiving
     {
         return SoundEvents.EVOCATION_ILLAGER_CAST_SPELL;
     }
+	
+	public void spawnVE()
+	{
+		List<EntityVoidEntity> ve = this.world.<EntityVoidEntity>getEntitiesWithinAABB(EntityVoidEntity.class, this.getEntityBoundingBox().grow(500, 100, 500));
+		if(ve.isEmpty())
+		{
+			this.setSpawnedStatus(false);
+		}
+	}
     
     public boolean getSpawnedStatus()
     {

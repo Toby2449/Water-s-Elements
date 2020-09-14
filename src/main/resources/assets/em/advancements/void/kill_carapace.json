@@ -1,0 +1,25 @@
+{
+    "display": {
+        "icon": {
+            "item": "em:corrupted_hemorrhage"
+        },
+        "title": {
+            "translate": "advancements.void.kill_carapace.title"
+        },
+        "description": {
+            "translate": "advancements.void.kill_carapace.description"
+        },
+		"frame": "challenge"
+    },
+    "parent": "em:void/root",
+    "criteria": {
+        "killed_carapace": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": {
+                    "type": "em:carapace"
+                }
+            }
+        }
+    }
+}

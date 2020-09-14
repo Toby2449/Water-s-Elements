@@ -1,0 +1,25 @@
+{
+    "display": {
+        "icon": {
+            "item": "em:item_eternal_fire"
+        },
+        "title": {
+            "translate": "advancements.elements.killed_fire_boss.title"
+        },
+        "description": {
+            "translate": "advancements.elements.killed_fire_boss.description"
+        },
+        "frame": "goal"
+    },
+    "parent": "em:elements/root",
+    "criteria": {
+        "killed_fire_boss": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": {
+                    "type": "em:fire_boss"
+                }
+            }
+        }
+    }
+}

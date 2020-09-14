@@ -1,0 +1,27 @@
+{
+    "display": {
+        "icon": {
+            "item": "em:item_void_sword"
+        },
+        "title": {
+            "translate": "advancements.void.void_sword.title"
+        },
+        "description": {
+            "translate": "advancements.void.void_sword.description"
+        },
+        "frame": "challenge"
+    },
+    "parent": "em:void/kill_void_entity",
+    "criteria": {
+        "void_sword": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:item_void_sword"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,53 @@
+{
+    "display": {
+        "icon": {
+            "item": "em:fire_sword1"
+        },
+        "title": {
+            "translate": "advancements.elements.level_1.title"
+        },
+        "description": {
+            "translate": "advancements.elements.level_1.description"
+        }
+    },
+    "parent": "em:elements/infuse",
+    "criteria": {
+        "level_1_fire": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:fire_sword1"
+                    }
+                ]
+            }
+        },
+		"level_1_water": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:water_sword1"
+                    }
+                ]
+            }
+        },
+		"level_1_nature": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:nature_sword1"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "level_1_fire",
+            "level_1_water",
+            "level_1_nature"
+        ]
+    ]
+}

@@ -49,13 +49,13 @@ public class WorldGenCustomStructures implements IWorldGenerator
 		case 1: // The End
 			break;
 		case 0: // Over world
-			generatorStructureOverworld(KNIGHT_ARENA, world, random, chunkX, chunkZ, 200, Blocks.GRASS, 0, 2, 0, BiomePlains.class);
-			generatorStructureOverworld(N_ARENA, world, random, chunkX, chunkZ, 200, Blocks.GRASS, 0, -4, 0, BiomeForest.class);
-			generatorStructureOverworldOcean(W_ARENA, world, random, chunkX, chunkZ, 200, Blocks.GRAVEL, 0, 0, 0, BiomeOcean.class);
+			generatorStructureOverworld(KNIGHT_ARENA, world, random, chunkX, chunkZ, 1000, Blocks.GRASS, 0, 2, 0, BiomePlains.class);
+			generatorStructureOverworld(N_ARENA, world, random, chunkX, chunkZ, 500, Blocks.GRASS, 0, -4, 0, BiomeForest.class);
+			generatorStructureOverworldOcean(W_ARENA, world, random, chunkX, chunkZ, 500, Blocks.GRAVEL, 0, 0, 0, BiomeOcean.class);
 			break;
 			
 		case -1: // Nether
-			generatorStructureNether(F_ARENA, world, random, chunkX, chunkZ, 200, Blocks.LAVA, 0, 5, 0, BiomeHell.class); //  was 2
+			generatorStructureNether(F_ARENA, world, random, chunkX, chunkZ, 1000, Blocks.LAVA, 0, 5, 0, BiomeHell.class); //  was 2
 			break;
 			
 		}
@@ -65,8 +65,8 @@ public class WorldGenCustomStructures implements IWorldGenerator
 	{
 		ArrayList<Class<?>> classesList = new ArrayList<Class<?>>(Arrays.asList(classes));
 		
-		int x = (chunkX * 16) + random.nextInt(15);
-		int z = (chunkZ * 16) + random.nextInt(15);
+		int x = (chunkX * 16) + random.nextInt(15) + 15;
+		int z = (chunkZ * 16) + random.nextInt(15) + 15;
 		int y = calculateGenerationHeight(world, x, z, topBlock);
 		BlockPos pos = new BlockPos(x + skewX, y + skewY, z + skewZ);
 		
@@ -91,8 +91,8 @@ public class WorldGenCustomStructures implements IWorldGenerator
 	{
 		ArrayList<Class<?>> classesList = new ArrayList<Class<?>>(Arrays.asList(classes));
 		
-		int x = (chunkX * 16) + random.nextInt(15);
-		int z = (chunkZ * 16) + random.nextInt(15);
+		int x = (chunkX * 16) + random.nextInt(15) + 15;
+		int z = (chunkZ * 16) + random.nextInt(15) + 15;
 		int y = calculateGenerationHeight(world, x, z, topBlock);
 		BlockPos pos = new BlockPos(x + skewX, y + skewY, z + skewZ);
 		

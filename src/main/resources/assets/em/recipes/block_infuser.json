@@ -3,18 +3,13 @@
     
     "pattern":
     [
-        "CSC",
+        "C C",
         "IEI",
         "OOO"
     ],
     
     "key":
     {
-        "S":
-        {
-            "item": "minecraft:nether_star"
-        },
-        
         "E":
         {
             "item": "em:item_void_singularity"

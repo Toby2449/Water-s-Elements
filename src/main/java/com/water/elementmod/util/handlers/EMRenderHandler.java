@@ -1,10 +1,10 @@
 package com.water.elementmod.util.handlers;
 
 import com.water.elementmod.EMCoreBlocks;
-import com.water.elementmod.entity.boss._void.EntityAnguish;
 import com.water.elementmod.entity.boss._void.EntityBlueGuardian;
 import com.water.elementmod.entity.boss._void.EntityBlueOrb;
 import com.water.elementmod.entity.boss._void.EntityCarapace;
+import com.water.elementmod.entity.boss._void.EntityCarapaceAnguish;
 import com.water.elementmod.entity.boss._void.EntityCarapaceEye;
 import com.water.elementmod.entity.boss._void.EntityEnergyOrb;
 import com.water.elementmod.entity.boss._void.EntityGrowingAnguishLarge;
@@ -14,8 +14,10 @@ import com.water.elementmod.entity.boss._void.EntityLunacy;
 import com.water.elementmod.entity.boss._void.EntityPurpleGuardian;
 import com.water.elementmod.entity.boss._void.EntityPurpleOrb;
 import com.water.elementmod.entity.boss._void.EntitySlaveMaster;
+import com.water.elementmod.entity.boss._void.EntityVEAnguish;
 import com.water.elementmod.entity.boss._void.EntityVEBase;
 import com.water.elementmod.entity.boss._void.EntityVoidEntity;
+import com.water.elementmod.entity.boss._void.EntityVoidEntityChest;
 import com.water.elementmod.entity.boss._void.EntityVoidSpectralLarge;
 import com.water.elementmod.entity.boss._void.EntityVoidSpectralMedium;
 import com.water.elementmod.entity.boss._void.EntityVoidSpectralSmall;
@@ -35,9 +37,6 @@ import com.water.elementmod.entity.boss.water.EntityWaterBossClone;
 import com.water.elementmod.entity.boss.water.EntityWaterBossMeleeMinion;
 import com.water.elementmod.entity.boss.water.EntityWaterBossRangedMinion;
 import com.water.elementmod.entity.boss.water.EntityWaterTrash;
-import com.water.elementmod.entity.friendly.EntityAlyxFire;
-import com.water.elementmod.entity.friendly.EntityAlyxNature;
-import com.water.elementmod.entity.friendly.EntityAlyxWater;
 import com.water.elementmod.entity.monster.EntityFireSkeleton;
 import com.water.elementmod.entity.monster.EntityFireZombie;
 import com.water.elementmod.entity.monster.EntityNatureSkeleton;
@@ -64,8 +63,10 @@ import com.water.elementmod.entity.render.boss._void.RenderLunacy;
 import com.water.elementmod.entity.render.boss._void.RenderPurpleGuardian;
 import com.water.elementmod.entity.render.boss._void.RenderPurpleOrb;
 import com.water.elementmod.entity.render.boss._void.RenderSlaveMaster;
+import com.water.elementmod.entity.render.boss._void.RenderVEAnguish;
 import com.water.elementmod.entity.render.boss._void.RenderVEBase;
 import com.water.elementmod.entity.render.boss._void.RenderVoidEntity;
+import com.water.elementmod.entity.render.boss._void.RenderVoidEntityChest;
 import com.water.elementmod.entity.render.boss._void.RenderVoidSpectralLarge;
 import com.water.elementmod.entity.render.boss._void.RenderVoidSpectralMedium;
 import com.water.elementmod.entity.render.boss._void.RenderVoidSpectralSmall;
@@ -85,9 +86,6 @@ import com.water.elementmod.entity.render.boss.water.RenderWaterBossClone;
 import com.water.elementmod.entity.render.boss.water.RenderWaterBossMeleeMinion;
 import com.water.elementmod.entity.render.boss.water.RenderWaterBossRangedMinion;
 import com.water.elementmod.entity.render.boss.water.RenderWaterTrash;
-import com.water.elementmod.entity.render.friendly.RenderAlyxFire;
-import com.water.elementmod.entity.render.friendly.RenderAlyxNature;
-import com.water.elementmod.entity.render.friendly.RenderAlyxWater;
 import com.water.elementmod.entity.render.monster.RenderFireSkeleton;
 import com.water.elementmod.entity.render.monster.RenderFireZombie;
 import com.water.elementmod.entity.render.monster.RenderNatureSkeleton;
@@ -239,15 +237,6 @@ public class EMRenderHandler
 			}
 		});
 		
-		RenderingRegistry.registerEntityRenderingHandler(EntityAlyxFire.class, new IRenderFactory<EntityAlyxFire>()
-		{
-			@Override
-			public Render<? super EntityAlyxFire> createRenderFor(RenderManager manager)
-			{
-				return new RenderAlyxFire(manager);
-			}
-		});
-		
 		RenderingRegistry.registerEntityRenderingHandler(EntityFireBoss.class, new IRenderFactory<EntityFireBoss>()
 		{
 			@Override
@@ -338,22 +327,6 @@ public class EMRenderHandler
 				return new RenderWaterBossMeleeMinion(manager);
 			}
 		});
-		RenderingRegistry.registerEntityRenderingHandler(EntityAlyxWater.class, new IRenderFactory<EntityAlyxWater>()
-		{
-			@Override
-			public Render<? super EntityAlyxWater> createRenderFor(RenderManager manager)
-			{
-				return new RenderAlyxWater(manager);
-			}
-		});
-		RenderingRegistry.registerEntityRenderingHandler(EntityAlyxNature.class, new IRenderFactory<EntityAlyxNature>()
-		{
-			@Override
-			public Render<? super EntityAlyxNature> createRenderFor(RenderManager manager)
-			{
-				return new RenderAlyxNature(manager);
-			}
-		});
 		RenderingRegistry.registerEntityRenderingHandler(EntityWaterTrash.class, new IRenderFactory<EntityWaterTrash>()
 		{
 			@Override
@@ -426,10 +399,10 @@ public class EMRenderHandler
 				return new RenderCarapaceEye(manager);
 			}
 		});
-		RenderingRegistry.registerEntityRenderingHandler(EntityAnguish.class, new IRenderFactory<EntityAnguish>()
+		RenderingRegistry.registerEntityRenderingHandler(EntityCarapaceAnguish.class, new IRenderFactory<EntityCarapaceAnguish>()
 		{
 			@Override
-			public Render<? super EntityAnguish> createRenderFor(RenderManager manager)
+			public Render<? super EntityCarapaceAnguish> createRenderFor(RenderManager manager)
 			{
 				return new RenderAnguish(manager);
 			}
@@ -528,6 +501,22 @@ public class EMRenderHandler
 			public Render<? super EntityGrowingAnguishLarge> createRenderFor(RenderManager manager)
 			{
 				return new RenderGrowingAnguishLarge(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityVoidEntityChest.class, new IRenderFactory<EntityVoidEntityChest>()
+		{
+			@Override
+			public Render<? super EntityVoidEntityChest> createRenderFor(RenderManager manager)
+			{
+				return new RenderVoidEntityChest(manager);
+			}
+		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityVEAnguish.class, new IRenderFactory<EntityVEAnguish>()
+		{
+			@Override
+			public Render<? super EntityVEAnguish> createRenderFor(RenderManager manager)
+			{
+				return new RenderVEAnguish(manager);
 			}
 		});
 	}

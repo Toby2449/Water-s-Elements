@@ -19,17 +19,17 @@ public class _ConfigEntityVoidKnight
 	public static final int P1_BLOB_CD = 120;
 	public static final int P1_SMASHER_CD = 700;
 	public static final int P1_EXPLOSION_CD = 140;
-	public static final int P1_PHASE_CD = 1800;
+	public static final int P1_PHASE_CD = 1000;
 	
 	public static final int P2_SMASHER_CD = 250;
 	public static final int P2_BLOB_CD = 140;
 	public static final int P2_EXPLOSION_CD = 140;
-	public static final int P2_PHASE_CD = 1200;
+	public static final int P2_PHASE_CD = 1000;
 	
 	public static final int P3_LOS_CD = 500;
 	public static final int P3_LOS_CAST = 100;
 	public static final int P3_EXPLOSION_CD = 140;
-	public static final int P3_PHASE_CD = 1300;
+	public static final int P3_PHASE_CD = 600;
 	
 	public static final int P4_BLOB_CD = 80;
 	public static final int P4_EXPLOSION_CD = 140;

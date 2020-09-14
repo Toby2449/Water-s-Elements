@@ -73,7 +73,7 @@ public class EntityIceBall extends EntityThrowable
                 entityareaeffectcloud.setDuration(40);
                 entityareaeffectcloud.setRadiusPerTick((2.0F - entityareaeffectcloud.getRadius()) / (float)entityareaeffectcloud.getDuration());
                 entityareaeffectcloud.addEffect(new PotionEffect(MobEffects.WEAKNESS, 50, 1));
-                entityareaeffectcloud.addEffect(new PotionEffect(MobEffects.INSTANT_DAMAGE, 50, 1));
+                entityareaeffectcloud.addEffect(new PotionEffect(MobEffects.INSTANT_DAMAGE, 50, 0));
                 
                 if (!list.isEmpty())
                 {

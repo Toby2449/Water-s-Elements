@@ -1,0 +1,53 @@
+{
+    "display": {
+        "icon": {
+            "item": "em:item_ashes"
+        },
+        "title": {
+            "translate": "advancements.elements.extract.title"
+        },
+        "description": {
+            "translate": "advancements.elements.extract.description"
+        }
+    },
+    "parent": "em:elements/root",
+    "criteria": {
+        "extract_fire": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:item_ashes"
+                    }
+                ]
+            }
+        },
+		"extract_water": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:item_micro_droplets"
+                    }
+                ]
+            }
+        },
+		"extract_nature": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:item_various_micro_organisms"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "extract_fire",
+            "extract_water",
+            "extract_nature"
+        ]
+    ]
+}

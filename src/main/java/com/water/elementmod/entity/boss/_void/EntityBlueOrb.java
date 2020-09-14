@@ -3,9 +3,9 @@ package com.water.elementmod.entity.boss._void;
 import java.util.List;
 import java.util.Random;
 
+import com.water.elementmod.entity.EntityBossMob;
 import com.water.elementmod.entity.ai.EntityAIMoveTo;
 import com.water.elementmod.network.PacketCarapaceParticleCircle;
-import com.water.elementmod.network.PacketCarapacePortalParticles;
 import com.water.elementmod.network.PacketCustomParticleData;
 import com.water.elementmod.network.PacketHandler;
 import com.water.elementmod.particle.EnumCustomParticleTypes;
@@ -15,21 +15,28 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AbstractAttributeMap;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BossInfo;
+import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
 
-public class EntityBlueOrb extends EntityMob
+public class EntityBlueOrb extends EntityBossMob
 {
+	private static final DataParameter<Integer> NUM_OF_PLAYERS = EntityDataManager.<Integer>createKey(EntityBlueOrb.class, DataSerializers.VARINT);
+	private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName(), BossInfo.Color.BLUE, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
     public int innerRotation;
     private AbstractAttributeMap attributeMap;
     private BlockPos destination = null;
+    private boolean scaledHP = false;
 
     public EntityBlueOrb(World worldIn)
     {
@@ -52,7 +59,7 @@ public class EntityBlueOrb extends EntityMob
     protected void applyEntityAttributes()
     {
     	super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(125.0F);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1000.0F);
 		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(999999999D);
     }
     
@@ -60,6 +67,7 @@ public class EntityBlueOrb extends EntityMob
     protected void entityInit()
     {
     	super.entityInit();
+    	this.dataManager.register(NUM_OF_PLAYERS, Integer.valueOf(1));
     }
     
     @Override
@@ -67,6 +75,7 @@ public class EntityBlueOrb extends EntityMob
     {
     	super.writeEntityToNBT(compound);
     	compound.setIntArray("Destination", new int[] {this.destination.getX(), this.destination.getY(), this.destination.getZ()});
+    	compound.setInteger("NumOfPlayers", this.getNumOfPlayers());
     }
 	
     @Override
@@ -76,6 +85,22 @@ public class EntityBlueOrb extends EntityMob
     	int[] pos = compound.getIntArray("Destination");
         BlockPos blockpos = new BlockPos(pos[0], pos[1], pos[2]);
         this.destination = blockpos;
+        this.setNumOfPlayers(compound.getInteger("NumOfPlayers"));
+        
+        if (this.hasCustomName())
+        {
+            this.bossInfo.setName(this.getDisplayName());
+        }
+    }
+
+    /**
+     * Sets the custom name tag for this entity
+     */
+	@Override
+    public void setCustomNameTag(String name)
+    {
+        super.setCustomNameTag(name);
+        this.bossInfo.setName(this.getDisplayName());
     }
     
     /**
@@ -94,6 +119,27 @@ public class EntityBlueOrb extends EntityMob
             PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceParticleCircle(this, this.world, 8, this.posX, this.posY, this.posZ, 0.0D, 0.0D,0.0D, 15), this.dimension);
         	this.setDead();
         }
+        
+        if(!this.world.isRemote)
+    	{
+    		if(!this.scaledHP)
+    		{
+    			this.scaledHP = true;
+	    		int numOfPlayers = 0;
+	        	List<EntityPlayer> players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE).offset(0, -5, 0));
+		        if(!players.isEmpty())
+		        {
+		        	for (EntityPlayer entity : players)
+			        {
+		        		numOfPlayers++;
+			        }
+		        }
+		        
+		        this.setNumOfPlayers(numOfPlayers);
+    		}
+    	}
+        
+        this.bossInfo.setPercent(this.getHealth() / this.getMaxHealth());
     }
     
     @Override
@@ -113,7 +159,7 @@ public class EntityBlueOrb extends EntityMob
     	Entity entity = source.getImmediateSource();
     	if(entity instanceof EntityPlayer)
     	{
-    		this.setHealth(this.getHealth() - amount);
+    		this.setHealth(this.getHealth() - this.calculateHealthReduction(amount));
     		this.BlueSmokeParticleEffect(this, this.world);
         	if(this.getHealth() <= 0.0F)
         	{
@@ -129,6 +175,11 @@ public class EntityBlueOrb extends EntityMob
         	}
     	}
     	return false;
+    }
+	
+	public float calculateHealthReduction(float amount)
+    {
+    	return amount * (1000 / (120.0F + (120.0F * (this.getNumOfPlayers() - 1))));
     }
     
     public void die()
@@ -187,6 +238,38 @@ public class EntityBlueOrb extends EntityMob
 			}
 		}
 	}
+    
+	/**
+     * Add the given player to the list of players tracking this entity. For instance, a player may track a boss in
+     * order to view its associated boss bar.
+     */
+	@Override
+    public void addTrackingPlayer(EntityPlayerMP player)
+    {
+        super.addTrackingPlayer(player);
+        this.bossInfo.addPlayer(player);
+    }
+
+    /**
+     * Removes the given player from the list of players tracking this entity. See {@link Entity#addTrackingPlayer} for
+     * more information on tracking.
+     */
+	@Override
+    public void removeTrackingPlayer(EntityPlayerMP player)
+    {
+        super.removeTrackingPlayer(player);
+        this.bossInfo.removePlayer(player);
+    }
+    
+    public int getNumOfPlayers()
+    {
+        return ((Integer)this.dataManager.get(NUM_OF_PLAYERS)).intValue();
+    }
+    
+    public void setNumOfPlayers(int state)
+    {
+        this.dataManager.set(NUM_OF_PLAYERS, Integer.valueOf(state));
+    }
     
     @Override
 	protected SoundEvent getHurtSound(DamageSource source)

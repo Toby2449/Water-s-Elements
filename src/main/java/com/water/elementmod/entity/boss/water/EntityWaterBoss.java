@@ -6,9 +6,11 @@ import java.util.Random;
 
 import com.water.elementmod.EMCoreItems;
 import com.water.elementmod.entity.ai.EntityAIMoveTo;
-import com.water.elementmod.entity.friendly.EntityAlyxWater;
 import com.water.elementmod.entity.projectile.EntityIceBall;
 import com.water.elementmod.entity.projectile.EntityIceBall2;
+import com.water.elementmod.network.PacketHandler;
+import com.water.elementmod.network.PacketParticleCircleExplosionVanilla;
+import com.water.elementmod.network.PacketParticleCircleVanilla;
 
 import net.minecraft.block.BlockSlab.EnumBlockHalf;
 import net.minecraft.block.BlockStairs;
@@ -67,8 +69,9 @@ public class EntityWaterBoss extends EntityMob implements IRangedAttackMob
 	private BlockPos spawn_location;
 	private boolean fightActive = false;
 	private static List explosionPoints = new ArrayList();
-	private static List explosionPointTimers = new ArrayList();
-	private int explosionCD = 0;
+	private static List explosionPointEntity = new ArrayList();
+	private int explosionPointTimer = _ConfigEntityWaterBoss.EXPLOSION_TIMER;
+	private int explosionCD = _ConfigEntityWaterBoss.EXPLOSION_CD;
 	private int wallCD = _ConfigEntityWaterBoss.WALL_CD;
 	
 	private int p1timer = 0;
@@ -79,7 +82,7 @@ public class EntityWaterBoss extends EntityMob implements IRangedAttackMob
 	private boolean p5attackpatternchosen = false;
 	private int p5attacklocations = 0;
 	private int p5attackspacer = _ConfigEntityWaterBoss.P5_ATTACK_SPACER;
-	private int p5minionCD = 0;
+	private int p5minionCD = _ConfigEntityWaterBoss.P5_MINION_CD;
 	private int p6minionCD = 0;
 	private int p6minionbossCD = 0;
 	private int p7attackCD = _ConfigEntityWaterBoss.P7_ATTACK_CD;
@@ -210,57 +213,55 @@ public class EntityWaterBoss extends EntityMob implements IRangedAttackMob
 	public void onLivingUpdate()
     {
     	super.onLivingUpdate();
-    	
-    	if (this.world.isRemote)
-        {
-    		for(int i = 0; i < 10; i++)
-    		{
-    			this.world.spawnParticle(EnumParticleTypes.WATER_SPLASH, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + 0.25D + this.rand.nextDouble() * ((double)this.height), this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 0.0D);
-    		}
-        	
-        	if(this.rand.nextInt(100) < 50)
-        	{
-        		for(int i = 0; i < 30; i++)
-        		{
-        			this.world.spawnParticle(EnumParticleTypes.WATER_SPLASH, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + 0.25D + this.rand.nextDouble() * ((double)this.height), this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 0.0D);
-                }
-        	}
-        	
-        	this.world.spawnParticle(EnumParticleTypes.WATER_DROP, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + 0.25D + this.rand.nextDouble() * (double)this.height + 0.4D, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 0.0D);
-        	this.world.spawnParticle(EnumParticleTypes.DRIP_WATER, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * 1.75D, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 0.0D);
-        	
-        	if(!this.explosionPoints.isEmpty() && !this.explosionPointTimers.isEmpty())
-    		{
-	        	for(int i = 0; i < this.explosionPoints.size(); i++)
-				{
-					int CircleTimer = (Integer)this.explosionPointTimers.get(i);
-					ArrayList pos = (ArrayList)this.explosionPoints.get(i);
-					
-					if((Integer)this.explosionPointTimers.get(i) > 0)
-					{
-						if((Integer)this.explosionPointTimers.get(i) % 8 == 1)
-						{
-							WaterCircle((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 2, this.world);
-						}
-							
-						if((Integer)this.explosionPointTimers.get(i) <= 1)
-						{
-							WaterExplosion((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 2, 8, this.world);
-						}
-						
-						this.explosionPointTimers.set(i, CircleTimer - 1);
-					}
-					else
-					{
-						this.explosionPoints.remove(i);
-						this.explosionPointTimers.remove(i);
-					}
-				}
-    		}
-        }
-    	
     	if(!this.world.isRemote)
     	{
+    		if(!this.explosionPoints.isEmpty())
+    		{
+    			boolean isCurrentEntity = false;
+    			for(int i = 0; i < this.explosionPointEntity.size(); i++)
+				{
+    				if(this.explosionPointEntity.get(i) == this) isCurrentEntity = true;
+				}
+    			if(isCurrentEntity)
+    			{
+	    			this.explosionPointTimer--;
+	    			for(int i = 0; i < this.explosionPoints.size(); i++)
+					{
+						ArrayList pos = (ArrayList)this.explosionPoints.get(i);
+						
+						if(this.explosionPoints.get(i) != null && this.explosionPointEntity.get(i) != null)
+						{
+							if(this.explosionPointTimer > 0)
+							{
+								PacketHandler.INSTANCE.sendToDimension(new PacketParticleCircleVanilla(this, this.world, 18, (double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 0.0D, 0.0D,0.0D, 2), this.dimension);
+							}
+							else
+							{
+								PacketHandler.INSTANCE.sendToDimension(new PacketParticleCircleExplosionVanilla(this, this.world, 18, (double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 0.0D, 0.0D,0.0D, 2, 8), this.dimension);
+								AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - 2.25D, (double)pos.get(1) - 0.5D, (double)pos.get(2) - 2.25D, (double)pos.get(0) + 2.25D, (double)pos.get(1) + 10.0D, (double)pos.get(2) + 2.25D);
+								List<EntityPlayer> AABBPlayer = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
+								if (!AABBPlayer.isEmpty())
+							    {
+							        for (EntityPlayer ent : AABBPlayer)
+							        {
+							        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 150, 1));
+							        	//ent.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100, 0));
+							        	ent.attackEntityFrom(DamageSource.causeMobDamage(this), 16.0F);
+							        }
+							    }
+								
+								this.explosionPoints.clear();
+								this.explosionPointTimer = _ConfigEntityWaterBoss.EXPLOSION_TIMER;
+								this.explosionPointEntity.clear();
+							}
+						}
+					}
+    			}
+    		}
+    	}
+    	
+    	if(!this.world.isRemote)
+        {
     		// If nobodies in the arena
 	        if(this.isFightActivated() && this.fightActive)
 	        {
@@ -278,40 +279,6 @@ public class EntityWaterBoss extends EntityMob implements IRangedAttackMob
 	        	this.setHealth(this.getMaxHealth());
 	        }
 	        
-	        if(!this.explosionPoints.isEmpty() && !this.explosionPointTimers.isEmpty())
-    		{
-		        for(int i = 0; i < this.explosionPoints.size(); i++)
-				{
-					int CircleTimer = (Integer)this.explosionPointTimers.get(i);
-					ArrayList pos = (ArrayList)this.explosionPoints.get(i);
-					
-					if((Integer)this.explosionPointTimers.get(i) > 0)
-					{
-						if((Integer)this.explosionPointTimers.get(i) <= 1)
-						{
-							AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - 0.5D, (double)pos.get(1) - 0.5D, (double)pos.get(2) - 0.5D, (double)pos.get(0) + 1.0D, (double)pos.get(1) + 1.0D, (double)pos.get(2) + 1.0D);
-							List<EntityPlayer> AABBPlayer = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);			
-							if (!AABBPlayer.isEmpty())
-						    {
-						        for (EntityPlayer ent : AABBPlayer)
-						        {
-						        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 150, 1));
-						        	ent.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100, 0));
-						        	ent.attackEntityFrom(DamageSource.causeMobDamage(this), 16.0F);
-						        }
-						    }
-						}
-						
-						this.explosionPointTimers.set(i, CircleTimer - 1);
-					}
-					else
-					{
-						this.explosionPoints.remove(i);
-						this.explosionPointTimers.remove(i);
-					}
-				}
-    		}
-	        
 	        List<EntityMob> list = this.world.<EntityMob>getEntitiesWithinAABB(EntityMob.class, this.getEntityBoundingBox().grow(_ConfigEntityWaterBoss.ARENA_SIZE_X, _ConfigEntityWaterBoss.ARENA_SIZE_Y, _ConfigEntityWaterBoss.ARENA_SIZE_Z));
 	        for (EntityMob entity : list)
 	        {
@@ -320,7 +287,26 @@ public class EntityWaterBoss extends EntityMob implements IRangedAttackMob
 	        		entity.isDead = true;
 	        	}
 	        }
-    	}    
+    	}
+    	
+    	if(this.world.isRemote)
+        {
+    		for(int i = 0; i < 10; i++)
+    		{
+    			this.world.spawnParticle(EnumParticleTypes.WATER_SPLASH, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + 0.25D + this.rand.nextDouble() * ((double)this.height), this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 0.0D);
+    		}
+        	
+        	if(this.rand.nextInt(100) < 50)
+        	{
+        		for(int i = 0; i < 30; i++)
+        		{
+        			this.world.spawnParticle(EnumParticleTypes.WATER_SPLASH, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + 0.25D + this.rand.nextDouble() * ((double)this.height), this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 0.0D);
+                }
+        	}
+        	
+        	this.world.spawnParticle(EnumParticleTypes.WATER_DROP, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + 0.25D + this.rand.nextDouble() * (double)this.height + 0.4D, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 0.0D);
+        	this.world.spawnParticle(EnumParticleTypes.DRIP_WATER, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * 1.75D, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 0.0D);
+        }
     	
     	switch(this.getPhase())
     	{
@@ -352,33 +338,21 @@ public class EntityWaterBoss extends EntityMob implements IRangedAttackMob
         				this.chatted2 = true;
     				}
     			}
-    			
-    			this.explosionCD++;
-	    		List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityWaterBoss.ARENA_SIZE_X, _ConfigEntityWaterBoss.ARENA_SIZE_Y, _ConfigEntityWaterBoss.ARENA_SIZE_Z));
-		        
-		        for (EntityPlayer entity : list)
-		        {
-		        	if(this.explosionCD >= _ConfigEntityWaterBoss.EXPLOSION_CD)
-		        	{
-		        		this.spawnWaterExplosion(entity.posX, entity.posY, entity.posZ);
-		        		this.explosionCD = 0;
-		        	}
-		        }
     		}
     		if(!this.world.isRemote)
     		{
-    			this.explosionCD++;
     			this.wallCD--;
-	    		List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityWaterBoss.ARENA_SIZE_X, _ConfigEntityWaterBoss.ARENA_SIZE_Y, _ConfigEntityWaterBoss.ARENA_SIZE_Z));
-		        
+    			this.explosionCD--;
+    			List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityWaterBoss.ARENA_SIZE_X, _ConfigEntityWaterBoss.ARENA_SIZE_Y, _ConfigEntityWaterBoss.ARENA_SIZE_Z));
 		        for (EntityPlayer entity : list)
 		        {
-		        	if(this.explosionCD >= _ConfigEntityWaterBoss.EXPLOSION_CD)
-		        	{
-		        		this.spawnWaterExplosion(entity.posX, entity.posY, entity.posZ);
-		        		this.explosionCD = 0;
-		        	}
+			        if(this.explosionCD <= 0)
+			        {
+			        	this.spawnWaterExplosion(entity.posX, entity.posY, entity.posZ, this);
+			        	this.explosionCD = _ConfigEntityWaterBoss.EXPLOSION_CD;
+			        }
 		        }
+		        
 		        
 		        if(this.wallCD <= 0)
 	        	{
@@ -606,9 +580,11 @@ public class EntityWaterBoss extends EntityMob implements IRangedAttackMob
     				}
     			}
     			
-    			this.p5minionCD++;
-    			if(this.p5minionCD >= _ConfigEntityWaterBoss.P5_MINION_CD)
+    			System.out.println(this.p5minionCD);
+    			this.p5minionCD--;
+    			if(this.p5minionCD <= 0)
     			{
+    				this.p5minionCD = _ConfigEntityWaterBoss.P5_MINION_CD;
     				BlockPos spawnlocation1 = this.getSpawnLocation().add(-7, 10, 5);
         			BlockPos spawnlocation2 = this.getSpawnLocation().add(-7, 10, -5);
         			BlockPos spawnlocation3 = this.getSpawnLocation().add(7, 10, 5);
@@ -633,8 +609,6 @@ public class EntityWaterBoss extends EntityMob implements IRangedAttackMob
 		            minion4.enablePersistence();
         			minion4.setPosition(spawnlocation4.getX() + 1.0D, spawnlocation4.getY(), spawnlocation4.getZ());
 		            world.spawnEntity(minion4);
-		            
-		            this.p5minionCD = 0;
     			}
     			
     			if(this.getHealth() <= this.getMaxHealth() / 3) // 1/3
@@ -1142,14 +1116,15 @@ public class EntityWaterBoss extends EntityMob implements IRangedAttackMob
         this.world.spawnEntity(entityiceball);
     }
 	
-	public void spawnWaterExplosion(double x, double y, double z)
+	public void spawnWaterExplosion(double x, double y, double z, EntityWaterBoss entity)
 	{
 		List pos = new ArrayList();
 		pos.add(x);
 		pos.add(y);
 		pos.add(z);
+		this.explosionPointTimer = _ConfigEntityWaterBoss.EXPLOSION_TIMER; // 5 seconds
 		this.explosionPoints.add(pos);
-		this.explosionPointTimers.add(80); // 5 seconds
+		this.explosionPointEntity.add(entity);
 	}
 	
 	public void WaterCircle(double x, double y, double z, double radius, World world)
@@ -1312,12 +1287,6 @@ public class EntityWaterBoss extends EntityMob implements IRangedAttackMob
     {
         super.onDeath(cause);
         this.opendoors();
-        
-        BlockPos spawnPos = this.getSpawnLocation().add(0, 1, -15);
-        EntityAlyxWater alyx = new EntityAlyxWater(this.world, spawnPos.getX(), spawnPos.getY() - 1, spawnPos.getZ() + 9);
-        alyx.setPosition(spawnPos.getX() + 0.5D, spawnPos.getY(), spawnPos.getZ() + 0.5D);
-        this.world.spawnEntity(alyx);
-        
         this.sayChatLine(7);
         this.sayChatLine(8);
     }
@@ -1328,8 +1297,8 @@ public class EntityWaterBoss extends EntityMob implements IRangedAttackMob
     	this.setInvulState(true);
     	this.setPhase(0);
     	this.explosionPoints.clear();
-    	this.explosionPointTimers.clear();
-    	this.explosionCD = 0;
+    	this.explosionPointTimer = _ConfigEntityWaterBoss.EXPLOSION_TIMER;
+    	this.explosionCD = _ConfigEntityWaterBoss.EXPLOSION_CD;
     	this.wallCD = _ConfigEntityWaterBoss.WALL_CD;
     	
     	this.p1timer = 0;

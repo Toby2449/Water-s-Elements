@@ -1,0 +1,53 @@
+{
+    "display": {
+        "icon": {
+            "item": "em:water_sword5"
+        },
+        "title": {
+            "translate": "advancements.elements.level_5.title"
+        },
+        "description": {
+            "translate": "advancements.elements.level_5.description"
+        }
+    },
+    "parent": "em:elements/level_1",
+    "criteria": {
+        "level_5_fire": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:fire_sword5"
+                    }
+                ]
+            }
+        },
+		"level_5_water": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:water_sword5"
+                    }
+                ]
+            }
+        },
+		"level_5_nature": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:nature_sword5"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "level_5_fire",
+            "level_5_water",
+            "level_5_nature"
+        ]
+    ]
+}

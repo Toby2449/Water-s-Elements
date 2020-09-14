@@ -2,10 +2,10 @@ package com.water.elementmod;
 
 import java.util.Collection;
 
-import com.water.elementmod.entity.boss._void.EntityAnguish;
 import com.water.elementmod.entity.boss._void.EntityBlueGuardian;
 import com.water.elementmod.entity.boss._void.EntityBlueOrb;
 import com.water.elementmod.entity.boss._void.EntityCarapace;
+import com.water.elementmod.entity.boss._void.EntityCarapaceAnguish;
 import com.water.elementmod.entity.boss._void.EntityCarapaceEye;
 import com.water.elementmod.entity.boss._void.EntityEnergyOrb;
 import com.water.elementmod.entity.boss._void.EntityGrowingAnguishLarge;
@@ -15,8 +15,10 @@ import com.water.elementmod.entity.boss._void.EntityLunacy;
 import com.water.elementmod.entity.boss._void.EntityPurpleGuardian;
 import com.water.elementmod.entity.boss._void.EntityPurpleOrb;
 import com.water.elementmod.entity.boss._void.EntitySlaveMaster;
+import com.water.elementmod.entity.boss._void.EntityVEAnguish;
 import com.water.elementmod.entity.boss._void.EntityVEBase;
 import com.water.elementmod.entity.boss._void.EntityVoidEntity;
+import com.water.elementmod.entity.boss._void.EntityVoidEntityChest;
 import com.water.elementmod.entity.boss._void.EntityVoidSpectralLarge;
 import com.water.elementmod.entity.boss._void.EntityVoidSpectralMedium;
 import com.water.elementmod.entity.boss._void.EntityVoidSpectralSmall;
@@ -36,9 +38,6 @@ import com.water.elementmod.entity.boss.water.EntityWaterBossClone;
 import com.water.elementmod.entity.boss.water.EntityWaterBossMeleeMinion;
 import com.water.elementmod.entity.boss.water.EntityWaterBossRangedMinion;
 import com.water.elementmod.entity.boss.water.EntityWaterTrash;
-import com.water.elementmod.entity.friendly.EntityAlyxFire;
-import com.water.elementmod.entity.friendly.EntityAlyxNature;
-import com.water.elementmod.entity.friendly.EntityAlyxWater;
 import com.water.elementmod.entity.monster.EntityFireSkeleton;
 import com.water.elementmod.entity.monster.EntityFireZombie;
 import com.water.elementmod.entity.monster.EntityNatureSkeleton;
@@ -76,44 +75,43 @@ public class EMCoreEntities
 		registerEntity(EMConfig.ENTITY_FIRESKELETON, "fire_skeleton", EntityFireSkeleton.class, 100, 15263976, 16736256);
 		registerEntity(EMConfig.ENTITY_WATERSKELETON, "water_skeleton", EntityWaterSkeleton.class, 100, 15263976, 2578864);
 		registerEntity(EMConfig.ENTITY_NATURESKELETON, "nature_skeleton", EntityNatureSkeleton.class, 100, 15263976, 2457391);
-		registerEntity(EMConfig.ENTITY_NATURE_BOSS, "nature_boss", EntityNatureBoss.class, 100, 15263976, 2457391);
-		registerEntity(EMConfig.ENTITY_PHOTOSYNCRYSTAL, "photo_synthetic_crystal", EntityPhotoSynthesizerCrystal.class, 100, 15263976, 2457391);
-		registerEntity(EMConfig.ENTITY_NATURE_BOSS_MINION, "nature_boss_minion", EntityNatureBossMinion.class, 100, 15263976, 2457391);
+		registerEntityNoEgg(EMConfig.ENTITY_NATURE_BOSS, "nature_boss", EntityNatureBoss.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_PHOTOSYNCRYSTAL, "photo_synthetic_crystal", EntityPhotoSynthesizerCrystal.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_NATURE_BOSS_MINION, "nature_boss_minion", EntityNatureBossMinion.class, 100);
 		registerEntity(EMConfig.ENTITY_NATURE_STALKER, "nature_stalker", EntityNatureStalker.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_ALYX_FIRE, "em_alyx_fire", EntityAlyxFire.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_FIRE_BOSS, "fire_boss", EntityFireBoss.class, 100, 16738048, 16711680);
-		registerEntity(EMConfig.ENTITY_FIRE_CRYSTAL, "fire_crystal", EntityFireCrystal.class, 100, 16738048, 16711680);
-		registerEntity(EMConfig.ENTITY_FIRE_BOSS_MINI, "fire_boss_mini", EntityFireBossMinion.class, 100, 16738048, 16711680);
-		registerEntity(EMConfig.ENTITY_FIRE_GUARDIAN, "fire_guardian", EntityFireGuardian.class, 100, 16738048, 16711680);
+		registerEntityNoEgg(EMConfig.ENTITY_FIRE_BOSS, "fire_boss", EntityFireBoss.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_FIRE_CRYSTAL, "fire_crystal", EntityFireCrystal.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_FIRE_BOSS_MINI, "fire_boss_mini", EntityFireBossMinion.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_FIRE_GUARDIAN, "fire_guardian", EntityFireGuardian.class, 100);
 		registerEntity(EMConfig.ENTITY_FIRE_GUARDIAN_CASTLE, "fire_guardian_castle", EntityFireGuardianCastle.class, 100, 16738048, 16711680);
-		registerEntity(EMConfig.ENTITY_WATER_BOSS, "water_boss", EntityWaterBoss.class, 100, 4360181, 14481);
-		registerEntity(EMConfig.ENTITY_WATER_BOSS_CLONE, "water_boss_clone", EntityWaterBossClone.class, 100, 4360181, 14481);
-		registerEntity(EMConfig.ENTITY_WATER_BOSS_RANGED_MINION, "water_boss_ranged_minion", EntityWaterBossRangedMinion.class, 100, 4360181, 14481);
-		registerEntity(EMConfig.ENTITY_WATER_BOSS_MELEE_MINION, "water_boss_melee_minion", EntityWaterBossMeleeMinion.class, 100, 4360181, 14481);
-		registerEntity(EMConfig.ENTITY_ALYX_WATER, "em_alyx_water", EntityAlyxWater.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_ALYX_NATURE, "em_alyx_nature", EntityAlyxNature.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_WATER_TRASH, "water_trash", EntityWaterTrash.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_VOID_KNIGHT, "void_knight", EntityVoidKnight.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_VOID_BLOB, "void_blob", EntityVoidBlob.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_VOID_SMASHER, "void_smasher", EntityVoidSmasher.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_CARAPACE, "carapace", EntityCarapace.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_ENERGY_ORB, "energy_orb", EntityEnergyOrb.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_BLUE_ORB, "blue_orb", EntityBlueOrb.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_PURPLE_ORB, "purple_orb", EntityPurpleOrb.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_CARAPACE_EYE, "carapace_eye", EntityCarapaceEye.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_ANGUISH, "anguish", EntityAnguish.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_BLUE_GUARDIAN, "blue_guardian", EntityBlueGuardian.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_PURPLE_GUARDIAN, "purple_guardian", EntityPurpleGuardian.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_VE_BASE, "ve_base", EntityVEBase.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_VOID_ENTITY, "void_entity", EntityVoidEntity.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_LUNACY, "lunacy", EntityLunacy.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_VSS, "void_spectral_small", EntityVoidSpectralSmall.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_VSM, "void_spectral_medium", EntityVoidSpectralMedium.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_VSL, "void_spectral_large", EntityVoidSpectralLarge.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_SLAVE_MASTER, "void_slave_master", EntitySlaveMaster.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_GROWING_ANGUISH_SMALL, "growing_anguish_small", EntityGrowingAnguishSmall.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_GROWING_ANGUISH_MEDIUM, "growing_anguish_medium", EntityGrowingAnguishMedium.class, 100, 3877140, 880148);
-		registerEntity(EMConfig.ENTITY_GROWING_ANGUISH_LARGE, "growing_anguish_large", EntityGrowingAnguishLarge.class, 100, 3877140, 880148);
+		registerEntityNoEgg(EMConfig.ENTITY_WATER_BOSS, "water_boss", EntityWaterBoss.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_WATER_BOSS_CLONE, "water_boss_clone", EntityWaterBossClone.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_WATER_BOSS_RANGED_MINION, "water_boss_ranged_minion", EntityWaterBossRangedMinion.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_WATER_BOSS_MELEE_MINION, "water_boss_melee_minion", EntityWaterBossMeleeMinion.class, 100);
+		registerEntity(EMConfig.ENTITY_WATER_TRASH, "water_trash", EntityWaterTrash.class, 100, 3877140, 41727);
+		registerEntityNoEgg(EMConfig.ENTITY_VOID_KNIGHT, "void_knight", EntityVoidKnight.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_VOID_BLOB, "void_blob", EntityVoidBlob.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_VOID_SMASHER, "void_smasher", EntityVoidSmasher.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_CARAPACE, "carapace", EntityCarapace.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_ENERGY_ORB, "energy_orb", EntityEnergyOrb.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_BLUE_ORB, "blue_orb", EntityBlueOrb.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_PURPLE_ORB, "purple_orb", EntityPurpleOrb.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_CARAPACE_EYE, "carapace_eye", EntityCarapaceEye.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_ANGUISH, "anguish", EntityCarapaceAnguish.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_BLUE_GUARDIAN, "blue_guardian", EntityBlueGuardian.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_PURPLE_GUARDIAN, "purple_guardian", EntityPurpleGuardian.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_VE_BASE, "ve_base", EntityVEBase.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_VOID_ENTITY, "void_entity", EntityVoidEntity.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_LUNACY, "lunacy", EntityLunacy.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_VSS, "void_spectral_small", EntityVoidSpectralSmall.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_VSM, "void_spectral_medium", EntityVoidSpectralMedium.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_VSL, "void_spectral_large", EntityVoidSpectralLarge.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_SLAVE_MASTER, "void_slave_master", EntitySlaveMaster.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_GROWING_ANGUISH_SMALL, "growing_anguish_small", EntityGrowingAnguishSmall.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_GROWING_ANGUISH_MEDIUM, "growing_anguish_medium", EntityGrowingAnguishMedium.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_GROWING_ANGUISH_LARGE, "growing_anguish_large", EntityGrowingAnguishLarge.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_VOID_ENTITY_CHEST, "ve_chest", EntityVoidEntityChest.class, 100);
+		registerEntityNoEgg(EMConfig.ENTITY_VE_ANGUISH, "ve_anguish", EntityVEAnguish.class, 100);
 		
 		registerArrow("nature_arrow", EntityNatureArrow.class, EMConfig.ENTITY_NATUREARROW);
 		registerArrow("water_arrow", EntityWaterArrow.class, EMConfig.ENTITY_WATERARROW);
@@ -137,6 +135,11 @@ public class EMCoreEntities
 	private static void registerEntity(int id, String name, Class<? extends Entity> entity, int range, int color1, int color2)
 	{
 		EntityRegistry.registerModEntity(new ResourceLocation(EMConfig.MOD_ID + ":" + name), entity, name, id, EMCore.instance, range, 1, true, color1, color2);
+    }
+	
+	private static void registerEntityNoEgg(int id, String name, Class<? extends Entity> entity, int range)
+	{
+		EntityRegistry.registerModEntity(new ResourceLocation(EMConfig.MOD_ID + ":" + name), entity, name, id, EMCore.instance, range, 1, true);
     }
 	
 	private static void SpawnAllBiomesOverworldNoOcean(Class<? extends EntityLiving> entityClass, int weight, int min, int max, EnumCreatureType typeOfCreature) 

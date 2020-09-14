@@ -1,0 +1,27 @@
+{
+    "display": {
+        "icon": {
+            "item": "em:nature_sword10"
+        },
+        "title": {
+            "translate": "advancements.elements.nature_sword.title"
+        },
+        "description": {
+            "translate": "advancements.elements.nature_sword.description"
+        },
+        "frame": "goal"
+    },
+    "parent": "em:elements/level_5",
+    "criteria": {
+        "nature_sword": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:nature_sword10"
+                    }
+                ]
+            }
+        }
+    }
+}

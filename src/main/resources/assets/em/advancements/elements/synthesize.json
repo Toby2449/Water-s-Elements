@@ -1,0 +1,53 @@
+{
+    "display": {
+        "icon": {
+            "item": "em:item_flaming_embers"
+        },
+        "title": {
+            "translate": "advancements.elements.synthesize.title"
+        },
+        "description": {
+            "translate": "advancements.elements.synthesize.description"
+        }
+    },
+    "parent": "em:elements/extract",
+    "criteria": {
+        "synthesize_fire": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:item_flaming_embers"
+                    }
+                ]
+            }
+        },
+		"synthesize_water": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:item_perpetual_droplet"
+                    }
+                ]
+            }
+        },
+		"synthesize_nature": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:item_nature_essence"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "synthesize_fire",
+            "synthesize_water",
+            "synthesize_nature"
+        ]
+    ]
+}

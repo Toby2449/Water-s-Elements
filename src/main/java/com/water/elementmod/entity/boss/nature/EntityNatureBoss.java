@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.water.elementmod.EMCoreItems;
-import com.water.elementmod.entity.friendly.EntityAlyxNature;
 import com.water.elementmod.entity.projectile.EntityFireArrow;
 import com.water.elementmod.entity.projectile.EntityPoisonBall;
 import com.water.elementmod.particle.EnumCustomParticleTypes;
@@ -31,13 +30,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
@@ -309,11 +306,14 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
     	}
         else
         {
-        	this.chatted++;
-        	if(this.chatted >= _ConfigEntityNatureBoss.CHATTED)
+        	if(this.isFightActivated())
         	{
-        		this.sayChatLine(this.rand.nextInt(4) + 1);
-        		this.chatted = 0;
+	        	this.chatted++;
+	        	if(this.chatted >= _ConfigEntityNatureBoss.CHATTED)
+	        	{
+	        		this.sayChatLine(this.rand.nextInt(4) + 1);
+	        		this.chatted = 0;
+	        	}
         	}
         }
 		
@@ -525,12 +525,7 @@ public class EntityNatureBoss extends EntityMob implements IRangedAttackMob
         this.openDoor();
         
         this.crystal_locations.clear();
-        
-        BlockPos spawnPos = this.getSpawnLocation().add(0, 0, 13);
-        EntityAlyxNature alyx = new EntityAlyxNature(this.world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ() - 13);
-        alyx.setPosition(spawnPos.getX() + 0.5D, spawnPos.getY(), spawnPos.getZ() + 0.5D);
-        this.world.spawnEntity(alyx);
-        
+
         this.sayChatLine(6);
         this.sayChatLine(7);
     }

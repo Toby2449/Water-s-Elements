@@ -7,16 +7,14 @@ import java.util.Random;
 import com.water.elementmod.EMCorePotionEffects;
 import com.water.elementmod.entity.ai.EntityAIMoveTo;
 import com.water.elementmod.entity.boss._void._ConfigEntityCarapace;
-import com.water.elementmod.entity.boss.fire.EntityFireBoss;
-import com.water.elementmod.entity.boss.nature._ConfigEntityNatureBoss;
-import com.water.elementmod.entity.boss.water.EntityWaterBoss;
-import com.water.elementmod.entity.boss.water.EntityWaterBossClone;
-import com.water.elementmod.entity.boss.water.EntityWaterBossMeleeMinion;
-import com.water.elementmod.entity.boss.water.EntityWaterBossRangedMinion;
-import com.water.elementmod.entity.boss.water.EntityWaterTrash;
-import com.water.elementmod.entity.boss.water._ConfigEntityWaterBoss;
+import com.water.elementmod.network.PacketHandler;
+import com.water.elementmod.network.PacketParticleCircle;
+import com.water.elementmod.network.PacketParticleCircleExplosion;
+import com.water.elementmod.network.PacketVoidKnightLargeCircle;
+import com.water.elementmod.network.PacketVoidKnightLargeCircleExplosion;
 import com.water.elementmod.particle.EnumCustomParticleTypes;
 import com.water.elementmod.particle.ParticleSpawner;
+import com.water.elementmod.util.handlers.EMSoundHandler;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -39,6 +37,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -53,13 +52,14 @@ public class EntityVoidKnight extends EntityMob
 	private static final DataParameter<Boolean> INITIATE = EntityDataManager.<Boolean>createKey(EntityVoidKnight.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> IS_INVURNERABLE = EntityDataManager.<Boolean>createKey(EntityVoidKnight.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Integer> PHASE = EntityDataManager.<Integer>createKey(EntityVoidKnight.class, DataSerializers.VARINT);
-	private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName(), BossInfo.Color.WHITE, BossInfo.Overlay.PROGRESS)).setDarkenSky(true);
+	private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName(), BossInfo.Color.WHITE, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
 	private final EntityAIAttackMelee aiMeleeAttack = new EntityAIAttackMelee(this, 0.5D, true);
 	private EntityAIMoveTo aiMoveToSide = null;
 	private BlockPos spawn_location;
 	private int fightCountdown = _ConfigEntityVoidKnight.FIGHT_STARTER_TIMER;
 	private static List explosionPoints = new ArrayList();
-	private static List explosionPointTimers = new ArrayList();
+	private int explosionPointTimer = _ConfigEntityVoidKnight.EXPLOSION_TIMER;
+	private static List explosionPointEntity = new ArrayList();
 	
 	private int blobCount = 0;
 	
@@ -191,78 +191,56 @@ public class EntityVoidKnight extends EntityMob
 	public void onLivingUpdate()
     {
     	super.onLivingUpdate();
-    	
-    	if(this.world.isRemote)
-    	{
-    		if(!this.explosionPoints.isEmpty() && !this.explosionPointTimers.isEmpty())
-    		{
-	    		for(int i = 0; i < this.explosionPoints.size(); i++)
-				{
-					int CircleTimer = (Integer)this.explosionPointTimers.get(i);
-					ArrayList pos = (ArrayList)this.explosionPoints.get(i);
-					
-					if((Integer)this.explosionPointTimers.get(i) > 0)
-					{
-						if((Integer)this.explosionPointTimers.get(i) % 8 == 1)
-						{
-							this.VoidRingAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 2, this.world);
-						}
-						
-						if((Integer)this.explosionPointTimers.get(i) <= 1)
-						{
-							this.VoidRingExplosionAnimation((double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 2, 8, this.world);
-							AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - 0.5D, (double)pos.get(1) - 0.5D, (double)pos.get(2) - 0.5D, (double)pos.get(0) + 1.0D, (double)pos.get(1) + 1.0D, (double)pos.get(2) + 1.0D);
-							List<EntityPlayer> AABBPlayer = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
-							if (!AABBPlayer.isEmpty())
-						    {
-						        for (EntityPlayer ent : AABBPlayer)
-						        {
-						        	ent.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_CORRUPTION, 100, 0));
-						        }
-						    }
-						}
-						
-						this.explosionPointTimers.set(i, CircleTimer - 1);
-					}
-					else
-					{
-						this.explosionPoints.remove(i);
-						this.explosionPointTimers.remove(i);
-					}
-				}
-    		}
-    	}
-    	
     	if(!this.world.isRemote)
     	{
-    		if(!this.explosionPoints.isEmpty() && !this.explosionPointTimers.isEmpty())
+    		if(!this.explosionPoints.isEmpty())
     		{
-	    		for(int i = 0; i < this.explosionPoints.size(); i++)
+    			boolean isCurrentEntity = false;
+    			for(int i = 0; i < this.explosionPointEntity.size(); i++)
 				{
-					int CircleTimer = (Integer)this.explosionPointTimers.get(i);
-					ArrayList pos = (ArrayList)this.explosionPoints.get(i);
-					
-					if((Integer)this.explosionPointTimers.get(i) > 0)
+    				if(this.explosionPointEntity.get(i) == this) isCurrentEntity = true;
+				}
+    			if(isCurrentEntity)
+    			{
+    				this.explosionPointTimer--;
+		    		for(int i = 0; i < this.explosionPoints.size(); i++)
 					{
-						if((Integer)this.explosionPointTimers.get(i) <= 1)
+						ArrayList pos = (ArrayList)this.explosionPoints.get(i);
+						
+						if(this.explosionPoints.get(i) != null && this.explosionPointEntity.get(i) != null)
 						{
-							AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - 0.5D, (double)pos.get(1) - 0.5D, (double)pos.get(2) - 0.5D, (double)pos.get(0) + 1.0D, (double)pos.get(1) + 1.0D, (double)pos.get(2) + 1.0D);
-							List<EntityPlayer> AABBPlayer = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
-							if (!AABBPlayer.isEmpty())
-						    {
-						        for (EntityPlayer ent : AABBPlayer)
-						        {
-						        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 150, 1));
-						        	ent.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_CORRUPTION, 100, 0));
-						        	ent.attackEntityFrom(DamageSource.MAGIC, 7.5F);
-						        }
-						    }
+							if(this.explosionPointTimer > 0)
+							{
+								PacketHandler.INSTANCE.sendToDimension(new PacketParticleCircle(this, this.world, 6, (double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 0.0D, 0.0D,0.0D, 2), this.dimension);
+							}
+							else
+							{
+								Double x = new Double((double)pos.get(0)); 
+								int x1 = x.intValue();
+								Double y = new Double((double)pos.get(1)); 
+								int y1 = y.intValue();
+								Double z = new Double((double)pos.get(2)); 
+								int z1 = z.intValue();
+								this.playImpactSound((int)x1, (int)y1, (int)z1, 3.5F);
+								PacketHandler.INSTANCE.sendToDimension(new PacketParticleCircleExplosion(this, this.world, 6, (double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 0.0D, 0.0D,0.0D, 2, 8), this.dimension);
+								AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - 2.25D, (double)pos.get(1) - 0.5D, (double)pos.get(2) - 2.25D, (double)pos.get(0) + 2.25D, (double)pos.get(1) + 10.0D, (double)pos.get(2) + 2.25D);
+								List<EntityPlayer> AABBPlayer = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
+								if (!AABBPlayer.isEmpty())
+							    {
+							        for (EntityPlayer ent : AABBPlayer)
+							        {
+							        	PacketHandler.INSTANCE.sendTo(new PacketParticleCircle(ent, this.world, 6, (double)pos.get(0), (double)pos.get(1), (double)pos.get(2), 0.0D, 0.0D,0.0D, 3), (EntityPlayerMP) ent);
+							        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 150, 1));
+							        	ent.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_CORRUPTION, 100, 0));
+							        	ent.attackEntityFrom(DamageSource.MAGIC, 7.5F);
+							        }
+							    }
+								
+								this.explosionPoints.clear();
+								this.explosionPointTimer = _ConfigEntityCarapace.EXPLOSION_TIMER;
+								this.explosionPointEntity.clear();
+							}
 						}
-					}
-					else
-					{
-						this.explosionPoints.remove(i);
-						this.explosionPointTimers.remove(i);
 					}
 				}
     		}
@@ -342,7 +320,6 @@ public class EntityVoidKnight extends EntityMob
 				}
 				if(this.fightCountdown <= 0)
 				{
-					aiMoveToSide = new EntityAIMoveTo(this, 0.36D, 10, (this.getSpawnLocation().getX() + 0.5D), this.getSpawnLocation().getY(), (this.getSpawnLocation().getZ() - 10D));
 					this.setFightState(true);
 					this.setPhase(1);
 				}
@@ -381,17 +358,6 @@ public class EntityVoidKnight extends EntityMob
 	    		
 	    		this.VoidPortalAnimation(this.posX, this.posY, this.posZ + 14, 3, this.world);
 	        	this.VoidPortalAnimation(this.posX, this.posY, this.posZ - 14, 3, this.world);
-	        	
-	        	this.P1explosionCD++;
-	        	List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidKnight.ARENA_SIZE_X, _ConfigEntityVoidKnight.ARENA_SIZE_Y, _ConfigEntityVoidKnight.ARENA_SIZE_Z).offset(0, -4, 0));
-				for (EntityPlayer player : list)
-		        {
-					if(this.P1explosionCD >= _ConfigEntityVoidKnight.P1_EXPLOSION_CD)
-					{
-						this.spawnVoidExplosion(player.posX, player.posY, player.posZ);
-						this.P1explosionCD = 0;
-					}
-		        }
 	    	}
     		
 	    	if(!this.world.isRemote)
@@ -406,7 +372,7 @@ public class EntityVoidKnight extends EntityMob
 		        {
 					if(this.P1explosionCD >= _ConfigEntityVoidKnight.P1_EXPLOSION_CD)
 					{
-						this.spawnVoidExplosion(player.posX, player.posY, player.posZ);
+						this.spawnVoidExplosion(player.posX, player.posY, player.posZ, this);
 						this.P1explosionCD = 0;
 					}
 		        }
@@ -468,17 +434,6 @@ public class EntityVoidKnight extends EntityMob
 	    		
 	    		this.VoidPortalAnimation(this.posX, this.posY, this.posZ + 14, 3, this.world);
 	        	this.VoidPortalAnimation(this.posX, this.posY, this.posZ - 14, 3, this.world);
-	        	
-	        	this.P2explosionCD++;
-	        	List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidKnight.ARENA_SIZE_X, _ConfigEntityVoidKnight.ARENA_SIZE_Y, _ConfigEntityVoidKnight.ARENA_SIZE_Z).offset(0, -4, 0));
-				for (EntityPlayer player : list)
-		        {
-					if(this.P2explosionCD >= _ConfigEntityVoidKnight.P2_EXPLOSION_CD)
-					{
-						this.spawnVoidExplosion(player.posX, player.posY, player.posZ);
-						this.P2explosionCD = 0;
-					}
-		        }
 	    	}
     		
 	    	if(!this.world.isRemote)
@@ -493,7 +448,7 @@ public class EntityVoidKnight extends EntityMob
 		        {
 					if(this.P2explosionCD >= _ConfigEntityVoidKnight.P2_EXPLOSION_CD)
 					{
-						this.spawnVoidExplosion(player.posX, player.posY, player.posZ);
+						this.spawnVoidExplosion(player.posX, player.posY, player.posZ, this);
 						this.P2explosionCD = 0;
 					}
 		        }
@@ -559,39 +514,12 @@ public class EntityVoidKnight extends EntityMob
                 {
                 	ParticleSpawner.spawnParticle(EnumCustomParticleTypes.VOID_PORTAL_BLOCK, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height - 0.25D, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, (this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(), (this.rand.nextDouble() - 0.5D) * 2.0D);
                 }
-    			
-    			this.sayChatLine(3);
-    			this.chatted6 = false;
-    			this.P3LoSCD++;
-    			this.P3explosionCD++;
-        		List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidKnight.ARENA_SIZE_X, _ConfigEntityVoidKnight.ARENA_SIZE_Y, _ConfigEntityVoidKnight.ARENA_SIZE_Z).offset(0, -4, 0));
-				for (EntityPlayer player : list)
-	        	{
-					if(this.P3explosionCD >= _ConfigEntityVoidKnight.P3_EXPLOSION_CD)
-					{
-						this.spawnVoidExplosion(player.posX, player.posY, player.posZ);
-						this.P3explosionCD = 0;
-					}
-	        	}
-				
-				if(this.P3LoSCD >= _ConfigEntityVoidKnight.P3_LOS_CD)
-    			{
-					this.sayChatLine(4);
-    				this.P3LoSCast++;
-    				VoidRingBigAnimation(this.posX, this.posY, this.posZ, 15, this.world);
-    				if(this.P3LoSCast >= _ConfigEntityVoidKnight.P3_LOS_CAST)
-    				{
-    					VoidRingExplosionAnimation(this.posX, this.posY, this.posZ, 15, 10, this.world);
-    	    			this.P3LoSCast = 0;
-    	    			this.P3LoSCD = 0;
-    	    			this.chatted5 = false;
-    				}
-    			}
     		}
     		
     		if(!this.world.isRemote)
     		{
     			this.setInvulState(false);
+    			this.chatted6 = false;
     			this.P3explosionCD++;
     			this.P3PhaseCD++;
     			this.P3LoSCD++;
@@ -607,16 +535,21 @@ public class EntityVoidKnight extends EntityMob
     			{
     				if(this.P3explosionCD >= _ConfigEntityVoidKnight.P3_EXPLOSION_CD)
     				{
-    					this.spawnVoidExplosion(player.posX, player.posY, player.posZ);
+    					this.spawnVoidExplosion(player.posX, player.posY, player.posZ, this);
     					this.P3explosionCD = 0;
     				}
     			}
     			
     			if(this.P3LoSCD >= _ConfigEntityVoidKnight.P3_LOS_CD)
     			{
+    				this.sayChatLine(4);
+    				if(this.P3LoSCD == _ConfigEntityVoidKnight.P3_LOS_CD) this.playVoidMagicCastSound(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
     				this.P3LoSCast++;
-    				if(this.P3LoSCast >= _ConfigEntityVoidKnight.P3_LOS_CAST)
+    				PacketHandler.INSTANCE.sendToDimension(new PacketVoidKnightLargeCircle(this, this.world, 6, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, 20), this.dimension);
+	    			if(this.P3LoSCast >= _ConfigEntityVoidKnight.P3_LOS_CAST)
     				{
+	    				this.playVoidMagicExplosionSound(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+    					PacketHandler.INSTANCE.sendToDimension(new PacketVoidKnightLargeCircleExplosion(this, this.world, 6, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, 20, 15), this.dimension);
     					List<EntityPlayer> list2 = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidKnight.ARENA_SIZE_X, _ConfigEntityVoidKnight.ARENA_SIZE_Y, _ConfigEntityVoidKnight.ARENA_SIZE_Z).offset(0, -4, 0));
     	    			for (EntityPlayer player : list2)
     	    			{
@@ -628,6 +561,7 @@ public class EntityVoidKnight extends EntityMob
     	    			
     	    			this.P3LoSCast = 0;
     	    			this.P3LoSCD = 0;
+    	    			this.chatted5 = false;
     				}
     			}
     			
@@ -666,17 +600,6 @@ public class EntityVoidKnight extends EntityMob
     			this.sayChatLine(5);
     			this.VoidPortalAnimation(this.posX, this.posY, this.posZ + 14, 3, this.world);
 	        	this.VoidPortalAnimation(this.posX, this.posY, this.posZ - 14, 3, this.world);
-	        	
-    			this.P4explosionCD++;
-        		List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidKnight.ARENA_SIZE_X, _ConfigEntityVoidKnight.ARENA_SIZE_Y, _ConfigEntityVoidKnight.ARENA_SIZE_Z).offset(0, -4, 0));
-				for (EntityPlayer player : list)
-	        	{
-					if(this.P4explosionCD >= _ConfigEntityVoidKnight.P4_EXPLOSION_CD)
-					{
-						this.spawnVoidExplosion(player.posX, player.posY, player.posZ);
-						this.P4explosionCD = 0;
-					}
-	        	}
     		}
     		
     		if(!this.world.isRemote)
@@ -691,7 +614,7 @@ public class EntityVoidKnight extends EntityMob
     			{
     				if(this.P4explosionCD >= _ConfigEntityVoidKnight.P4_EXPLOSION_CD)
     				{
-    					this.spawnVoidExplosion(player.posX, player.posY, player.posZ);
+    					this.spawnVoidExplosion(player.posX, player.posY, player.posZ, this);
     					this.P4explosionCD = 0;
     				}
     			}
@@ -885,7 +808,7 @@ public class EntityVoidKnight extends EntityMob
     			player.attackEntityFrom(DamageSource.causeMobDamage(this), 10.0F);
 	        }
     		
-    		VoidRingAnimation(this.posX, this.posY, this.posZ, 20, this.world);
+    		PacketHandler.INSTANCE.sendToDimension(new PacketVoidKnightLargeCircle(this, this.world, 6, this.posX, this.posY, this.posZ, 0.0D, 0.0D,0.0D, 20), this.dimension);
     		return super.attackEntityFrom(source, amount);
 		}
 		else
@@ -907,67 +830,14 @@ public class EntityVoidKnight extends EntityMob
         super.onDeath(cause);
     }
     
-    public void VoidRingAnimation(double x, double y, double z, double radius, World world)
-	{
-		Random rand = new Random();
-		for(double r = 0.6D; r <= radius; r += 0.2D)
-		{
-			for(float i = 0.0F; i < 360.0F; i += 15.0F)
-			{
-				double deltaX = Math.cos(Math.toRadians(i))*r + rand.nextDouble();
-				double deltaZ = -Math.sin(Math.toRadians(i))*r + rand.nextDouble();
-				double finalX = x - 0.5D + deltaX;
-				double finalZ = z - 0.5D + deltaZ;
-			    
-				ParticleSpawner.spawnParticle(EnumCustomParticleTypes.VOID_PORTAL, finalX, y + 0.15D, finalZ, 0.0D, 0.0D, 0.0D);
-			}
-		}
-	}
-    
-    public void VoidRingBigAnimation(double x, double y, double z, double radius, World world)
-	{
-		Random rand = new Random();
-		for(double r = 0.6D; r <= radius; r += 0.2D)
-		{
-			for(float i = 0.0F; i < 360.0F; i += 15.0F)
-			{
-				double deltaX = Math.cos(Math.toRadians(i))*r + rand.nextDouble();
-				double deltaZ = -Math.sin(Math.toRadians(i))*r + rand.nextDouble();
-				double finalX = x - 0.5D + deltaX;
-				double finalZ = z - 0.5D + deltaZ;
-			    
-				if(this.rand.nextInt(99) < 20) ParticleSpawner.spawnParticle(EnumCustomParticleTypes.VOID_PORTAL, finalX, y + 0.15D, finalZ, 0.0D, 0.0D, 0.0D);
-			}
-		}
-	}
-    
-    public void VoidRingExplosionAnimation(double x, double y, double z, double radius, int height, World world)
-	{
-		Random rand = new Random();
-		for(int m = 0; m < 20; m++)
-		{
-			for(double r = 0.6D; r <= radius; r += 0.45D)
-			{
-				for(float i = 0.0F; i < 360.0F; i += 30.0F)
-				{
-					double deltaX = Math.cos(Math.toRadians(i))*r + rand.nextDouble();
-					double deltaZ = -Math.sin(Math.toRadians(i))*r + rand.nextDouble();
-					double finalX = x - 0.5D + deltaX;
-					double finalZ = z - 0.5D + deltaZ;
-				    
-					ParticleSpawner.spawnParticle(EnumCustomParticleTypes.VOID_PORTAL, finalX, (y + this.rand.nextInt(height) + this.rand.nextDouble()) + 0.15D, finalZ, 0.0D, 0.0D, 0.0D);
-				}
-			}
-		}
-	}
-    
     public void resetFight()
     {
     	this.setFightState(false);
     	this.setInvulState(true);
     	this.setPhase(0);
     	this.explosionPoints.clear();
-    	this.explosionPointTimers.clear();
+    	this.explosionPointTimer = _ConfigEntityVoidKnight.EXPLOSION_TIMER;
+    	this.explosionPointEntity.clear();
     	fightCountdown = _ConfigEntityVoidKnight.FIGHT_STARTER_TIMER;
     	
     	blobCount = 0;
@@ -1093,15 +963,70 @@ public class EntityVoidKnight extends EntityMob
 		}
 	}
     
-    public void spawnVoidExplosion(double x, double y, double z)
+    public void spawnVoidExplosion(double x, double y, double z, EntityVoidKnight entity)
 	{
 		List pos = new ArrayList();
 		pos.add(x);
 		pos.add(y);
 		pos.add(z);
 		this.explosionPoints.add(pos);
-		this.explosionPointTimers.add(_ConfigEntityVoidKnight.EXPLOSION_TIMER);
+		this.explosionPointTimer = _ConfigEntityVoidKnight.EXPLOSION_TIMER;
+		this.explosionPointEntity.add(entity);
 	}
+    
+    public void playImpactSound(int x, int y, int z, float volume)
+    {
+    	Random rand = new Random();
+    	int r = rand.nextInt(3);
+    	switch(r)
+    	{
+    	case 0:
+    		this.world.playSound((EntityPlayer)null, new BlockPos(x, y, z), EMSoundHandler.SPELL_IMPACT_01, SoundCategory.HOSTILE, volume, 1.0f);
+    		break;
+    	case 1:
+    		this.world.playSound((EntityPlayer)null, new BlockPos(x, y, z), EMSoundHandler.SPELL_IMPACT_02, SoundCategory.HOSTILE, volume, 1.0f);
+    		break;
+    	case 2:
+    		this.world.playSound((EntityPlayer)null, new BlockPos(x, y, z), EMSoundHandler.SPELL_IMPACT_03, SoundCategory.HOSTILE, volume, 1.0f);
+    		break;
+    	}
+    }
+    
+    public void playVoidMagicCastSound(int x, int y, int z)
+    {
+    	Random rand = new Random();
+    	int r = rand.nextInt(3);
+    	switch(r)
+    	{
+    	case 0:
+    		this.world.playSound((EntityPlayer)null, new BlockPos(x, y, z), EMSoundHandler.VOIDMAGIC_CAST_01, SoundCategory.HOSTILE, 3.5F, 1.0f);
+    		break;
+    	case 1:
+    		this.world.playSound((EntityPlayer)null, new BlockPos(x, y, z), EMSoundHandler.VOIDMAGIC_CAST_02, SoundCategory.HOSTILE, 3.5F, 1.0f);
+    		break;
+    	case 2:
+    		this.world.playSound((EntityPlayer)null, new BlockPos(x, y, z), EMSoundHandler.VOIDMAGIC_CAST_03, SoundCategory.HOSTILE, 3.5F, 1.0f);
+    		break;
+    	}
+    }
+    
+    public void playVoidMagicExplosionSound(int x, int y, int z)
+    {
+    	Random rand = new Random();
+    	int r = rand.nextInt(3);
+    	switch(r)
+    	{
+    	case 0:
+    		this.world.playSound((EntityPlayer)null, new BlockPos(x, y, z), EMSoundHandler.VOIDMAGIC_EXPLOSION_01, SoundCategory.HOSTILE, 3.5F, 1.0f);
+    		break;
+    	case 1:
+    		this.world.playSound((EntityPlayer)null, new BlockPos(x, y, z), EMSoundHandler.VOIDMAGIC_EXPLOSION_02, SoundCategory.HOSTILE, 3.5F, 1.0f);
+    		break;
+    	case 2:
+    		this.world.playSound((EntityPlayer)null, new BlockPos(x, y, z), EMSoundHandler.VOIDMAGIC_EXPLOSION_03, SoundCategory.HOSTILE, 3.5F, 1.0f);
+    		break;
+    	}
+    }
     
     public boolean getInvulState()
     {
@@ -1141,6 +1066,7 @@ public class EntityVoidKnight extends EntityMob
     public void setSpawnLocation(BlockPos pos)
     {
     	this.spawn_location = pos;
+    	aiMoveToSide = new EntityAIMoveTo(this, 0.36D, 10, (this.getSpawnLocation().getX() + 0.5D), this.getSpawnLocation().getY(), (this.getSpawnLocation().getZ() - 10D));
     }
     
     public BlockPos getSpawnLocation()

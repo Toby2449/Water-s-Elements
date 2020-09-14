@@ -1,0 +1,25 @@
+{
+    "display": {
+        "icon": {
+            "item": "em:item_void_entity_soul"
+        },
+        "title": {
+            "translate": "advancements.void.kill_void_entity.title"
+        },
+        "description": {
+            "translate": "advancements.void.kill_void_entity.description"
+        },
+        "frame": "goal"
+    },
+    "parent": "em:void/root",
+    "criteria": {
+        "killed_void_entity": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": {
+                    "type": "em:void_entity"
+                }
+            }
+        }
+    }
+}

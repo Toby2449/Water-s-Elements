@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "###",
+        "#S#",
+        "###"
+    ],
+    
+    "key":
+    {
+        "S":
+        {
+            "item": "em:item_void_singularity"
+        },
+        
+        "#":
+        {
+            "item": "em:item_void_essence"
+        }
+    },
+    
+    "result":
+    {
+        "item": "em:item_interdimentional_rift_stone",
+        "count": 1
+    }
+}

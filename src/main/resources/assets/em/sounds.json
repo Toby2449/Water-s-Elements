@@ -163,5 +163,20 @@
         "category": "hostile",
         "subtitle": "entity.vo_voidentity_11",
         "sounds": [ { "name": "em:entity/vo_voidentity_11", "stream": false } ]
+    },
+    "entity.vo_voidentity_13": {
+        "category": "hostile",
+        "subtitle": "entity.vo_voidentity_13",
+        "sounds": [ { "name": "em:entity/vo_voidentity_13", "stream": true } ]
+    },
+    "entity.vo_voidentity_14": {
+        "category": "hostile",
+        "subtitle": "entity.vo_voidentity_14",
+        "sounds": [ { "name": "em:entity/vo_voidentity_14", "stream": true } ]
+    },
+    "entity.vo_voidentity_15": {
+        "category": "hostile",
+        "subtitle": "entity.vo_voidentity_15",
+        "sounds": [ { "name": "em:entity/vo_voidentity_15", "stream": true } ]
     }
 }

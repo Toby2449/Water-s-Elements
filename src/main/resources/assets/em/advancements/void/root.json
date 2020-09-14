@@ -1,0 +1,24 @@
+{
+    "display": {
+        "icon": {
+            "item": "em:item_interdimentional_rift_stone"
+        },
+        "title": {
+            "translate": "advancements.void.root.title"
+        },
+        "description": {
+            "translate": "advancements.void.root.description"
+        },
+        "background": "em:textures/gui/advancements/backgrounds/void_block.png",
+        "show_toast": true,
+        "announce_to_chat": false
+    },
+    "criteria": {
+        "entered_void": {
+            "trigger": "minecraft:changed_dimension",
+            "conditions": {
+                "to": "Void"
+            }
+        }
+    }
+}

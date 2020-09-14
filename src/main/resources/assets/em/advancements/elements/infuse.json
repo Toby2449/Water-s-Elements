@@ -1,0 +1,26 @@
+{
+    "display": {
+        "icon": {
+            "item": "em:infuser"
+        },
+        "title": {
+            "translate": "advancements.elements.infuse.title"
+        },
+        "description": {
+            "translate": "advancements.elements.infuse.description"
+        }
+    },
+    "parent": "em:elements/synthesize",
+    "criteria": {
+        "infuse": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:infuser"
+                    }
+                ]
+            }
+        }
+    }
+}

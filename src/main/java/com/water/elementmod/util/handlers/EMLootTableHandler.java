@@ -15,6 +15,8 @@ public class EMLootTableHandler
 	public static final ResourceLocation WATER_SKELETON = LootTableList.register(new ResourceLocation(EMConfig.MOD_ID, "entities/waterskeleton"));
 	public static final ResourceLocation NATURE_SKELETON = LootTableList.register(new ResourceLocation(EMConfig.MOD_ID, "entities/natureskeleton"));
 	
+	public static final ResourceLocation VOID_ENTITY = LootTableList.register(new ResourceLocation(EMConfig.MOD_ID, "entities/void_entity"));
+	
 	public static final ResourceLocation NATURE_STRUCTURE_CHEST1 = LootTableList.register(new ResourceLocation(EMConfig.MOD_ID, "structure_loot/nature_structure_chest1"));
 	public static final ResourceLocation NATURE_STRUCTURE_CHEST2 = LootTableList.register(new ResourceLocation(EMConfig.MOD_ID, "structure_loot/nature_structure_chest2"));
 	public static final ResourceLocation NATURE_STRUCTURE_CHEST3 = LootTableList.register(new ResourceLocation(EMConfig.MOD_ID, "structure_loot/nature_structure_chest3"));

@@ -1,0 +1,54 @@
+{
+    "display": {
+        "icon": {
+            "item": "em:item_fire_chestplate"
+        },
+        "title": {
+            "translate": "advancements.void.elemental_chestplate.title"
+        },
+        "description": {
+            "translate": "advancements.void.elemental_chestplate.description"
+        },
+        "frame": "challenge"
+    },
+    "parent": "em:void/kill_void_entity",
+    "criteria": {
+        "elemental_chestplate_fire": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:item_fire_chestplate"
+                    }
+                ]
+            }
+        },
+		"elemental_chestplate_water": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:item_water_robe"
+                    }
+                ]
+            }
+        },
+		"elemental_chestplate_nature": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:item_leaf_armor"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "elemental_chestplate_fire",
+            "elemental_chestplate_water",
+            "elemental_chestplate_nature"
+        ]
+    ]
+}

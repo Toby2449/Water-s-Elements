@@ -1,38 +1,15 @@
 package com.water.elementmod.entity.boss._void;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.water.elementmod.EMCoreBlocks;
-import com.water.elementmod.EMCorePotionEffects;
-import com.water.elementmod.entity.ai.EntityAIMoveTo;
-import com.water.elementmod.network.PacketCarapaceBeam;
-import com.water.elementmod.network.PacketCarapaceBeamGrow;
-import com.water.elementmod.network.PacketCarapaceBlueBuffExplosion;
+import com.water.elementmod.entity.EntityBossMob;
 import com.water.elementmod.network.PacketCarapaceParticleCircle;
-import com.water.elementmod.network.PacketCarapaceParticleRing;
-import com.water.elementmod.network.PacketCarapacePortalParticles;
-import com.water.elementmod.network.PacketCarapacePurpleBuffArea1;
-import com.water.elementmod.network.PacketCarapacePurpleBuffArea2;
-import com.water.elementmod.network.PacketCarapacePurpleBuffArea3;
-import com.water.elementmod.network.PacketCarapacePurpleBuffExplode1;
-import com.water.elementmod.network.PacketCarapacePurpleBuffExplode2;
-import com.water.elementmod.network.PacketCarapacePurpleBuffExplode3;
-import com.water.elementmod.network.PacketCarapaceRingExplosion;
-import com.water.elementmod.network.PacketCarapaceSightAttack;
-import com.water.elementmod.network.PacketCarapaceSightExplode;
 import com.water.elementmod.network.PacketHandler;
-import com.water.elementmod.network.PacketPlayMusic;
-import com.water.elementmod.network.PacketStopMusic;
 import com.water.elementmod.particle.EnumCustomParticleTypes;
 import com.water.elementmod.particle.ParticleSpawner;
-import com.water.elementmod.util.EMConfig;
 import com.water.elementmod.util.handlers.EMSoundHandler;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -41,34 +18,27 @@ import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.datafix.DataFixer;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
 
-public class EntityLunacy extends EntityMob
+public class EntityLunacy extends EntityBossMob
 {
 	private static final DataParameter<Integer> RAGE = EntityDataManager.<Integer>createKey(EntityLunacy.class, DataSerializers.VARINT);
 	private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName(), BossInfo.Color.PINK, BossInfo.Overlay.PROGRESS)).setDarkenSky(true);
+	private static final DataParameter<Integer> NUM_OF_PLAYERS = EntityDataManager.<Integer>createKey(EntityLunacy.class, DataSerializers.VARINT);
 	private final EntityAIAttackMelee aiMeleeAttack = new EntityAIAttackMelee(this, 0.5D, true);
 	public boolean RageActivated = false;
 	public boolean casting = false;
@@ -101,7 +71,7 @@ public class EntityLunacy extends EntityMob
 	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(_ConfigEntityCarapace.BASE_HP / 2);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1000.0F);
 		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(12.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);
 		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(9999999999999.0F);
@@ -112,6 +82,7 @@ public class EntityLunacy extends EntityMob
     {
         super.entityInit();
         this.dataManager.register(RAGE, Integer.valueOf(1800)); // 1 1/2 minutes
+        this.dataManager.register(NUM_OF_PLAYERS, Integer.valueOf(1));
     }
 	
 	@Override
@@ -120,6 +91,7 @@ public class EntityLunacy extends EntityMob
         super.writeEntityToNBT(compound);
         compound.setInteger("Rage", this.getRageTimer());
         compound.setInteger("Anguish", this.anguishTimer);
+        compound.setInteger("NumOfPlayers", this.getNumOfPlayers());
     }
 	
 	@Override
@@ -128,6 +100,7 @@ public class EntityLunacy extends EntityMob
         super.readEntityFromNBT(compound);
         this.setRageTimer(compound.getInteger("Rage"));
         this.anguishTimer = compound.getInteger("Anguish");
+        this.setNumOfPlayers(compound.getInteger("NumOfPlayers"));
         
         if (this.hasCustomName())
         {
@@ -247,12 +220,7 @@ public class EntityLunacy extends EntityMob
 			        }
 		        }
 		        
-		        if(numOfPlayers > 1)
-		        {
-		        	float scaledHP = (_ConfigEntityCarapace.BASE_HP / 2) + ((_ConfigEntityCarapace.HP_SCALE_AMOUNT / 2) * numOfPlayers);
-		        	this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(scaledHP);
-		        	this.setHealth(scaledHP);
-		        }
+		        this.setNumOfPlayers(numOfPlayers);
     		}
     	}
     	
@@ -333,7 +301,12 @@ public class EntityLunacy extends EntityMob
 	@Override
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
-		return super.attackEntityFrom(source, amount);
+		return super.attackEntityFrom(source, this.calculateHealthReduction(amount));
+    }
+	
+	public float calculateHealthReduction(float amount)
+    {
+    	return amount * (1000 / (2000.0F + (2000.0F * (this.getNumOfPlayers() - 1))));
     }
     
     @Override
@@ -368,7 +341,7 @@ public class EntityLunacy extends EntityMob
     
     public void spawnAnguish(double x, double y, double z)
 	{
-    	EntityAnguish entity = new EntityAnguish(this.world, false);
+    	EntityVEAnguish entity = new EntityVEAnguish(this.world);
        	entity.setPosition(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
        	entity.enablePersistence();
    		this.world.spawnEntity(entity);
@@ -463,6 +436,16 @@ public class EntityLunacy extends EntityMob
     public void setRageTimer(int state)
     {
         this.dataManager.set(RAGE, Integer.valueOf(state));
+    }
+    
+    public int getNumOfPlayers()
+    {
+        return ((Integer)this.dataManager.get(NUM_OF_PLAYERS)).intValue();
+    }
+    
+    public void setNumOfPlayers(int state)
+    {
+        this.dataManager.set(NUM_OF_PLAYERS, Integer.valueOf(state));
     }
     
     @Override

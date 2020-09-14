@@ -99,7 +99,6 @@ public class WorldGenNArena extends WorldGenerator implements IStructure
 					BlockPos blockpos = entry.getKey();
 					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
 					int randnum = new Random().nextInt(1);
-					System.out.println(randnum);
 					for(int i = 1 + randnum; i > 0; i--)
 					{
 						EntityNatureStalker stalker = new EntityNatureStalker(world);
@@ -114,7 +113,6 @@ public class WorldGenNArena extends WorldGenerator implements IStructure
 					BlockPos blockpos = entry.getKey();
 					world.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 3);
 					int randnum = new Random().nextInt(2);
-					System.out.println(randnum);
 					for(int i = 2 + randnum; i > 0; i--)
 					{
 						EntityNatureStalker stalker = new EntityNatureStalker(world);

@@ -1,0 +1,28 @@
+{
+    "display": {
+        "icon": {
+            "item": "em:ore_void_bedrock"
+        },
+        "title": {
+            "translate": "advancements.elements.root.title"
+        },
+        "description": {
+            "translate": "advancements.elements.root.description"
+        },
+        "background": "em:textures/gui/advancements/backgrounds/dirt.png",
+        "show_toast": true,
+        "announce_to_chat": false
+    },
+    "criteria": {
+        "void_essence": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "em:item_void_essence"
+                    }
+                ]
+            }
+        }
+    }
+}
