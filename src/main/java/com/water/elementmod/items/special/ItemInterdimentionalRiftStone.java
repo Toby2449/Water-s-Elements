@@ -121,10 +121,6 @@ public class ItemInterdimentionalRiftStone extends Item implements IHasModel
 						player.setPositionAndUpdate(1.0D, 58, 1.0D);
 					}
 				}
-				
-				((EntityPlayerMP) player).mcServer.getPlayerList().transferPlayerToDimension(
-				(EntityPlayerMP) player, 2, new TeleportWithoutPortal(((EntityPlayerMP) player).mcServer.getWorld(EMCoreDimensions.VOID.getId())));
-				player.setPositionAndUpdate(1.0D, 58, 1.0D);
 			}
 		}
 		
