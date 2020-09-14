@@ -1298,6 +1298,7 @@ public class EntityWaterBoss extends EntityMob implements IRangedAttackMob
     	this.setPhase(0);
     	this.explosionPoints.clear();
     	this.explosionPointTimer = _ConfigEntityWaterBoss.EXPLOSION_TIMER;
+    	this.explosionPointEntity.clear();
     	this.explosionCD = _ConfigEntityWaterBoss.EXPLOSION_CD;
     	this.wallCD = _ConfigEntityWaterBoss.WALL_CD;
     	

@@ -1123,6 +1123,7 @@ public class EntityFireBoss extends EntityMob
     	this.spawnMinionCooldownP1 = 0;
     	this.trailPoints.clear();
     	this.trailPointTimers.clear();
+    	this.trailPointEntity.clear();
     	this.spawnMinionCooldownP2 = 0;
     	this.minionWaves = 0;
     	this.spawnMinionCooldownP3 = 0;

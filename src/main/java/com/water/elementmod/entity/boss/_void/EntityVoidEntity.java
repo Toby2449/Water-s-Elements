@@ -1201,6 +1201,24 @@ public class EntityVoidEntity extends EntityBossMob
 	}
 	
 	@Override
+	protected SoundEvent getHurtSound(DamageSource source)
+	{
+		Random rand = new Random();
+    	int r = rand.nextInt(3);
+    	switch(r)
+    	{
+    	default:
+    		return EMSoundHandler.VE_WOUND_01;
+    	case 0:
+    		return EMSoundHandler.VE_WOUND_01;
+    	case 1:
+    		return EMSoundHandler.VE_WOUND_02;
+    	case 2:
+    		return EMSoundHandler.VE_WOUND_03;
+    	}
+	}
+	
+	@Override
 	protected SoundEvent getDeathSound()
     {
         return SoundEvents.ENTITY_SHULKER_DEATH;
@@ -1252,7 +1270,7 @@ public class EntityVoidEntity extends EntityBossMob
     
     public void resetFight()
     {
-    	this.explosionPoints = null;
+    	this.explosionPoints.clear();
     	this.explosionPointTimer = _ConfigEntityVoidEntity.EXPLOSION_TIMER;
     	this.musicPlaying = false;
     	this.musicDuration = _ConfigEntityVoidEntity.MUSIC_DURATION;

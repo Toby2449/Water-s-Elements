@@ -178,5 +178,20 @@
         "category": "hostile",
         "subtitle": "entity.vo_voidentity_15",
         "sounds": [ { "name": "em:entity/vo_voidentity_15", "stream": true } ]
+    },
+    "entity.ve_wound_01": {
+        "category": "hostile",
+        "subtitle": "entity.ve_wound_01",
+        "sounds": [ { "name": "em:entity/ve_wound_01", "stream": false } ]
+    },
+    "entity.ve_wound_02": {
+        "category": "hostile",
+        "subtitle": "entity.ve_wound_02",
+        "sounds": [ { "name": "em:entity/ve_wound_02", "stream": false } ]
+    },
+    "entity.ve_wound_03": {
+        "category": "hostile",
+        "subtitle": "entity.ve_wound_03",
+        "sounds": [ { "name": "em:entity/ve_wound_03", "stream": false } ]
     }
 }
