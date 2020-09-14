@@ -2,9 +2,9 @@ package com.water.elementmod.entity.boss.nature;
 
 public class _ConfigEntityNatureBoss 
 {
-	public static final double ARENA_SIZE_X = 30.0D;
-	public static final double ARENA_SIZE_Y = 20.0D;
-	public static final double ARENA_SIZE_Z = 30.0D;
+	public static final double ARENA_SIZE_X = 25.0D;
+	public static final double ARENA_SIZE_Y = 60.0D;
+	public static final double ARENA_SIZE_Z = 25.0D;
 	public static final double MF_SIZE_X = 40.0D;
 	public static final double MF_SIZE_Y = 60.0D;
 	public static final double MF_SIZE_Z = 40.0D;

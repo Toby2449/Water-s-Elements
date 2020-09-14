@@ -2,8 +2,8 @@
 {
   "modid": "em",
   "name": "[BETA] WateR's Elements",
-  "description": "WateR's Elements is a mod that adds elemental enchantments such as fire, water, and nature. The entire mod is revolved around the main source of energy: the void.",
-  "version": "Beta v0.5u1",
+  "description": "WateR's Elements is a mod that adds elemental enchantments such as fire, water, and nature. You must stop the power of the void.",
+  "version": "Beta v0.9u1",
   "mcversion": "1.12.2",
   "url": "https://github.com/Toby2449/Water-s-Elements",
   "updateUrl": "",

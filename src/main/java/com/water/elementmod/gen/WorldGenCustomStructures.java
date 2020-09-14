@@ -1,6 +1,7 @@
 package com.water.elementmod.gen;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import com.water.elementmod.EMCoreBlocks;
@@ -18,7 +19,6 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
-import scala.actors.threadpool.Arrays;
 
 public class WorldGenCustomStructures implements IWorldGenerator
 {
@@ -49,7 +49,7 @@ public class WorldGenCustomStructures implements IWorldGenerator
 		case 1: // The End
 			break;
 		case 0: // Over world
-			generatorStructureOverworld(KNIGHT_ARENA, world, random, chunkX, chunkZ, 1000, Blocks.GRASS, 0, 2, 0, BiomePlains.class);
+			generatorStructureOverworld(KNIGHT_ARENA, world, random, chunkX, chunkZ, 750, Blocks.GRASS, 0, 2, 0, BiomePlains.class);
 			generatorStructureOverworld(N_ARENA, world, random, chunkX, chunkZ, 500, Blocks.GRASS, 0, -4, 0, BiomeForest.class);
 			generatorStructureOverworldOcean(W_ARENA, world, random, chunkX, chunkZ, 500, Blocks.GRAVEL, 0, 0, 0, BiomeOcean.class);
 			break;
@@ -72,15 +72,18 @@ public class WorldGenCustomStructures implements IWorldGenerator
 		
 		Class<?> biome = world.provider.getBiomeForCoords(pos).getClass();
 		
-		if(y >= 60) // So the structure doesn't generate underground
+		if((x > 1500 && x < -1500) || (z > 1500 && z < -1500))
 		{
-			if(world.getWorldType() != WorldType.FLAT)
+			if(y >= 60) // So the structure doesn't generate underground
 			{
-				if(classesList.contains(biome))
+				if(world.getWorldType() != WorldType.FLAT)
 				{
-					if(random.nextInt(chance) == 0)
+					if(classesList.contains(biome))
 					{
-						generator.generate(world, random, pos);
+						if(random.nextInt(chance) == 0)
+						{
+							generator.generate(world, random, pos);
+						}
 					}
 				}
 			}
@@ -98,15 +101,18 @@ public class WorldGenCustomStructures implements IWorldGenerator
 		
 		Class<?> biome = world.provider.getBiomeForCoords(pos).getClass();
 		
-		if(y >= 25 && y <= 41) // So the structure doesn't generate underground
+		if((x > 1500 && x < -1500) || (z > 1500 && z < -1500))
 		{
-			if(world.getWorldType() != WorldType.FLAT)
+			if(y >= 25 && y <= 41) // So the structure doesn't generate underground
 			{
-				if(classesList.contains(biome))
+				if(world.getWorldType() != WorldType.FLAT)
 				{
-					if(random.nextInt(chance) == 0)
+					if(classesList.contains(biome))
 					{
-						generator.generate(world, random, pos);
+						if(random.nextInt(chance) == 0)
+						{
+							generator.generate(world, random, pos);
+						}
 					}
 				}
 			}

@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PacketStopMusic implements IMessage
 {
@@ -72,6 +73,7 @@ public class PacketStopMusic implements IMessage
 			return null;
 		}
 		
+		@SideOnly(Side.CLIENT)
 		void processMessage(PacketStopMusic message, MessageContext ctx)
 		{
 			Minecraft mc = Minecraft.getMinecraft();
