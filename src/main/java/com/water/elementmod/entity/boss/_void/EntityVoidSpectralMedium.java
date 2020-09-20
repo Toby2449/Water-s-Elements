@@ -5,6 +5,7 @@ import java.util.List;
 import com.water.elementmod.EMCorePotionEffects;
 import com.water.elementmod.entity.EntityBossMob;
 import com.water.elementmod.network.PacketCarapaceParticleCircle;
+import com.water.elementmod.network.PacketCustomPotionEffect;
 import com.water.elementmod.network.PacketHandler;
 import com.water.elementmod.particle.EnumCustomParticleTypes;
 import com.water.elementmod.particle.ParticleSpawner;
@@ -20,6 +21,7 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
@@ -148,35 +150,30 @@ public class EntityVoidSpectralMedium extends EntityBossMob
 	@Override
 	public boolean attackEntityAsMob(Entity entityIn)
     {
-		EntityPlayer player = (EntityPlayer)entityIn;
-		if(player.isPotionActive(EMCorePotionEffects.POTION_INSANITY)) 
-		{
-			player.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_INSANITY, 12000, player.getActivePotionEffect(EMCorePotionEffects.POTION_INSANITY).getAmplifier() + 1));
-		}
-		else
-		{
-			player.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_INSANITY, 12000, 0));
-		}
-		
 		return super.attackEntityAsMob(entityIn);
     }
     
     @Override
     public void onDeath(DamageSource cause)
     {
-    	List<EntityPlayer> InsanityList = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidEntity.ARENA_SIZE, _ConfigEntityVoidEntity.ARENA_SIZE, _ConfigEntityVoidEntity.ARENA_SIZE));
-		for (EntityPlayer player : InsanityList)
-        {
-			if(player.isPotionActive(EMCorePotionEffects.POTION_INSANITY))
-			{
-				player.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_INSANITY, player.getActivePotionEffect(EMCorePotionEffects.POTION_INSANITY).getDuration(), player.getActivePotionEffect(EMCorePotionEffects.POTION_INSANITY).getAmplifier() + 1));
-			}
-			else
-			{
-				player.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_INSANITY, 300, 0));
-			}
-			PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceParticleCircle(this, this.world, 9, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, 15), this.dimension);
-        }
+    	if(!this.world.isRemote)
+    	{
+	    	List<EntityPlayer> InsanityList = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidEntity.ARENA_SIZE, _ConfigEntityVoidEntity.ARENA_SIZE, _ConfigEntityVoidEntity.ARENA_SIZE));
+			for (EntityPlayer player : InsanityList)
+	        {
+				if(player.isPotionActive(EMCorePotionEffects.POTION_INSANITY))
+				{
+					player.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_INSANITY, player.getActivePotionEffect(EMCorePotionEffects.POTION_INSANITY).getDuration(), player.getActivePotionEffect(EMCorePotionEffects.POTION_INSANITY).getAmplifier() + 1));
+					PacketHandler.INSTANCE.sendTo(new PacketCustomPotionEffect(player, this.world, 2, player.getActivePotionEffect(EMCorePotionEffects.POTION_INSANITY).getDuration(), player.getActivePotionEffect(EMCorePotionEffects.POTION_INSANITY).getAmplifier() + 1), (EntityPlayerMP) player);
+				}
+				else
+				{
+					player.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_INSANITY, 300, 0));
+					PacketHandler.INSTANCE.sendTo(new PacketCustomPotionEffect(player, this.world, 2, 300, 0), (EntityPlayerMP) player);
+				}
+				PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceParticleCircle(this, this.world, 9, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, 15), this.dimension);
+	        }
+    	}
 		
         super.onDeath(cause);
     }

@@ -179,7 +179,7 @@ public class EntityBlueOrb extends EntityBossMob
 	
 	public float calculateHealthReduction(float amount)
     {
-    	return amount * (1000 / (120.0F + (120.0F * (this.getNumOfPlayers() - 1))));
+    	return amount * (1000 / (175.0F + (175.0F * (this.getNumOfPlayers() - 1))));
     }
     
     public void die()

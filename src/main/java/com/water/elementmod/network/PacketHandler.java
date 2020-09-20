@@ -59,5 +59,7 @@ public class PacketHandler
 		
 		INSTANCE.registerMessage(PacketFlameTrail.Handler.class, PacketFlameTrail.class, nextID(), Side.CLIENT);
 		INSTANCE.registerMessage(PacketFlameTrailSpit.Handler.class, PacketFlameTrailSpit.class, nextID(), Side.CLIENT);
+		
+		INSTANCE.registerMessage(PacketCustomPotionEffect.Handler.class, PacketCustomPotionEffect.class, nextID(), Side.CLIENT);
 	}
 }

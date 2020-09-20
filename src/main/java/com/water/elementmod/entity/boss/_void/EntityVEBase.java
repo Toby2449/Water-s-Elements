@@ -32,14 +32,16 @@ public class EntityVEBase extends EntityLiving
     public EntityVEBase(World worldIn)
     {
         super(worldIn);
-        this.setSize(7.25F, 5.0F);
+        this.setSize(6.25F, 5.0F);
+        this.isImmuneToFire = true;
     }
     
     public EntityVEBase(World worldIn, double x, double y, double z)
     {
         this(worldIn);
         this.setPosition(x, y, z);
-        this.setSize(7.25F, 5.0F);
+        this.setSize(6.25F, 5.0F);
+        this.isImmuneToFire = true;
     }
     
     @Override
@@ -57,7 +59,7 @@ public class EntityVEBase extends EntityLiving
     protected void entityInit()
     {
     	super.entityInit();
-    	this.dataManager.register(SPAWNED, Boolean.valueOf(false));
+    	this.dataManager.register(SPAWNED, Boolean.valueOf(true));
     }
     
     @Override
@@ -86,7 +88,7 @@ public class EntityVEBase extends EntityLiving
 	    	List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox());
 	        for (EntityPlayer entity : list)
 	        {
-	        	if(this.ticksExisted % 10 == 1) entity.attackEntityFrom(DamageSource.MAGIC, 8.0f);
+	        	if(this.ticksExisted % 10 == 1) entity.attackEntityFrom(DamageSource.MAGIC, 25.0f);
 	        }
 	        
 	        List<EntityCarapace> carapace = this.world.<EntityCarapace>getEntitiesWithinAABB(EntityCarapace.class, this.getEntityBoundingBox().grow(500, 100, 500));
@@ -141,7 +143,7 @@ public class EntityVEBase extends EntityLiving
         List<EntityVoidEntity> ve = this.world.<EntityVoidEntity>getEntitiesWithinAABB(EntityVoidEntity.class, this.getEntityBoundingBox().grow(500, 100, 500));
     	if(!ve.isEmpty())
     	{
-    		this.setSize(7.25F, 0.75F);
+    		this.setSize(8.25F, 0.75F);
     	}
     	else
     	{

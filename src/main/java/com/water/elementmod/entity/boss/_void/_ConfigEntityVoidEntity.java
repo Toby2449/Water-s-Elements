@@ -3,15 +3,21 @@ package com.water.elementmod.entity.boss._void;
 public class _ConfigEntityVoidEntity 
 {
 	public static final double ARENA_SIZE = 150.0D;
-	public static final float BASE_HP = 10000.0F;
-	public static final float HP_SCALE_AMOUNT = 9900.0F;
+	public static final float BASE_HP = 4500.0F;
+	public static final float HP_SCALE_AMOUNT = 4400.0F;
 	public static final int MUSIC_DURATION = 4380;
 	public static final int EXPLOSION_TIMER = 60;
+	
+	public static final float LUNACY_BASE_HP = 600.0F;
+	public static final float LUNACY_HP_SCALE_AMOUNT = 500.0F;
+	public static final int LUNACY_RAGE_TIMER = 2200;
+	public static final int LUNACY_ANGUISH_TIMER = 420;
+	public static final int LUNACY_CAST_TIMER = 230;
 	
 	public static final int TALK_PHASE_TIMER = 1250;
 	public static final int GLIMPSE_ANIM_TIMER = 36;
 	public static final int FIRST_LUNACY_SPAWN_TIMER = 30;
-	public static final int P2TIMER = 300;
+	public static final int P2TIMER = 200;
 	public static final int P3SOAKCD = 250;
 	public static final int P3SOAKTIMER = 100;
 	public static final int P3EXPLOSIONTIMER = 150;
@@ -20,8 +26,8 @@ public class _ConfigEntityVoidEntity
 	public static final int P4SOAKCD = 250;
 	public static final int P4SOAKTIMER = 100;
 	public static final int P4EXPLOSIONTIMER = 150;
-	public static final int P4MINIONSPAWNTIMER = 800;
-	public static final int P6MINIONSPAWNTIMER = 800;
+	public static final int P4MINIONSPAWNTIMER = 900;
+	public static final int P6MINIONSPAWNTIMER = 900;
 	public static final int P6SECONDMINIONSPAWNTIMER = 3000;
 	public static final int P6EXPLOSIONTIMER = 900;
 	public static final int P6SOAKCD = 500;

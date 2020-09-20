@@ -159,16 +159,6 @@ public class EventWaterSwordAbility
             		entityplayer.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, abilityDuration * 20, iLevel / 2 + 1));
             		
             	}
-            	else
-            	{
-            		LesserWaterParticleEffect(entityplayer, worldIn, iLevel);
-            		Vec3d targetpos = entityplayer.getPositionVector();
-            		entityplayer.attackEntityFrom(DamageSource.DROWN, 0.5F);
-            		entityplayer.knockBack(player, knockbackStrength / 2, playerpos.x - targetpos.x, playerpos.z - targetpos.z);
-            		int potionstrength = 0;
-            		if(iLevel >= 8) potionstrength = 1;
-            		entityplayer.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, abilityDuration * 20 / 2, potionstrength));
-            	}
             }
         }
         
@@ -192,7 +182,7 @@ public class EventWaterSwordAbility
 			PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 5, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D, 0.0D, -1), target.dimension);
 			PacketHandler.INSTANCE.sendToDimension(new PacketParticleData(target, world, 39, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D, 0.0D, -1), target.dimension);
 		}
-		for(int countparticles = 0; countparticles <= 50 * level / 2; ++countparticles)
+		for(int countparticles = 0; countparticles <= 20 * level / 2; ++countparticles)
 		{
 			Random rand = new Random();
 			world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, target.posX + (rand.nextDouble() - 0.5D) * target.width, target.posY + rand.nextDouble() * target.height - target.getYOffset(), target.posZ + (rand.nextDouble() - 0.5D) * target.width, 0.0D, 0.0D,0.0D);

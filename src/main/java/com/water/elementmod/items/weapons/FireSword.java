@@ -333,12 +333,6 @@ public class FireSword extends ItemSword implements IHasModel
 				int playerAbilityRemainingCD = (Integer)this.abilityPlayerCD.get(i);
 				EntityLivingBase currentPlayer = (EntityLivingBase)this.abilityPlayers.get(i);
 				
-				if(playerAbilityRemainingCD == 0)
-				{
-					//currentSword.setItemDamage(1);
-					System.out.println(currentSword.getItemDamage());
-				}
-				
 				if(currentPlayer != null)
 				{
 					if(!currentPlayer.isDead)

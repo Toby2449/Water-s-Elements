@@ -29,14 +29,16 @@ public class EntityCarapaceAnguish extends EntityLiving
     public EntityCarapaceAnguish(World worldIn)
     {
         super(worldIn);
-        this.setSize(16.5F, 1.25F);
+        this.setSize(16.5F, 0.1F);
+        this.isImmuneToFire = true;
     }
     
     public EntityCarapaceAnguish(World worldIn, boolean despawn)
     {
         this(worldIn);
-        this.setSize(16.5F, 1.25F);
+        this.setSize(16.5F, 0.1F);
         this.setDespawn(despawn);
+        this.isImmuneToFire = true;
     }
     
     @Override
@@ -93,7 +95,7 @@ public class EntityCarapaceAnguish extends EntityLiving
 	        for (EntityPlayer entity : list)
 	        {
 	        	entity.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_CORRUPTION, 150, 0));
-	        	if(this.getTimer() % 20 == 1) entity.attackEntityFrom(DamageSource.causeMobDamage(this), 10.0F);
+	        	if(this.getTimer() % 20 == 1) entity.attackEntityFrom(DamageSource.MAGIC, 7.5F);
 	        }
     	}
     }

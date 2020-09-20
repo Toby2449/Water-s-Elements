@@ -35,6 +35,7 @@ public class EventFireSwordAbility
 	private static List abilityPlayerCD = new ArrayList();
 	private static List abilityAoePoints = new ArrayList();
 	private static List abilityAoeTimers = new ArrayList();
+	private static List abilityAoePlayer = new ArrayList();
 	
 	@SubscribeEvent
 	public void onLivingUpdateEvent(LivingUpdateEvent event)
@@ -47,7 +48,7 @@ public class EventFireSwordAbility
 				{
 					int playerAbilityRemaining = (Integer)this.abilityTimer.get(i);
 					int playerAbilityRemainingCD = (Integer)this.abilityPlayerCD.get(i);
-					EntityLivingBase currentPlayer = (EntityLivingBase)this.abilityPlayers.get(i);
+					EntityPlayer currentPlayer = (EntityPlayer)this.abilityPlayers.get(i);
 					if(playerAbilityRemaining != 0)
 					{
 						if(playerAbilityRemaining % 4 == 0) spawnTrailNode(currentPlayer.posX, currentPlayer.posY, currentPlayer.posZ, playerAbilityRemaining);
@@ -95,42 +96,15 @@ public class EventFireSwordAbility
 					ArrayList pos = (ArrayList)this.abilityAoePoints.get(i);
 					
 					AxisAlignedBB AoePoint = new AxisAlignedBB((double)pos.get(0) - 0.5D, (double)pos.get(1) - 0.5D, (double)pos.get(2) - 0.5D, (double)pos.get(0) + 1.0D, (double)pos.get(1) + 1.0D, (double)pos.get(2) + 1.0D);
-					List<EntityMob> AABBMob = event.getEntity().world.<EntityMob>getEntitiesWithinAABB(EntityMob.class, AoePoint);
-					List<EntityAnimal> AABBAnimal = event.getEntity().world.<EntityAnimal>getEntitiesWithinAABB(EntityAnimal.class, AoePoint);
-					List<EntityPlayer> AABBPlayer = event.getEntity().world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint);
-					if (!AABBMob.isEmpty())
+					List<EntityLivingBase> AABB = event.getEntity().world.<EntityLivingBase>getEntitiesWithinAABB(EntityLivingBase.class, AoePoint);
+					if (!AABB.isEmpty())
 			        {
-			            for (EntityMob ent : AABBMob)
+			            for (EntityLivingBase ent : AABB)
 			            {
-			            
-			            	ent.setFire(8);
-			            	if(!ent.isPotionActive(MobEffects.SLOWNESS)) 
+			            	if(!(ent instanceof EntityPlayer))
 			            	{
-			            		ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50, 1));
-			            	}
-			            }
-			        }
-					
-					if (!AABBAnimal.isEmpty())
-			        {
-			            for (EntityAnimal ent : AABBAnimal)
-			            {
-			            	ent.setFire(8);
-			            	if(!ent.isPotionActive(MobEffects.SLOWNESS)) 
-			            	{
-			            		ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50, 1));
-			            	}
-			            }
-			        }
-					
-					if (!AABBPlayer.isEmpty())
-			        {
-			            for (EntityPlayer ent : AABBPlayer)
-			            {
-			            	if(ent != event.getEntity())
-			            	{
-			            		ent.setFire(8);
-			            		if(!ent.isPotionActive(MobEffects.SLOWNESS)) 
+				            	ent.setFire(8);
+				            	if(!ent.isPotionActive(MobEffects.SLOWNESS)) 
 				            	{
 				            		ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50, 1));
 				            	}

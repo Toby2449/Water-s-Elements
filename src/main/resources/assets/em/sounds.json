@@ -14,51 +14,6 @@
         "subtitle": "block.infuser.nature",
         "sounds": [ { "name": "em:block/infuser/nature", "stream": false } ]
     },
-    "entity.carapace_attack_01": {
-        "category": "hostile",
-        "subtitle": "entity.carapace_attack_01",
-        "sounds": [ { "name": "em:entity/carapace_attack_01", "stream": false } ]
-    },
-    "entity.carapace_attack_02": {
-        "category": "hostile",
-        "subtitle": "entity.carapace_attack_02",
-        "sounds": [ { "name": "em:entity/carapace_attack_02", "stream": false } ]
-    },
-    "entity.carapace_critattack_01": {
-        "category": "hostile",
-        "subtitle": "entity.carapace_critattack_01",
-        "sounds": [ { "name": "em:entity/carapace_critattack_01", "stream": false } ]
-    },
-    "entity.carapace_critattack_02": {
-        "category": "hostile",
-        "subtitle": "entity.carapace_critattack_02",
-        "sounds": [ { "name": "em:entity/carapace_critattack_02", "stream": false } ]
-    },
-    "entity.carapace_critattack_03": {
-        "category": "hostile",
-        "subtitle": "entity.carapace_critattack_03",
-        "sounds": [ { "name": "em:entity/carapace_critattack_03", "stream": false } ]
-    },
-    "entity.carapace_critattack_04": {
-        "category": "hostile",
-        "subtitle": "entity.carapace_critattack_04",
-        "sounds": [ { "name": "em:entity/carapace_critattack_04", "stream": false } ]
-    },
-    "entity.carapace_wound_01": {
-        "category": "hostile",
-        "subtitle": "entity.carapace_wound_01",
-        "sounds": [ { "name": "em:entity/carapace_wound_01", "stream": false } ]
-    },
-    "entity.carapace_wound_02": {
-        "category": "hostile",
-        "subtitle": "entity.carapace_wound_02",
-        "sounds": [ { "name": "em:entity/carapace_wound_02", "stream": false } ]
-    },
-    "entity.carapace_wound_03": {
-        "category": "hostile",
-        "subtitle": "entity.carapace_wound_03",
-        "sounds": [ { "name": "em:entity/carapace_wound_03", "stream": false } ]
-    },
     "spells.impact_01": {
         "category": "hostile",
         "subtitle": "spells.impact_01",
@@ -107,12 +62,12 @@
     "entity.ve_base_spawn_cast": {
         "category": "hostile",
         "subtitle": "entity.ve_base_spawn_cast",
-        "sounds": [ { "name": "em:entity/ve_base_spawn_cast", "stream": false } ]
+        "sounds": [ { "name": "em:entity/void_entity/ve_base_spawn_cast", "stream": false } ]
     },
     "entity.ve_base_spawned": {
         "category": "hostile",
         "subtitle": "entity.ve_base_spawned",
-        "sounds": [ { "name": "em:entity/ve_base_spawned", "stream": false } ]
+        "sounds": [ { "name": "em:entity/void_entity/ve_base_spawned", "stream": false } ]
     },
     "music.carapace_fight_music": {
         "category": "music",
@@ -127,71 +82,323 @@
     "entity.vo_voidentity_1": {
         "category": "hostile",
         "subtitle": "entity.vo_voidentity_1",
-        "sounds": [ { "name": "em:entity/vo_voidentity_1", "stream": true } ]
+        "sounds": [ { "name": "em:entity/void_entity/vo_voidentity_1", "stream": true } ]
     },
     "entity.vo_voidentity_2": {
         "category": "hostile",
         "subtitle": "entity.vo_voidentity_2",
-        "sounds": [ { "name": "em:entity/vo_voidentity_2", "stream": true } ]
+        "sounds": [ { "name": "em:entity/void_entity/vo_voidentity_2", "stream": true } ]
     },
     "entity.vo_voidentity_3": {
         "category": "hostile",
         "subtitle": "entity.vo_voidentity_3",
-        "sounds": [ { "name": "em:entity/vo_voidentity_3", "stream": true } ]
+        "sounds": [ { "name": "em:entity/void_entity/vo_voidentity_3", "stream": true } ]
     },
     "entity.vo_voidentity_5": {
         "category": "hostile",
         "subtitle": "entity.vo_voidentity_5",
-        "sounds": [ { "name": "em:entity/vo_voidentity_5", "stream": false } ]
+        "sounds": [ { "name": "em:entity/void_entity/vo_voidentity_5", "stream": false } ]
     },
     "entity.vo_voidentity_6": {
         "category": "hostile",
         "subtitle": "entity.vo_voidentity_6",
-        "sounds": [ { "name": "em:entity/vo_voidentity_6", "stream": false } ]
+        "sounds": [ { "name": "em:entity/void_entity/vo_voidentity_6", "stream": false } ]
     },
     "entity.vo_voidentity_8": {
         "category": "hostile",
         "subtitle": "entity.vo_voidentity_8",
-        "sounds": [ { "name": "em:entity/vo_voidentity_8", "stream": false } ]
+        "sounds": [ { "name": "em:entity/void_entity/vo_voidentity_8", "stream": false } ]
     },
     "entity.vo_voidentity_10": {
         "category": "hostile",
         "subtitle": "entity.vo_voidentity_10",
-        "sounds": [ { "name": "em:entity/vo_voidentity_10", "stream": false } ]
+        "sounds": [ { "name": "em:entity/void_entity/vo_voidentity_10", "stream": false } ]
     },
     "entity.vo_voidentity_11": {
         "category": "hostile",
         "subtitle": "entity.vo_voidentity_11",
-        "sounds": [ { "name": "em:entity/vo_voidentity_11", "stream": false } ]
+        "sounds": [ { "name": "em:entity/void_entity/vo_voidentity_11", "stream": false } ]
     },
     "entity.vo_voidentity_13": {
         "category": "hostile",
         "subtitle": "entity.vo_voidentity_13",
-        "sounds": [ { "name": "em:entity/vo_voidentity_13", "stream": true } ]
+        "sounds": [ { "name": "em:entity/void_entity/vo_voidentity_13", "stream": true } ]
     },
     "entity.vo_voidentity_14": {
         "category": "hostile",
         "subtitle": "entity.vo_voidentity_14",
-        "sounds": [ { "name": "em:entity/vo_voidentity_14", "stream": true } ]
+        "sounds": [ { "name": "em:entity/void_entity/vo_voidentity_14", "stream": true } ]
     },
     "entity.vo_voidentity_15": {
         "category": "hostile",
         "subtitle": "entity.vo_voidentity_15",
-        "sounds": [ { "name": "em:entity/vo_voidentity_15", "stream": true } ]
+        "sounds": [ { "name": "em:entity/void_entity/vo_voidentity_15", "stream": true } ]
     },
-    "entity.ve_wound_01": {
+    "entity.ve_wound": {
         "category": "hostile",
-        "subtitle": "entity.ve_wound_01",
-        "sounds": [ { "name": "em:entity/ve_wound_01", "stream": false } ]
+        "subtitle": "entity.ve_wound",
+        "sounds": [ 
+            {
+                "name": "em:entity/void_entity/ve_wound_01", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/void_entity/ve_wound_02", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/void_entity/ve_wound_03", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/void_entity/ve_wound_04", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/void_entity/ve_wound_05", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/void_entity/ve_wound_06", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/void_entity/ve_wound_07", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/void_entity/ve_wound_08", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/void_entity/ve_wound_09", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/void_entity/ve_wound_10", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/void_entity/ve_woundshout_01", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/void_entity/ve_woundshout_02", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/void_entity/ve_woundshout_03", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/void_entity/ve_woundshout_04", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/void_entity/ve_woundshout_05", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            }
+        ]
     },
-    "entity.ve_wound_02": {
+    "entity.carapace_attack": {
         "category": "hostile",
-        "subtitle": "entity.ve_wound_02",
-        "sounds": [ { "name": "em:entity/ve_wound_02", "stream": false } ]
+        "subtitle": "entity.carapace_attack",
+        "sounds": [ 
+            {
+                "name": "em:entity/carapace/carapace_attack_01", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_attack_02", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_attack_03", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_attack_04", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_attack_05", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            }
+        ]
     },
-    "entity.ve_wound_03": {
+    "entity.carapace_shout": {
         "category": "hostile",
-        "subtitle": "entity.ve_wound_03",
-        "sounds": [ { "name": "em:entity/ve_wound_03", "stream": false } ]
+        "subtitle": "entity.carapace_shout",
+        "sounds": [ 
+            {
+                "name": "em:entity/carapace/carapace_shout_01", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_shout_02", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_shout_03", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_shout_04", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            }
+        ]
+    },
+    "entity.carapace_wound": {
+        "category": "hostile",
+        "subtitle": "entity.carapace_wound",
+        "sounds": [ 
+            {
+                "name": "em:entity/carapace/carapace_wound_01", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_wound_02", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_wound_03", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_wound_04", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_wound_05", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_wound_06", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_wound_07", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_wound_08", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_wound_09", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_woundshout_01", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_woundshout_02", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_woundshout_03", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_woundshout_04", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            },
+            {
+                "name": "em:entity/carapace/carapace_woundshout_05", 
+				"stream": false,
+				"volume": 1.0,
+				"pitch": 1.0
+            }
+        ]
+    },
+    "entity.carapace_death": {
+        "category": "hostile",
+        "subtitle": "entity.carapace_death",
+        "sounds": [ { "name": "em:entity/carapace/carapace_death", "stream": false } ]
+    },
+    "entity.carapace_voice_line_01": {
+        "category": "hostile",
+        "subtitle": "entity.carapace_voice_line_01",
+        "sounds": [ { "name": "em:entity/carapace/carapace_voice_line_01", "stream": true } ]
+    },
+    "entity.carapace_voice_line_02": {
+        "category": "hostile",
+        "subtitle": "entity.carapace_voice_line_02",
+        "sounds": [ { "name": "em:entity/carapace/carapace_voice_line_02", "stream": true } ]
     }
 }

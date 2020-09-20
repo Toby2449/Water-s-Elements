@@ -54,6 +54,7 @@ import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
@@ -88,8 +89,12 @@ public class EntityCarapace extends EntityBossMob
 	private int AttackSoundDelay = _ConfigEntityCarapace.ATTACK_SOUND_DELAY;
 	
 	private int prefighttimer1 = _ConfigEntityCarapace.PREFIGHTTIMER1;
+	private int prefighttalktimer = _ConfigEntityCarapace.PREFIGHTTALKTIMER;
 	private int prefightdooranimdelay = _ConfigEntityCarapace.PREFIGHTDOORANIMDELAY;
 	private int doorPhase = 0;
+	
+	private boolean spokeVoiceLine1 = false;
+	private boolean spokeVoiceLine2 = false;
 	
 	private int P1explosionCD = _ConfigEntityCarapace.P1EXPLOSIONTIMER;
 	private int P1TTimer = _ConfigEntityCarapace.P1TIMER;
@@ -138,6 +143,8 @@ public class EntityCarapace extends EntityBossMob
 	private int PurpleBeamTimer = _ConfigEntityCarapace.PURPLEBEAMTIMER;
 	private static List PurpleBeamLocations = new ArrayList();
 	private boolean PurpleBeamPosFound = false;
+	private boolean weaknessCastFix1 = false;
+	private boolean weaknessCastFix2 = false;
 	
 	public EntityCarapace(World worldIn) 
 	{
@@ -172,7 +179,7 @@ public class EntityCarapace extends EntityBossMob
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1000.0F);
-		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(10.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(7.5D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);
 		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(9999999999999.0F);
 	}
@@ -400,13 +407,44 @@ public class EntityCarapace extends EntityBossMob
     	case 2:
     		if(!this.world.isRemote)
     		{
-	    		this.setInvulState(false);
-	    		if(this.getHealth() != this.getMaxHealth())
+	    		this.setInvulState(true);
+	    		if(!this.spokeVoiceLine1)
+	    		{
+	    			this.spokeVoiceLine1 = true;
+	    			this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_VOICE_LINE_01, SoundCategory.HOSTILE, 3.5F, 1.0f);
+	    			List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+	    	    	if(!list.isEmpty())
+	    	    	{
+	    		    	for (EntityPlayer player : list)
+	    		        {
+	    		    		player.sendMessage(new TextComponentTranslation("message.em.carapace.line1"));
+	    		        }
+	    	    	}
+	    		}
+	    		this.prefighttalktimer--;
+	    		if(this.prefighttalktimer <= 0)
+	    		{
+	    			this.setInvulState(false);
+	    		}
+	    		if(this.getHealth() != this.getMaxHealth() && this.prefighttalktimer <= 0)
 	    		{
 	    			this.playBossMusic();
 	    			this.musicPlaying = true;
 	    			this.setPrePhase(-1);
 	    			this.setPhase(1);
+	    			if(!this.spokeVoiceLine2)
+		    		{
+		    			this.spokeVoiceLine2 = true;
+		    			this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_VOICE_LINE_02, SoundCategory.HOSTILE, 3.5F, 1.0f);
+		    			List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+		    	    	if(!list.isEmpty())
+		    	    	{
+		    		    	for (EntityPlayer player : list)
+		    		        {
+		    		    		player.sendMessage(new TextComponentTranslation("message.em.carapace.line2"));
+		    		        }
+		    	    	}
+		    		}
 	    		}
     		}
     		break;
@@ -657,7 +695,7 @@ public class EntityCarapace extends EntityBossMob
 						    {
 						        for (EntityPlayer ent : AABBPlayer)
 						        {
-						        	ent.attackEntityFrom(DamageSource.causeMobDamage(this), 35.0f);
+						        	ent.attackEntityFrom(DamageSource.MAGIC, 25.0f);
 						        	playerInAOE = true;
 						        }
 						    }
@@ -670,7 +708,7 @@ public class EntityCarapace extends EntityBossMob
 								List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
 						        for (EntityPlayer entity : list)
 						        {
-						        	entity.attackEntityFrom(DamageSource.causeMobDamage(this), 65.0f);
+						        	entity.attackEntityFrom(DamageSource.MAGIC, 65.0f);
 						        }
 						        PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceParticleCircle(this, this.world, 8, (double)this.BlueBuffSoakLocation.getX(), (double)this.BlueBuffSoakLocation.getY(), (double)this.BlueBuffSoakLocation.getZ(), 0.0D, 0.0D,0.0D, 15), this.dimension);
     						}
@@ -931,9 +969,9 @@ public class EntityCarapace extends EntityBossMob
          * =================================================
         **/
     	case 4:
+    		this.setSize(1.6F, 1F);
     		if(!this.world.isRemote)
     		{
-    			this.setSize(1.6F, 1F);
 	    		this.setInvulState(true);
 	    		if(this.getPosition().getX() == 30 || this.getPosition().getX() == 31)
 	    		{
@@ -1010,6 +1048,7 @@ public class EntityCarapace extends EntityBossMob
          * =================================================
         **/
     	case 6:
+    		this.setSize(1.6F, 4.5F);
     		this.AttackSoundDelay--;
 			if(this.AttackSoundDelay <= 0)
 			{
@@ -1035,6 +1074,7 @@ public class EntityCarapace extends EntityBossMob
 						for (EntityPlayer player : players)
 				        {
 							player.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 140, 0));
+							player.attackEntityFrom(DamageSource.MAGIC, 25.0f);
 				        }
 					}
 				}
@@ -1118,6 +1158,11 @@ public class EntityCarapace extends EntityBossMob
          * =================================================
         **/
     	case 7:
+    		if(!this.weaknessCastFix1)
+    		{
+    			this.WeaknessCasting = false;
+    			this.weaknessCastFix1 = true;
+    		}
     		this.AttackSoundDelay--;
 			if(this.AttackSoundDelay <= 0)
 			{
@@ -1142,7 +1187,7 @@ public class EntityCarapace extends EntityBossMob
 						for (EntityPlayer player : players)
 				        {
 							player.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 140, 0));
-							player.attackEntityFrom(DamageSource.MAGIC, 20.0f);
+							player.attackEntityFrom(DamageSource.MAGIC, 25.0f);
 				        }
 					}
 				}
@@ -1358,7 +1403,7 @@ public class EntityCarapace extends EntityBossMob
         			    {
         			        for (EntityPlayer ent : AABBPlayer1)
         			        {
-        			        	ent.attackEntityFrom(DamageSource.MAGIC, 40.0f);
+        			        	ent.attackEntityFrom(DamageSource.MAGIC, 50.0f);
         			        	ent.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100, 0));
         			        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 1));
         			        }
@@ -1372,7 +1417,7 @@ public class EntityCarapace extends EntityBossMob
         			    {
         			        for (EntityPlayer ent : AABBPlayer2)
         			        {
-        			        	ent.attackEntityFrom(DamageSource.MAGIC, 40.0f);
+        			        	ent.attackEntityFrom(DamageSource.MAGIC, 50.0f);
         			        	ent.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100, 0));
         			        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 1));
         			        }
@@ -1386,7 +1431,7 @@ public class EntityCarapace extends EntityBossMob
         			    {
         			        for (EntityPlayer ent : AABBPlayer3)
         			        {
-        			        	ent.attackEntityFrom(DamageSource.MAGIC, 40.0f);
+        			        	ent.attackEntityFrom(DamageSource.MAGIC, 50.0f);
         			        	ent.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100, 0));
         			        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 1));
         			        }
@@ -1400,7 +1445,7 @@ public class EntityCarapace extends EntityBossMob
         			    {
         			        for (EntityPlayer ent : AABBPlayer4)
         			        {
-        			        	ent.attackEntityFrom(DamageSource.MAGIC, 40.0f);
+        			        	ent.attackEntityFrom(DamageSource.MAGIC, 50.0f);
         			        	ent.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100, 0));
         			        	ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 1));
         			        }
@@ -1431,6 +1476,11 @@ public class EntityCarapace extends EntityBossMob
          * =================================================
         **/
     	case 9:
+    		if(!this.weaknessCastFix2)
+    		{
+    			this.WeaknessCasting = false;
+    			this.weaknessCastFix2 = true;
+    		}
     		this.AttackSoundDelay--;
 			if(this.AttackSoundDelay <= 0)
 			{
@@ -1440,13 +1490,7 @@ public class EntityCarapace extends EntityBossMob
 			
     		if(!this.world.isRemote)
     		{
-    			this.AttackSoundDelay--;
-    			if(this.AttackSoundDelay <= 0)
-    			{
-    				this.AttackSoundDelay = _ConfigEntityCarapace.ATTACK_SOUND_DELAY;
-    				this.playAttackSound();
-    			}
-    			
+    			this.setSize(1.6F, 1F);
     			if(this.getPosition().getX() >= 85)
     			{
     				switch(this.doorPhase)
@@ -1489,6 +1533,7 @@ public class EntityCarapace extends EntityBossMob
     		}
     		break;
     	case 10:
+    		this.setSize(1.6F, 4.5F);
     		this.AttackSoundDelay--;
 			if(this.AttackSoundDelay <= 0)
 			{
@@ -1712,14 +1757,18 @@ public class EntityCarapace extends EntityBossMob
 			this.tasks.removeTask(aiWatchClosest);
 			break;
 		case 9:
+			this.tasks.removeTask(aiMeleeAttack);
 			if(!this.P9Teleported)
 			{
 				this.P9Teleported = true;
-				if(this.getPosition().getY() > 53 || this.getPosition().getX() < 45)
+				if(this.getPosition().getY() > 53)
 				{
 					this.setPosition(70, 50, 1);
 				}
-				this.tasks.addTask(1, aiMoveToSecondAreaDoor);
+				if(this.getPosition().getX() < 45)
+				{
+					this.setPosition(70, 50, 1);
+				}
 			}
 			else
 			{
@@ -1733,6 +1782,10 @@ public class EntityCarapace extends EntityBossMob
 						this.tasks.addTask(1, aiMoveToThirdRoom);
 	    			}
     			}
+				else
+				{
+					this.tasks.addTask(1, aiMoveToSecondAreaDoor);
+				}
 			}
 			break;
 		case 10:
@@ -1758,25 +1811,13 @@ public class EntityCarapace extends EntityBossMob
 	@Override
 	protected SoundEvent getHurtSound(DamageSource source)
 	{
-		Random rand = new Random();
-    	int r = rand.nextInt(3);
-    	switch(r)
-    	{
-    	default:
-    		return EMSoundHandler.CARAPACE_WOUND_01;
-    	case 0:
-    		return EMSoundHandler.CARAPACE_WOUND_01;
-    	case 1:
-    		return EMSoundHandler.CARAPACE_WOUND_02;
-    	case 2:
-    		return EMSoundHandler.CARAPACE_WOUND_03;
-    	}
+		return EMSoundHandler.CARAPACE_WOUND;
 	}
 	
 	@Override
 	protected SoundEvent getDeathSound()
     {
-        return SoundEvents.ENTITY_SHULKER_DEATH;
+        return EMSoundHandler.CARAPACE_DEATH;
     }
 	
 	/**
@@ -1829,6 +1870,16 @@ public class EntityCarapace extends EntityBossMob
 		this.openDoorDeath1(this.getSpawnLocation().getX() + 47, this.getSpawnLocation().getY() - 2, this.getSpawnLocation().getZ() - 1);
 		this.openDoorDeath2(this.getSpawnLocation().getX() + 1, this.getSpawnLocation().getY() + 1, this.getSpawnLocation().getZ() - 1);
 		if(!this.world.isRemote) PacketHandler.INSTANCE.sendToDimension(new PacketStopMusic(this, this.world), this.dimension);
+		if(!this.world.isRemote)
+		{
+			List<EntityVEBase> vebase = this.world.<EntityVEBase>getEntitiesWithinAABB(EntityVEBase.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+			for (EntityVEBase ent : vebase)
+	        {
+				ent.spawnVE();
+	        }
+		}
+		
+		this.world.playSound((EntityPlayer)null, new BlockPos(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ()), EMSoundHandler.CARAPACE_DEATH, SoundCategory.HOSTILE, 3.5F, 1.0f);
 		
         super.onDeath(cause);
     }
@@ -1854,6 +1905,7 @@ public class EntityCarapace extends EntityBossMob
     	this.AttackSoundDelay = _ConfigEntityCarapace.ATTACK_SOUND_DELAY;
     	this.prefighttimer1 = _ConfigEntityCarapace.PREFIGHTTIMER1;
     	this.prefightdooranimdelay = _ConfigEntityCarapace.PREFIGHTDOORANIMDELAY;
+    	this.prefighttalktimer = _ConfigEntityCarapace.PREFIGHTTALKTIMER;
     	this.doorPhase = 0;
     	this.P1explosionCD = _ConfigEntityCarapace.P1EXPLOSIONTIMER;
     	this.P1TTimer = _ConfigEntityCarapace.P1TIMER;
@@ -1899,6 +1951,10 @@ public class EntityCarapace extends EntityBossMob
     	this.PurpleBeamTimer = _ConfigEntityCarapace.PURPLEBEAMTIMER;
     	this.PurpleBeamLocations = new ArrayList();
     	this.PurpleBeamPosFound = false;
+    	this.weaknessCastFix1 = false;
+    	this.weaknessCastFix2 = false;
+    	this.spokeVoiceLine1 = false;
+    	this.spokeVoiceLine2 = false;
     	
     	List<EntityCarapaceEye> list = this.world.<EntityCarapaceEye>getEntitiesWithinAABB(EntityCarapaceEye.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
     	if(!list.isEmpty())
@@ -2395,27 +2451,14 @@ public class EntityCarapace extends EntityBossMob
     public void playAttackSound()
     {
     	Random rand = new Random();
-    	int r = rand.nextInt(6);
-    	switch(r)
+    	int r = rand.nextInt(100);
+    	if(r < 70)
     	{
-    	case 0:
-    		this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_ATTACK_01, SoundCategory.HOSTILE, 3.5F, 1.0f);
-    		break;
-    	case 1:
-    		this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_ATTACK_02, SoundCategory.HOSTILE, 3.5F, 1.0f);
-    		break;
-    	case 2:
-    		this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_CRITATTACK_01, SoundCategory.HOSTILE, 3.5F, 1.0f);
-    		break;
-    	case 3:
-    		this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_CRITATTACK_02, SoundCategory.HOSTILE, 3.5F, 1.0f);
-    		break;
-    	case 4:
-    		this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_CRITATTACK_03, SoundCategory.HOSTILE, 3.5F, 1.0f);
-    		break;
-    	case 5:
-    		this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_CRITATTACK_04, SoundCategory.HOSTILE, 3.5F, 1.0f);
-    		break;
+    		this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_ATTACK, SoundCategory.HOSTILE, 3.5F, 1.0f);
+    	}
+    	else
+    	{
+    		this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_SHOUT, SoundCategory.HOSTILE, 3.5F, 1.0f);
     	}
     }
     

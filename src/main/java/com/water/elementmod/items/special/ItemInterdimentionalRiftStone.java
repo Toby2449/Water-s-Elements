@@ -25,6 +25,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -88,6 +89,7 @@ public class ItemInterdimentionalRiftStone extends Item implements IHasModel
 						((EntityPlayerMP) player).mcServer.getPlayerList().transferPlayerToDimension(
 						(EntityPlayerMP) player, 0, new TeleportWithoutPortal(((EntityPlayerMP) player).mcServer.getWorld(0)));
 						player.setPositionAndUpdate(player.getBedLocation(0).getX(), player.getBedLocation(0).getY(), player.getBedLocation(0).getZ());
+						return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
 					}
 					else
 					{
@@ -97,8 +99,11 @@ public class ItemInterdimentionalRiftStone extends Item implements IHasModel
 						((EntityPlayerMP) player).mcServer.getPlayerList().transferPlayerToDimension(
 						(EntityPlayerMP) player, 0, new TeleportWithoutPortal(((EntityPlayerMP) player).mcServer.getWorld(0)));
 						player.setPositionAndUpdate(pos.getX(), pos.getY(), pos.getZ());
+						return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
 					}
 		        }
+		        
+		        player.sendMessage(new TextComponentTranslation("idrs.fail_message"));
 			}
 			else
 			{
@@ -116,15 +121,21 @@ public class ItemInterdimentionalRiftStone extends Item implements IHasModel
 				{
 					if(this.findBlockUnderEntity(player) == EMCoreBlocks.VOID_CRACK_15.getDefaultState() || this.findBlockUnderEntity(player) == EMCoreBlocks.VOID_CRACK_16.getDefaultState() || this.findBlockUnderEntity(player) == EMCoreBlocks.VOID_CRACK_19.getDefaultState() || this.findBlockUnderEntity(player) == EMCoreBlocks.VOID_CRACK_20.getDefaultState())
 					{
-						((EntityPlayerMP) player).mcServer.getPlayerList().transferPlayerToDimension(
-						(EntityPlayerMP) player, 2, new TeleportWithoutPortal(((EntityPlayerMP) player).mcServer.getWorld(EMCoreDimensions.VOID.getId())));
-						player.setPositionAndUpdate(1.0D, 58, 1.0D);
+						while(player.dimension != 2)
+						{
+							((EntityPlayerMP) player).mcServer.getPlayerList().transferPlayerToDimension(
+							(EntityPlayerMP) player, 2, new TeleportWithoutPortal(((EntityPlayerMP) player).mcServer.getWorld(EMCoreDimensions.VOID.getId())));
+							player.setPositionAndUpdate(1.0D, 58, 1.0D);
+						}
+						return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
 					}
 				}
+				
+				player.sendMessage(new TextComponentTranslation("idrs.fail_message"));
 			}
 		}
 		
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
+		return new ActionResult<ItemStack>(EnumActionResult.FAIL, player.getHeldItem(handIn));
     }
 	
 	public IBlockState findBlockUnderEntity(EntityPlayer parEntity)

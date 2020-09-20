@@ -39,11 +39,15 @@ import com.water.elementmod.particle.ParticleSpawner;
 import com.water.elementmod.util.EMConfig;
 
 import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -55,6 +59,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -74,6 +79,21 @@ public class EMEventHandler {
             
             ResourceLocation leaf = new ResourceLocation(EMConfig.MOD_ID, "particle/leaf");
             event.getMap().registerSprite(leaf);
+	}
+	
+	@SubscribeEvent
+	public static void onPlayerAttack(AttackEntityEvent event) 
+	{
+		// Eliminates PvP in the void
+		EntityPlayer player = event.getEntityPlayer();
+		Entity target = event.getTarget();
+		if (player.dimension == 2) 
+		{
+			if(target instanceof EntityPlayer)
+			{
+				event.setCanceled(true);
+			}
+		}
 	}
 	
 	@SubscribeEvent
@@ -115,38 +135,43 @@ public class EMEventHandler {
 	@SubscribeEvent
 	public static void onPlayerRightClickBlock(PlayerInteractEvent.RightClickBlock event) 
 	{
+		IBlockState traceBlockState = event.getEntityPlayer().world.getBlockState(event.getPos());
+		
 		if (event.getEntityPlayer() != null) 
 		{
-			if(event.getEntityPlayer().dimension == EMCoreDimensions.VOID.getId())
+			if(traceBlockState != Blocks.CHEST.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.NORTH) && traceBlockState != Blocks.CHEST.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.SOUTH) && traceBlockState != Blocks.CHEST.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.WEST) && traceBlockState != Blocks.CHEST.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.EAST))
 			{
-				event.setCanceled(true);
-			}
-			
-			List<EntityNatureBoss> NatureBoss = event.getEntityPlayer().world.<EntityNatureBoss>getEntitiesWithinAABB(EntityNatureBoss.class, event.getEntityPlayer().getEntityBoundingBox().grow(_ConfigEntityNatureBoss.ARENA_SIZE_X, _ConfigEntityNatureBoss.ARENA_SIZE_Y, _ConfigEntityNatureBoss.ARENA_SIZE_Z));
-			if(NatureBoss.size() > 0)
-			{
-				event.setCanceled(true);
-			}
-			
-			List<EntityFireBoss> FireBoss = event.getEntityPlayer().world.<EntityFireBoss>getEntitiesWithinAABB(EntityFireBoss.class, event.getEntityPlayer().getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
-			if(FireBoss.size() > 0)
-			{
-				event.setCanceled(true);
-			}
-			
-			if(event.getEntityPlayer().world.getBlockState(event.getPos()) != EMCoreBlocks.VALVE.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.SOUTH))
-			{
-				List<EntityWaterBoss> WaterBoss = event.getEntityPlayer().world.<EntityWaterBoss>getEntitiesWithinAABB(EntityWaterBoss.class, event.getEntityPlayer().getEntityBoundingBox().grow(_ConfigEntityWaterBoss.ARENA_SIZE_X, _ConfigEntityWaterBoss.ARENA_SIZE_Y, _ConfigEntityWaterBoss.ARENA_SIZE_Z));
-				if(WaterBoss.size() > 0)
+				if(event.getEntityPlayer().dimension == EMCoreDimensions.VOID.getId())
 				{
 					event.setCanceled(true);
 				}
-			}
-			
-			List<EntityVoidKnight> KnightBoss = event.getEntityPlayer().world.<EntityVoidKnight>getEntitiesWithinAABB(EntityVoidKnight.class, event.getEntityPlayer().getEntityBoundingBox().grow(_ConfigEntityVoidKnight.ARENA_SIZE_X, _ConfigEntityVoidKnight.ARENA_SIZE_Y, _ConfigEntityVoidKnight.ARENA_SIZE_Z));
-			if(KnightBoss.size() > 0)
-			{
-				event.setCanceled(true);
+				
+				List<EntityNatureBoss> NatureBoss = event.getEntityPlayer().world.<EntityNatureBoss>getEntitiesWithinAABB(EntityNatureBoss.class, event.getEntityPlayer().getEntityBoundingBox().grow(_ConfigEntityNatureBoss.ARENA_SIZE_X, _ConfigEntityNatureBoss.ARENA_SIZE_Y, _ConfigEntityNatureBoss.ARENA_SIZE_Z));
+				if(NatureBoss.size() > 0)
+				{
+					event.setCanceled(true);
+				}
+				
+				List<EntityFireBoss> FireBoss = event.getEntityPlayer().world.<EntityFireBoss>getEntitiesWithinAABB(EntityFireBoss.class, event.getEntityPlayer().getEntityBoundingBox().grow(_ConfigEntityFireBoss.ARENA_SIZE_X, _ConfigEntityFireBoss.ARENA_SIZE_Y, _ConfigEntityFireBoss.ARENA_SIZE_Z));
+				if(FireBoss.size() > 0)
+				{
+					event.setCanceled(true);
+				}
+				
+				if(traceBlockState != EMCoreBlocks.VALVE.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.SOUTH))
+				{
+					List<EntityWaterBoss> WaterBoss = event.getEntityPlayer().world.<EntityWaterBoss>getEntitiesWithinAABB(EntityWaterBoss.class, event.getEntityPlayer().getEntityBoundingBox().grow(_ConfigEntityWaterBoss.ARENA_SIZE_X, _ConfigEntityWaterBoss.ARENA_SIZE_Y, _ConfigEntityWaterBoss.ARENA_SIZE_Z));
+					if(WaterBoss.size() > 0)
+					{
+						event.setCanceled(true);
+					}
+				}
+				
+				List<EntityVoidKnight> KnightBoss = event.getEntityPlayer().world.<EntityVoidKnight>getEntitiesWithinAABB(EntityVoidKnight.class, event.getEntityPlayer().getEntityBoundingBox().grow(_ConfigEntityVoidKnight.ARENA_SIZE_X, _ConfigEntityVoidKnight.ARENA_SIZE_Y, _ConfigEntityVoidKnight.ARENA_SIZE_Z));
+				if(KnightBoss.size() > 0)
+				{
+					event.setCanceled(true);
+				}
 			}
 		}
 	}
@@ -170,6 +195,11 @@ public class EMEventHandler {
 			Minecraft.getMinecraft().ingameGUI.drawModalRectWithCustomSizedTexture(xPos, yPos, 0, 0, scaledRes.getScaledWidth(), scaledRes.getScaledHeight(), scaledRes.getScaledWidth(), scaledRes.getScaledHeight());
 			GL11.glDisable(GL11.GL_BLEND);
 			GL11.glPopMatrix();
+			
+			if(mc.player.getActivePotionEffect(EMCorePotionEffects.POTION_GLIMPSE).getDuration() <= 0)
+			{
+				mc.player.removeActivePotionEffect(EMCorePotionEffects.POTION_GLIMPSE);
+			}
 		}
 	}
 	
@@ -194,6 +224,11 @@ public class EMEventHandler {
 	            	ParticleSpawner.spawnParticle(EnumCustomParticleTypes.VOID_PORTAL_BLOCK, living.posX + (rand.nextDouble() - 0.5D) * (double)living.width, living.posY + rand.nextDouble() * (double)living.height - 0.25D, living.posZ + (rand.nextDouble() - 0.5D) * (double)living.width, (rand.nextDouble() - 0.5D) * 2.0D, -rand.nextDouble(), (rand.nextDouble() - 0.5D) * 2.0D);
 	            	ParticleSpawner.spawnParticle(EnumCustomParticleTypes.VOID_PORTAL, living.posX + (rand.nextDouble() - 0.5D) * (double)living.width, living.posY + rand.nextDouble() * (double)living.height - 0.25D, living.posZ + (rand.nextDouble() - 0.5D) * (double)living.width, (rand.nextDouble() - 0.5D) * 2.0D, -rand.nextDouble(), (rand.nextDouble() - 0.5D) * 2.0D);
 		        }
+			}
+			
+			if(living.getActivePotionEffect(EMCorePotionEffects.POTION_CORRUPTION).getDuration() <= 0)
+			{
+				living.removeActivePotionEffect(EMCorePotionEffects.POTION_CORRUPTION);
 			}
 		}
 	}
@@ -222,13 +257,18 @@ public class EMEventHandler {
 				{
 					if(event.player.getActivePotionEffect(EMCorePotionEffects.POTION_INSANITY).getAmplifier() > 4)
 					{
-						event.player.attackEntityFrom(DamageSource.MAGIC, 999999999);
+						event.player.attackEntityFrom(DamageSource.MAGIC, 999999999F);
 					}
 					else
 					{
-						event.player.attackEntityFrom(DamageSource.MAGIC, 7.5F * event.player.getActivePotionEffect(EMCorePotionEffects.POTION_INSANITY).getAmplifier());
+						event.player.attackEntityFrom(DamageSource.MAGIC, 10.0F * event.player.getActivePotionEffect(EMCorePotionEffects.POTION_INSANITY).getAmplifier());
 					}
 				}
+			}
+			
+			if(event.player.getActivePotionEffect(EMCorePotionEffects.POTION_INSANITY).getDuration() <= 0)
+			{
+				event.player.removeActivePotionEffect(EMCorePotionEffects.POTION_INSANITY);
 			}
 		}
 	}

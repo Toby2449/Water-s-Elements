@@ -145,25 +145,13 @@ public class EntitySlaveMaster extends EntityBossMob
 	@Override
 	protected SoundEvent getHurtSound(DamageSource source)
 	{
-		Random rand = new Random();
-    	int r = rand.nextInt(3);
-    	switch(r)
-    	{
-    	default:
-    		return EMSoundHandler.CARAPACE_WOUND_01;
-    	case 0:
-    		return EMSoundHandler.CARAPACE_WOUND_01;
-    	case 1:
-    		return EMSoundHandler.CARAPACE_WOUND_02;
-    	case 2:
-    		return EMSoundHandler.CARAPACE_WOUND_03;
-    	}
+		return EMSoundHandler.CARAPACE_WOUND;
 	}
 	
 	@Override
 	protected SoundEvent getDeathSound()
     {
-        return SoundEvents.ENTITY_SHULKER_DEATH;
+        return EMSoundHandler.CARAPACE_DEATH;
     }
     
     /**

@@ -5,9 +5,9 @@ import java.util.List;
 
 public class _ConfigEntityFireBoss 
 {
-	public static final double ARENA_SIZE_X = 50.0D;
-	public static final double ARENA_SIZE_Y = 11.0D;
-	public static final double ARENA_SIZE_Z = 40.0D;
+	public static final double ARENA_SIZE_X = 33.0D;
+	public static final double ARENA_SIZE_Y = 25.0D;
+	public static final double ARENA_SIZE_Z = 21.0D;
 	public static final double MF_SIZE_X = 95.0D;
 	public static final double MF_SIZE_Y = 65.0D;
 	public static final double MF_SIZE_Z = 105.0D;

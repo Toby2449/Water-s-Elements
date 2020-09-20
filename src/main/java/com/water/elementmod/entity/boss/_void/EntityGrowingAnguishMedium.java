@@ -28,7 +28,8 @@ public class EntityGrowingAnguishMedium extends EntityLiving
     public EntityGrowingAnguishMedium(World worldIn)
     {
         super(worldIn);
-        this.setSize(6.0F, 1.25F);
+        this.setSize(6.0F, 0.1F);
+        this.isImmuneToFire = true;
     }
     
     @Override
@@ -87,7 +88,7 @@ public class EntityGrowingAnguishMedium extends EntityLiving
         for (EntityPlayer entity : list)
         {
         	entity.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_CORRUPTION, 150, 0));
-        	if(this.getTimer() % 20 == 1) entity.attackEntityFrom(DamageSource.causeMobDamage(this), 10.0F);
+        	if(this.getTimer() % 20 == 1) entity.attackEntityFrom(DamageSource.MAGIC, 10.0F);
         }
     }
     

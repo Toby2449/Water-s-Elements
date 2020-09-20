@@ -13,8 +13,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeForest;
 import net.minecraft.world.biome.BiomeHell;
+import net.minecraft.world.biome.BiomeHills;
 import net.minecraft.world.biome.BiomeOcean;
-import net.minecraft.world.biome.BiomePlains;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.WorldGenerator;
@@ -49,9 +49,9 @@ public class WorldGenCustomStructures implements IWorldGenerator
 		case 1: // The End
 			break;
 		case 0: // Over world
-			generatorStructureOverworld(KNIGHT_ARENA, world, random, chunkX, chunkZ, 750, Blocks.GRASS, 0, 2, 0, BiomePlains.class);
-			generatorStructureOverworld(N_ARENA, world, random, chunkX, chunkZ, 500, Blocks.GRASS, 0, -4, 0, BiomeForest.class);
-			generatorStructureOverworldOcean(W_ARENA, world, random, chunkX, chunkZ, 500, Blocks.GRAVEL, 0, 0, 0, BiomeOcean.class);
+			generatorStructureKnightArena(KNIGHT_ARENA, world, random, chunkX, chunkZ, 700, 0, 0, 0, BiomeHills.class);
+			generatorStructureOverworld(N_ARENA, world, random, chunkX, chunkZ, 750, Blocks.GRASS, 0, -4, 0, BiomeForest.class);
+			generatorStructureOverworldOcean(W_ARENA, world, random, chunkX, chunkZ, 750, Blocks.GRAVEL, 0, 0, 0, BiomeOcean.class);
 			break;
 			
 		case -1: // Nether
@@ -65,24 +65,59 @@ public class WorldGenCustomStructures implements IWorldGenerator
 	{
 		ArrayList<Class<?>> classesList = new ArrayList<Class<?>>(Arrays.asList(classes));
 		
-		int x = (chunkX * 16) + random.nextInt(15) + 15;
-		int z = (chunkZ * 16) + random.nextInt(15) + 15;
+		int x = (chunkX * 16) + random.nextInt(15);
+		int z = (chunkZ * 16) + random.nextInt(15);
 		int y = calculateGenerationHeight(world, x, z, topBlock);
 		BlockPos pos = new BlockPos(x + skewX, y + skewY, z + skewZ);
 		
 		Class<?> biome = world.provider.getBiomeForCoords(pos).getClass();
 		
-		if((x > 1500 && x < -1500) || (z > 1500 && z < -1500))
+		if(x > 93 || x < -93)
 		{
-			if(y >= 60) // So the structure doesn't generate underground
+			if(z > 93 || z < -93)
 			{
-				if(world.getWorldType() != WorldType.FLAT)
+				if(y >= 60) // So the structure doesn't generate underground
 				{
-					if(classesList.contains(biome))
+					if(world.getWorldType() != WorldType.FLAT)
 					{
-						if(random.nextInt(chance) == 0)
+						if(classesList.contains(biome))
 						{
-							generator.generate(world, random, pos);
+							if(random.nextInt(chance) == 0)
+							{
+								generator.generate(world, random, pos);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	private void generatorStructureKnightArena(WorldGenerator generator, World world, Random random, int chunkX, int chunkZ, int chance, int skewX, int skewY, int skewZ, Class<?>... classes)
+	{
+		ArrayList<Class<?>> classesList = new ArrayList<Class<?>>(Arrays.asList(classes));
+		
+		int x = (chunkX * 16) + random.nextInt(15);
+		int z = (chunkZ * 16) + random.nextInt(15);
+		int y = calculateGenerationHeightKnightArena(world, x, z);
+		BlockPos pos = new BlockPos(x + skewX, y + skewY, z + skewZ);
+		
+		Class<?> biome = world.provider.getBiomeForCoords(pos).getClass();
+		
+		if(x > 100 || x < -100)
+		{
+			if(z > 100 || z < -100)
+			{
+				if(y >= 100) // So the structure doesn't generate underground
+				{
+					if(world.getWorldType() != WorldType.FLAT)
+					{
+						if(classesList.contains(biome))
+						{
+							if(random.nextInt(chance) == 0)
+							{
+								generator.generate(world, random, pos);
+							}
 						}
 					}
 				}
@@ -101,17 +136,20 @@ public class WorldGenCustomStructures implements IWorldGenerator
 		
 		Class<?> biome = world.provider.getBiomeForCoords(pos).getClass();
 		
-		if((x > 1500 && x < -1500) || (z > 1500 && z < -1500))
+		if(x > 93 || x < -93)
 		{
-			if(y >= 25 && y <= 41) // So the structure doesn't generate underground
+			if(z > 93 || z < -93)
 			{
-				if(world.getWorldType() != WorldType.FLAT)
+				if(y >= 25 && y <= 41) // So the structure doesn't generate underground
 				{
-					if(classesList.contains(biome))
+					if(world.getWorldType() != WorldType.FLAT)
 					{
-						if(random.nextInt(chance) == 0)
+						if(classesList.contains(biome))
 						{
-							generator.generate(world, random, pos);
+							if(random.nextInt(chance) == 0)
+							{
+								generator.generate(world, random, pos);
+							}
 						}
 					}
 				}
@@ -123,8 +161,8 @@ public class WorldGenCustomStructures implements IWorldGenerator
 	{
 		ArrayList<Class<?>> classesList = new ArrayList<Class<?>>(Arrays.asList(classes));
 		
-		int x = (chunkX * 16) + random.nextInt(15);
-		int z = (chunkZ * 16) + random.nextInt(15);
+		int x = (chunkX * 16) + 15 + random.nextInt(15);
+		int z = (chunkZ * 16) + 15 + random.nextInt(15);
 		int y = 30;
 		BlockPos pos = new BlockPos(x + skewX, y + skewY, z + skewZ);
 		
@@ -162,6 +200,19 @@ public class WorldGenCustomStructures implements IWorldGenerator
 		{
 			Block block = world.getBlockState(new BlockPos(x, y, z)).getBlock();
 			foundGround = block == topBlock;
+		}
+		
+		return y;
+	}
+	
+	private static int calculateGenerationHeightKnightArena(World world, int x, int z)
+	{
+		int y = world.getHeight();
+		boolean foundGround = false;
+		
+		while(!foundGround && y-- >= 0)
+		{
+			if(!world.isAirBlock(new BlockPos(x, y, z))) foundGround = true;
 		}
 		
 		return y;

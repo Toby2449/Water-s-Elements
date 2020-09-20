@@ -42,8 +42,8 @@ public class EntityLunacy extends EntityBossMob
 	private final EntityAIAttackMelee aiMeleeAttack = new EntityAIAttackMelee(this, 0.5D, true);
 	public boolean RageActivated = false;
 	public boolean casting = false;
-	private int castTimer = 230;
-	private int anguishTimer = 425;
+	private int castTimer = _ConfigEntityVoidEntity.LUNACY_CAST_TIMER;
+	private int anguishTimer = _ConfigEntityVoidEntity.LUNACY_ANGUISH_TIMER;
 	private boolean scaledHP = false;
 	private int AttackSoundDelay = _ConfigEntityCarapace.ATTACK_SOUND_DELAY;
 	
@@ -81,7 +81,7 @@ public class EntityLunacy extends EntityBossMob
 	protected void entityInit()
     {
         super.entityInit();
-        this.dataManager.register(RAGE, Integer.valueOf(1800)); // 1 1/2 minutes
+        this.dataManager.register(RAGE, Integer.valueOf(_ConfigEntityVoidEntity.LUNACY_RAGE_TIMER));
         this.dataManager.register(NUM_OF_PLAYERS, Integer.valueOf(1));
     }
 	
@@ -141,7 +141,7 @@ public class EntityLunacy extends EntityBossMob
     		this.anguishTimer--;
     		if(this.anguishTimer <= 0)
     		{
-    			this.anguishTimer = 425;
+    			this.anguishTimer = _ConfigEntityVoidEntity.LUNACY_ANGUISH_TIMER;
     			this.playVoidMagicCastSound(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
     			this.spawnAnguish(this.posX, this.posY, this.posZ);
     		}
@@ -171,7 +171,7 @@ public class EntityLunacy extends EntityBossMob
     		else if(this.castTimer <= 0)
     		{
     			this.casting = false;
-    			this.castTimer = 230;
+    			this.castTimer = _ConfigEntityVoidEntity.LUNACY_CAST_TIMER;
     			this.playImpactSound(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ(), 3.5F);
 				PacketHandler.INSTANCE.sendToDimension(new PacketCarapaceParticleCircle(this, this.world, 9, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, 15), this.dimension);
 				List<EntityPlayer> players = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(100, 100, 100));
@@ -201,7 +201,7 @@ public class EntityLunacy extends EntityBossMob
     		if(this.castTimer <= 0)
     		{
     			this.casting = false;
-    			this.castTimer = 230;
+    			this.castTimer = _ConfigEntityVoidEntity.LUNACY_CAST_TIMER;
     		}
     	}
     	
@@ -252,25 +252,13 @@ public class EntityLunacy extends EntityBossMob
 	@Override
 	protected SoundEvent getHurtSound(DamageSource source)
 	{
-		Random rand = new Random();
-    	int r = rand.nextInt(3);
-    	switch(r)
-    	{
-    	default:
-    		return EMSoundHandler.CARAPACE_WOUND_01;
-    	case 0:
-    		return EMSoundHandler.CARAPACE_WOUND_01;
-    	case 1:
-    		return EMSoundHandler.CARAPACE_WOUND_02;
-    	case 2:
-    		return EMSoundHandler.CARAPACE_WOUND_03;
-    	}
+		return EMSoundHandler.CARAPACE_WOUND;
 	}
 	
 	@Override
 	protected SoundEvent getDeathSound()
     {
-        return SoundEvents.ENTITY_SHULKER_DEATH;
+        return EMSoundHandler.CARAPACE_DEATH;
     }
 	
 	/**
@@ -306,7 +294,7 @@ public class EntityLunacy extends EntityBossMob
 	
 	public float calculateHealthReduction(float amount)
     {
-    	return amount * (1000 / (2000.0F + (2000.0F * (this.getNumOfPlayers() - 1))));
+    	return amount * (1000 / (_ConfigEntityVoidEntity.LUNACY_BASE_HP + (_ConfigEntityVoidEntity.LUNACY_HP_SCALE_AMOUNT * (this.getNumOfPlayers() - 1))));
     }
     
     @Override
@@ -350,27 +338,14 @@ public class EntityLunacy extends EntityBossMob
     public void playAttackSound()
     {
     	Random rand = new Random();
-    	int r = rand.nextInt(6);
-    	switch(r)
+    	int r = rand.nextInt(100);
+    	if(r < 70)
     	{
-    	case 0:
-    		this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_ATTACK_01, SoundCategory.HOSTILE, 3.5F, 1.0f);
-    		break;
-    	case 1:
-    		this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_ATTACK_02, SoundCategory.HOSTILE, 3.5F, 1.0f);
-    		break;
-    	case 2:
-    		this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_CRITATTACK_01, SoundCategory.HOSTILE, 3.5F, 1.0f);
-    		break;
-    	case 3:
-    		this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_CRITATTACK_02, SoundCategory.HOSTILE, 3.5F, 1.0f);
-    		break;
-    	case 4:
-    		this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_CRITATTACK_03, SoundCategory.HOSTILE, 3.5F, 1.0f);
-    		break;
-    	case 5:
-    		this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_CRITATTACK_04, SoundCategory.HOSTILE, 3.5F, 1.0f);
-    		break;
+    		this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_ATTACK, SoundCategory.HOSTILE, 3.5F, 1.0f);
+    	}
+    	else
+    	{
+    		this.world.playSound((EntityPlayer)null, this.getPosition(), EMSoundHandler.CARAPACE_SHOUT, SoundCategory.HOSTILE, 3.5F, 1.0f);
     	}
     }
     

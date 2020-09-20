@@ -28,7 +28,8 @@ public class EntityVEAnguish extends EntityLiving
     public EntityVEAnguish(World worldIn)
     {
         super(worldIn);
-        this.setSize(11.0F, 0.8F);
+        this.setSize(11.0F, 0.1F);
+        this.isImmuneToFire = true;
     }
     
     @Override
@@ -77,7 +78,7 @@ public class EntityVEAnguish extends EntityLiving
 	        for (EntityPlayer entity : list)
 	        {
 	        	entity.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_CORRUPTION, 150, 0));
-	        	if(this.ticksExisted % 20 == 1) entity.attackEntityFrom(DamageSource.causeMobDamage(this), 10.0F);
+	        	if(this.ticksExisted % 20 == 1) entity.attackEntityFrom(DamageSource.MAGIC, 5.0F);
 	        }
     	}
         
@@ -88,12 +89,12 @@ public class EntityVEAnguish extends EntityLiving
             {
         		if(entity.getPhase() == 1 || entity.getPhase() == 4)
         		{
-        			this.setSize(11.0F, 1.25F);
+        			this.setSize(11.0F, 0.1F);
         			this.setInvisble(false);
         		}
         		else
         		{
-        			this.setSize(11.0F, 1.25F);
+        			this.setSize(11.0F, 0.1F);
         			this.setInvisble(true);
         		}
             }

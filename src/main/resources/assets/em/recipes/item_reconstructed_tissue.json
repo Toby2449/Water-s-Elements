@@ -3,9 +3,9 @@
     
     "pattern":
     [
+        " X ",
         "XXX",
-        "XXX",
-        "XXX"
+        " X "
     ],
     
     "key":

@@ -3,6 +3,8 @@ package com.water.elementmod.entity.boss._void;
 import java.util.List;
 
 import com.water.elementmod.EMCorePotionEffects;
+import com.water.elementmod.network.PacketCustomPotionEffect;
+import com.water.elementmod.network.PacketHandler;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -11,6 +13,7 @@ import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -28,7 +31,8 @@ public class EntityGrowingAnguishLarge extends EntityLiving
     public EntityGrowingAnguishLarge(World worldIn)
     {
         super(worldIn);
-        this.setSize(11.0F, 1.25F);
+        this.setSize(11.0F, 0.1F);
+        this.isImmuneToFire = true;
     }
     
     @Override
@@ -83,7 +87,7 @@ public class EntityGrowingAnguishLarge extends EntityLiving
         for (EntityPlayer entity : list)
         {
         	entity.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_CORRUPTION, 150, 0));
-        	if(this.getTimer() % 20 == 1) entity.attackEntityFrom(DamageSource.causeMobDamage(this), 10.0F);
+        	if(this.getTimer() % 20 == 1) entity.attackEntityFrom(DamageSource.MAGIC, 10.0F);
         }
     }
     

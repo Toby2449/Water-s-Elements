@@ -51,7 +51,7 @@ public class EntityFireGuardianCastle extends EntityMob
 	{
 		super(worldIn);
 		this.isImmuneToFire = true;
-		this.setSize(0.7F, 2.25F);
+		this.setSize(0.7F, 1.85F);
 	}
 	
 	public static void registerFixesBoss(DataFixer fixer)

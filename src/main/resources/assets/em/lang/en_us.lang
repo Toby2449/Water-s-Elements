@@ -32,7 +32,7 @@ item.item_fire_arrow.name=§6Fire Arrow§r
 item.item_water_arrow.name=§9Water Arrow§r
 item.item_nature_arrow.name=§2Nature Arrow§r
 
-item.item_interdimentional_rift_stone.name=Interdimentional Rift Stone
+item.item_interdimentional_rift_stone.name=Interdimensional Rift Stone
 item.item_void_entity_soul.name=Soul of the Void
 item.item_void_sword.name=§1§lSword of a Thousand Souls§r
 
@@ -47,6 +47,12 @@ tile.valve_shutoff_fake.name=Small Valve
 
 tile.void_block.name=Void Stone
 tile.void_block_2.name=Weeping Void Stone
+tile.corrupted_flesh.name=Corrupted Flesh
+tile.dead_corrupted_flesh.name=Dead Corrupted Flesh
+tile.corrupted_hemorrhage.name=Corrupted Hemorrhage
+tile.corrupted_void_flesh.name=Corrupted Void Flesh
+tile.dead_corrupted_void_flesh.name=Dead Corrupted Void Flesh
+
 
 fluid.pure_evil=§5Pure Evil§r
 
@@ -89,7 +95,7 @@ entity.purple_orb.name=Purple Orb
 entity.blue_guardian.name=Blue Guardian
 entity.purple_guardian.name=Purple Guardian
 
-entity.lunacy.name=§5Lunacy of the Mind§r
+entity.lunacy.name=§5Lunacy of the Void§r
 entity.void_entity.name=§1§lVoid Entity§r
 entity.void_slave_master.name=Servant of the Void
 entity.void_spectral_small.name=Void Spectral
@@ -207,6 +213,9 @@ message.em.voidknight.phase4=<§1§lArthur, Guardian of the Void§r> CONSUME!!
 message.em.voidknight.cleansed=<§lArthur, Guardian of the Overworld§r> I have been freed from the control of the void. I will be forever scarred by the great evil of the void.
 message.em.voidknight.ending_message=<§lArthur, Guardian of the Overworld§r> My senses tell me that you're able to save us all from the greater evil. Dive into the void rift and end this once and for all! The world's counting on you.
 
+message.em.carapace.line1=<§5§lWrath of the Void§r> Yes... Come... Your strength will become ours, child of darkness.
+message.em.carapace.line2=<§5§lWrath of the Void§r> Destroy them! They must not hinder my return.
+
 message.em.voidentity.chat1=<§1§lVoid Entity§r> Hahaha... You have fallen into my trap foolish ones. I've got you. There is no escape. Your only choice is slave for the void.
 message.em.voidentity.chat2=<§1§lVoid Entity§r> You have no idea what you've gotten yourself into mortals! I am the Ender Dragon! I am the Wither! I CONTROL EVERYTHING!!!!!
 message.em.voidentity.chat3=<§1§lVoid Entity§r> Become one of my mind. Now you will see what it's like to live in darkness!
@@ -218,6 +227,8 @@ message.em.voidentity.chat8=<§1§lVoid Entity§r> My purpose will put an end to
 message.em.voidentity.chat9=<§1§lVoid Entity§r> No.. NO! THIS CANNOT BE THE END!
 message.em.voidentity.chat10=<§1§lVoid Entity§r> HOW CAN THIS BE? The weaklings have brought my own powers against myself.
 message.em.voidentity.chat11=<§1§lVoid Entity§r> Foolish mortals... I will never be defeated. I am in all of you! I AM ALL OF YOU!
+
+idrs.fail_message=§8§oThe moment is not right...
 
 item.fire_sword1.name=Diamond Sword
 item.fire_sword2.name=Diamond Sword

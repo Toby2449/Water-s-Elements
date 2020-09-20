@@ -10,6 +10,7 @@ import com.water.elementmod.entity.EntityBossMob;
 import com.water.elementmod.network.PacketCarapaceParticleCircle;
 import com.water.elementmod.network.PacketCarapaceParticleRing;
 import com.water.elementmod.network.PacketCarapaceRingExplosion;
+import com.water.elementmod.network.PacketCustomPotionEffect;
 import com.water.elementmod.network.PacketHandler;
 import com.water.elementmod.network.PacketPlayMusic;
 import com.water.elementmod.network.PacketStopMusic;
@@ -26,8 +27,6 @@ import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.ai.attributes.IAttribute;
-import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
@@ -253,6 +252,14 @@ public class EntityVoidEntity extends EntityBossMob
 	    		if(this.pre_phase_talk > 0)
 	    		{
 	    			this.setInvulState(true);
+	    			List<EntityCarapaceAnguish> list6 = this.world.<EntityCarapaceAnguish>getEntitiesWithinAABB(EntityCarapaceAnguish.class, this.getEntityBoundingBox().grow(_ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE, _ConfigEntityCarapace.ARENA_SIZE));
+	    	    	if(!list6.isEmpty())
+	    	    	{
+	    		    	for (EntityCarapaceAnguish entity : list6)
+	    		        {
+	    		    		entity.isDead = true;
+	    		        }
+	    	    	}
 		    		this.pre_phase_talk--;
 		    		
 		    		if(this.pre_phase_talk == _ConfigEntityVoidEntity.TALK_PHASE_TIMER - 1)
@@ -336,6 +343,7 @@ public class EntityVoidEntity extends EntityBossMob
     			for (EntityPlayer player : GlimpseList)
     	        {
     				player.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_GLIMPSE, 20, 0));
+    				PacketHandler.INSTANCE.sendTo(new PacketCustomPotionEffect(player, this.world, 1, 20, 0), (EntityPlayerMP) player);
     	        }
     			
     			this.firstLunacySpawnTimer--;
@@ -410,14 +418,6 @@ public class EntityVoidEntity extends EntityBossMob
     				this.setInvisible(false);
     				this.glimpseAnimationTimer = _ConfigEntityVoidEntity.GLIMPSE_ANIM_TIMER;
     				this.sayChatLine(3);
-    	        }
-    		}
-    		else
-    		{
-    			List<EntityPlayer> GlimpseList = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidEntity.ARENA_SIZE, _ConfigEntityVoidEntity.ARENA_SIZE, _ConfigEntityVoidEntity.ARENA_SIZE).offset(0, -5, 0));
-    			for (EntityPlayer player : GlimpseList)
-    	        {
-    				player.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_GLIMPSE, 20, 0));
     	        }
     		}
     		break;
@@ -640,6 +640,7 @@ public class EntityVoidEntity extends EntityBossMob
 				for (EntityPlayer player : GlimpseList)
 		        {
 					player.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_GLIMPSE, 20, 0));
+					PacketHandler.INSTANCE.sendTo(new PacketCustomPotionEffect(player, this.world, 1, 20, 0), (EntityPlayerMP) player);
 		        }
 				
 				this.secondLunacySpawnTimer--;
@@ -733,14 +734,6 @@ public class EntityVoidEntity extends EntityBossMob
     		       	entity4.enablePersistence();
     		   		this.world.spawnEntity(entity4);
     				this.sayChatLine(6);
-    	        }
-    		}
-    		else
-    		{
-    			List<EntityPlayer> GlimpseList = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidEntity.ARENA_SIZE, _ConfigEntityVoidEntity.ARENA_SIZE, _ConfigEntityVoidEntity.ARENA_SIZE).offset(0, -5, 0));
-    			for (EntityPlayer player : GlimpseList)
-    	        {
-    				player.addPotionEffect(new PotionEffect(EMCorePotionEffects.POTION_GLIMPSE, 20, 0));
     	        }
     		}
     		break;
@@ -1203,19 +1196,7 @@ public class EntityVoidEntity extends EntityBossMob
 	@Override
 	protected SoundEvent getHurtSound(DamageSource source)
 	{
-		Random rand = new Random();
-    	int r = rand.nextInt(3);
-    	switch(r)
-    	{
-    	default:
-    		return EMSoundHandler.VE_WOUND_01;
-    	case 0:
-    		return EMSoundHandler.VE_WOUND_01;
-    	case 1:
-    		return EMSoundHandler.VE_WOUND_02;
-    	case 2:
-    		return EMSoundHandler.VE_WOUND_03;
-    	}
+		return EMSoundHandler.VE_WOUND;
 	}
 	
 	@Override
@@ -1310,11 +1291,12 @@ public class EntityVoidEntity extends EntityBossMob
     	this.setInvulState(true);
     	this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(_ConfigEntityVoidEntity.BASE_HP);
     	this.setHealth(_ConfigEntityVoidEntity.BASE_HP);
+    	this.setInvisible(false);
     	
     	PacketHandler.INSTANCE.sendToDimension(new PacketStopMusic(this, this.world), this.dimension);
     	this.openDoorDeath(97, 49, -1);
-    	List<EntityCarapaceAnguish> AnguishList = this.world.<EntityCarapaceAnguish>getEntitiesWithinAABB(EntityCarapaceAnguish.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidEntity.ARENA_SIZE, _ConfigEntityVoidEntity.ARENA_SIZE, _ConfigEntityVoidEntity.ARENA_SIZE).offset(0, -5, 0));
-		for (EntityCarapaceAnguish ent : AnguishList)
+    	List<EntityVEAnguish> AnguishList = this.world.<EntityVEAnguish>getEntitiesWithinAABB(EntityVEAnguish.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidEntity.ARENA_SIZE, _ConfigEntityVoidEntity.ARENA_SIZE, _ConfigEntityVoidEntity.ARENA_SIZE).offset(0, -5, 0));
+		for (EntityVEAnguish ent : AnguishList)
         {
 			ent.isDead = true;
         }

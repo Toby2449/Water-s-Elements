@@ -4,7 +4,6 @@
     "pattern":
     [
         "XXX",
-        "XXX",
         "XXX"
     ],
     
@@ -19,6 +18,6 @@
     "result":
     {
         "item": "em:item_scolding_embers",
-        "count": 4
+        "count": 1
     }
 }
