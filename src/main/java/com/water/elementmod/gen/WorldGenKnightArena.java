@@ -43,7 +43,10 @@ public class WorldGenKnightArena extends WorldGenerator implements IStructure
 			{
 				for(int j = pos.getZ(); j < (pos.getZ() + template.getSize().getZ()); j++)
 				{
-					replaceAirAndLiquidDownwards(template, world, Blocks.DIRT.getDefaultState(), k, pos.getY(), j);
+					if(!world.isAirBlock(new BlockPos(k, pos.getY() + 1, j)))
+					{
+						replaceAirAndLiquidDownwards(template, world, Blocks.STONEBRICK.getDefaultState(), k, pos.getY(), j);
+					}
 				}
 			}
 			IBlockState state = world.getBlockState(pos);

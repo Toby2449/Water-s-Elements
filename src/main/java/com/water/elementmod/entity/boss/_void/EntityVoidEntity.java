@@ -551,7 +551,15 @@ public class EntityVoidEntity extends EntityBossMob
 							{
 						        for (EntityPlayer ent : AABBPlayer)
 						        {
-						        	float damage = (25.0F * (AABBPlayer.size() / 2)) / AABBPlayer.size();
+						        	float damage = (30.0F * (AABBPlayer.size() / 2)) / AABBPlayer.size();
+						        	ent.attackEntityFrom(DamageSource.MAGIC, damage);
+						        }
+							}
+							else
+							{
+								for (EntityPlayer ent : AABBPlayer)
+						        {
+						        	float damage = 40.0F;
 						        	ent.attackEntityFrom(DamageSource.MAGIC, damage);
 						        }
 							}
@@ -969,10 +977,10 @@ public class EntityVoidEntity extends EntityBossMob
 					    }
 						else
 						{
-							List<EntityPlayer> AABBPlayer2 = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, AoePoint.grow(100.0D, 100.0D, 100.0D));
-							if (!AABBPlayer.isEmpty())
+							List<EntityPlayer> ExplosionList = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidEntity.ARENA_SIZE, _ConfigEntityVoidEntity.ARENA_SIZE, _ConfigEntityVoidEntity.ARENA_SIZE));
+		    				if (!ExplosionList.isEmpty())
 						    {
-								for (EntityPlayer ent : AABBPlayer2)
+								for (EntityPlayer ent : ExplosionList)
 						        {
 									ent.attackEntityFrom(DamageSource.MAGIC, 999999999.9F);
 						        }
@@ -1011,6 +1019,7 @@ public class EntityVoidEntity extends EntityBossMob
 	        			this.P6FacingFound = true;
 	        			this.playVoidMagicCastSound(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
 	        			this.P6Facing = rand.nextInt(2);
+	        			this.sayChatLine(11);
 	        		}
 	    			
 	    			this.P6ConeCastTime--;
@@ -1413,6 +1422,10 @@ public class EntityVoidEntity extends EntityBossMob
 	    		case 10:
 	    			player.sendMessage(new TextComponentTranslation("message.em.voidentity.chat11"));
 	    			this.world.playSound((EntityPlayer)null, new BlockPos(this.posX, this.posY, this.posZ), EMSoundHandler.VO_VOIDENTITY_15, SoundCategory.HOSTILE, 3.5F, 1.0f);
+	    			break;
+	    		case 11:
+	    			player.sendMessage(new TextComponentTranslation("message.em.voidentity.chat12"));
+	    			this.world.playSound((EntityPlayer)null, new BlockPos(this.posX, this.posY, this.posZ), EMSoundHandler.VO_VOIDENTITY_12, SoundCategory.HOSTILE, 3.5F, 1.0f);
 	    			break;
 	    		}
 	        }

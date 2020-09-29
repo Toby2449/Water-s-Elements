@@ -143,7 +143,7 @@ public class EntityVEBase extends EntityLiving
         List<EntityVoidEntity> ve = this.world.<EntityVoidEntity>getEntitiesWithinAABB(EntityVoidEntity.class, this.getEntityBoundingBox().grow(500, 100, 500));
     	if(!ve.isEmpty())
     	{
-    		this.setSize(8.25F, 0.75F);
+    		this.setSize(6.25F, 0.75F);
     	}
     	else
     	{
@@ -187,7 +187,7 @@ public class EntityVEBase extends EntityLiving
 
     @Override
     public boolean canBeCollidedWith() {
-    	return true;
+    	return false;
     }
     
     @Override

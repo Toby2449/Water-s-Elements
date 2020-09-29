@@ -130,7 +130,12 @@ public class ItemInterdimentionalRiftStone extends Item implements IHasModel
 						return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
 					}
 				}
-				
+				while(player.dimension != 2)
+				{
+					((EntityPlayerMP) player).mcServer.getPlayerList().transferPlayerToDimension(
+					(EntityPlayerMP) player, 2, new TeleportWithoutPortal(((EntityPlayerMP) player).mcServer.getWorld(EMCoreDimensions.VOID.getId())));
+					player.setPositionAndUpdate(1.0D, 58, 1.0D);
+				}
 				player.sendMessage(new TextComponentTranslation("idrs.fail_message"));
 			}
 		}

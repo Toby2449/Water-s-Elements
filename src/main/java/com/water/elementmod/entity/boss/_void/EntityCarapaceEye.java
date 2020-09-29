@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 public class EntityCarapaceEye extends EntityBossMob
 {
 	public static final float BASE_HP = 60.0F;
-	public static final float HP_SCALE_AMOUNT = 60.0F;
+	public static final float HP_SCALE_AMOUNT = 45.0F;
 	public EntityCarapaceEye(World worldIn) 
 	{
 		super(worldIn);

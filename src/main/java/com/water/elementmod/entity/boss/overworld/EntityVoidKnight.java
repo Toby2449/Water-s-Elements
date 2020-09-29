@@ -367,27 +367,27 @@ public class EntityVoidKnight extends EntityMob
 	    		this.P1SmasherCD++;
 	    		this.P1phaseCD++;
 	    		
-	    		List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidKnight.ARENA_SIZE_X, _ConfigEntityVoidKnight.ARENA_SIZE_Y, _ConfigEntityVoidKnight.ARENA_SIZE_Z).offset(0, -4, 0));
-				for (EntityPlayer player : list)
-		        {
-					if(this.P1explosionCD >= _ConfigEntityVoidKnight.P1_EXPLOSION_CD)
-					{
+	    		if(this.P1explosionCD >= _ConfigEntityVoidKnight.P1_EXPLOSION_CD)
+				{
+		    		List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidKnight.ARENA_SIZE_X, _ConfigEntityVoidKnight.ARENA_SIZE_Y, _ConfigEntityVoidKnight.ARENA_SIZE_Z).offset(0, -4, 0));
+					for (EntityPlayer player : list)
+			        {
 						this.spawnVoidExplosion(player.posX, player.posY, player.posZ, this);
-						this.P1explosionCD = 0;
 					}
+					this.P1explosionCD = 0;
 		        }
 				
 				if(this.P1BlobCD >= _ConfigEntityVoidKnight.P1_BLOB_CD)
 	    		{
 	    			if(this.rand.nextInt(99) > 50)
 	    			{
-			    		EntityVoidBlob entity = new EntityVoidBlob(this.world, this.posX - 0.5D, this.posY, this.posZ, 0.325D);
+			    		EntityVoidBlob entity = new EntityVoidBlob(this.world, this.posX - 0.5D, this.posY, this.posZ, 0.375D);
 				       	entity.setPosition(this.getPosition().getX(), this.getPosition().getY() + 1, this.getPosition().getZ() + 14D);
 				   		this.world.spawnEntity(entity);
 	    			}
 	    			else
 	    			{
-				   		EntityVoidBlob entity2 = new EntityVoidBlob(this.world, this.posX - 0.5D, this.posY, this.posZ, 0.325D);
+				   		EntityVoidBlob entity2 = new EntityVoidBlob(this.world, this.posX - 0.5D, this.posY, this.posZ, 0.375D);
 				       	entity2.setPosition(this.getPosition().getX(), this.getPosition().getY() + 1, this.getPosition().getZ() - 14D);
 				   		this.world.spawnEntity(entity2);
 	    			}
@@ -443,23 +443,24 @@ public class EntityVoidKnight extends EntityMob
 	    		this.P2SmasherCD++;
 	    		this.P2phaseCD++;
 	    		
-	    		List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidKnight.ARENA_SIZE_X, _ConfigEntityVoidKnight.ARENA_SIZE_Y, _ConfigEntityVoidKnight.ARENA_SIZE_Z).offset(0, -4, 0));
-				for (EntityPlayer player : list)
-		        {
-					if(this.P2explosionCD >= _ConfigEntityVoidKnight.P2_EXPLOSION_CD)
-					{
+	    		
+				if(this.P2explosionCD >= _ConfigEntityVoidKnight.P2_EXPLOSION_CD)
+				{
+					List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidKnight.ARENA_SIZE_X, _ConfigEntityVoidKnight.ARENA_SIZE_Y, _ConfigEntityVoidKnight.ARENA_SIZE_Z).offset(0, -4, 0));
+					for (EntityPlayer player : list)
+			        {
 						this.spawnVoidExplosion(player.posX, player.posY, player.posZ, this);
-						this.P2explosionCD = 0;
 					}
+					this.P2explosionCD = 0;
 		        }
 				
 				if(this.P2BlobCD >= _ConfigEntityVoidKnight.P2_BLOB_CD)
 	    		{
-			    	EntityVoidBlob entity = new EntityVoidBlob(this.world, this.posX - 0.5D, this.posY, this.posZ, 0.4D);
+			    	EntityVoidBlob entity = new EntityVoidBlob(this.world, this.posX - 0.5D, this.posY, this.posZ, 0.5D);
 				    entity.setPosition(this.getPosition().getX(), this.getPosition().getY() + 1, this.getPosition().getZ() + 14D);
 				   	this.world.spawnEntity(entity);
 				   	
-				   	EntityVoidBlob entity2 = new EntityVoidBlob(this.world, this.posX - 0.5D, this.posY, this.posZ, 0.4D);
+				   	EntityVoidBlob entity2 = new EntityVoidBlob(this.world, this.posX - 0.5D, this.posY, this.posZ, 0.5D);
 				    entity2.setPosition(this.getPosition().getX(), this.getPosition().getY() + 1, this.getPosition().getZ() - 14D);
 				    this.world.spawnEntity(entity2);
 				    
@@ -530,14 +531,14 @@ public class EntityVoidKnight extends EntityMob
 					entity.isDead = true;
 		        }
     			
-    			List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidKnight.ARENA_SIZE_X, _ConfigEntityVoidKnight.ARENA_SIZE_Y, _ConfigEntityVoidKnight.ARENA_SIZE_Z).offset(0, -4, 0));
-    			for (EntityPlayer player : list)
+    			if(this.P3explosionCD >= _ConfigEntityVoidKnight.P3_EXPLOSION_CD)
     			{
-    				if(this.P3explosionCD >= _ConfigEntityVoidKnight.P3_EXPLOSION_CD)
-    				{
+    				List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidKnight.ARENA_SIZE_X, _ConfigEntityVoidKnight.ARENA_SIZE_Y, _ConfigEntityVoidKnight.ARENA_SIZE_Z).offset(0, -4, 0));
+        			for (EntityPlayer player : list)
+        			{
     					this.spawnVoidExplosion(player.posX, player.posY, player.posZ, this);
-    					this.P3explosionCD = 0;
     				}
+        			this.P3explosionCD = 0;
     			}
     			
     			if(this.P3LoSCD >= _ConfigEntityVoidKnight.P3_LOS_CD)
@@ -609,23 +610,23 @@ public class EntityVoidKnight extends EntityMob
     			this.P4PhaseCD++;
     			this.P4BlobCD++;
     			
-    			List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidKnight.ARENA_SIZE_X, _ConfigEntityVoidKnight.ARENA_SIZE_Y, _ConfigEntityVoidKnight.ARENA_SIZE_Z).offset(0, -4, 0));
-    			for (EntityPlayer player : list)
+    			if(this.P4explosionCD >= _ConfigEntityVoidKnight.P4_EXPLOSION_CD)
     			{
-    				if(this.P4explosionCD >= _ConfigEntityVoidKnight.P4_EXPLOSION_CD)
-    				{
+    				List<EntityPlayer> list = this.world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(_ConfigEntityVoidKnight.ARENA_SIZE_X, _ConfigEntityVoidKnight.ARENA_SIZE_Y, _ConfigEntityVoidKnight.ARENA_SIZE_Z).offset(0, -4, 0));
+        			for (EntityPlayer player : list)
+        			{
     					this.spawnVoidExplosion(player.posX, player.posY, player.posZ, this);
-    					this.P4explosionCD = 0;
     				}
+        			this.P4explosionCD = 0;
     			}
     			
     			if(this.P4BlobCD >= _ConfigEntityVoidKnight.P4_BLOB_CD)
 	    		{
-			    	EntityVoidBlob entity = new EntityVoidBlob(this.world, this.posX - 0.5D, this.posY, this.posZ, 0.475D);
+			    	EntityVoidBlob entity = new EntityVoidBlob(this.world, this.posX - 0.5D, this.posY, this.posZ, 0.7D);
 				    entity.setPosition(this.getPosition().getX(), this.getPosition().getY() + 1, this.getPosition().getZ() + 14D);
 				   	this.world.spawnEntity(entity);
 				   	
-				   	EntityVoidBlob entity2 = new EntityVoidBlob(this.world, this.posX - 0.5D, this.posY, this.posZ, 0.475D);
+				   	EntityVoidBlob entity2 = new EntityVoidBlob(this.world, this.posX - 0.5D, this.posY, this.posZ, 0.7D);
 				    entity2.setPosition(this.getPosition().getX(), this.getPosition().getY() + 1, this.getPosition().getZ() - 14D);
 				    this.world.spawnEntity(entity2);
 				    

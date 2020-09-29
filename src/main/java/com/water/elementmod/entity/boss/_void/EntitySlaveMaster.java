@@ -165,7 +165,7 @@ public class EntitySlaveMaster extends EntityBossMob
 	
 	public float calculateHealthReduction(float amount)
     {
-    	return amount * (1000 / (200.0F + (200.0F * (this.getNumOfPlayers() - 1))));
+    	return amount * (1000 / (200.0F + (150.0F * (this.getNumOfPlayers() - 1))));
     }
     
     @Override

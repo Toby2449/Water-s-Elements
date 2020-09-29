@@ -4,8 +4,8 @@ public class _ConfigEntityCarapace
 {
 	public static final double FIGHT_INIT_RADIUS = 40.0D;
 	public static final double ARENA_SIZE = 150.0D;
-	public static final float BASE_HP = 3500.0F;
-	public static final float HP_SCALE_AMOUNT = 3400.0F;
+	public static final float BASE_HP = 3250.0F;
+	public static final float HP_SCALE_AMOUNT = 3100.0F;
 	public static final int MUSIC_DURATION = 2800;
 	
 	public static final int EXPLOSION_TIMER = 100;

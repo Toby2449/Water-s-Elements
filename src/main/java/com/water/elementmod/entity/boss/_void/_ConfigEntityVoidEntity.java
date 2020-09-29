@@ -3,13 +3,13 @@ package com.water.elementmod.entity.boss._void;
 public class _ConfigEntityVoidEntity 
 {
 	public static final double ARENA_SIZE = 150.0D;
-	public static final float BASE_HP = 4500.0F;
-	public static final float HP_SCALE_AMOUNT = 4400.0F;
+	public static final float BASE_HP = 4000.0F;
+	public static final float HP_SCALE_AMOUNT = 3850.0F;
 	public static final int MUSIC_DURATION = 4380;
 	public static final int EXPLOSION_TIMER = 60;
 	
-	public static final float LUNACY_BASE_HP = 600.0F;
-	public static final float LUNACY_HP_SCALE_AMOUNT = 500.0F;
+	public static final float LUNACY_BASE_HP = 650.0F;
+	public static final float LUNACY_HP_SCALE_AMOUNT = 575.0F;
 	public static final int LUNACY_RAGE_TIMER = 2200;
 	public static final int LUNACY_ANGUISH_TIMER = 420;
 	public static final int LUNACY_CAST_TIMER = 230;

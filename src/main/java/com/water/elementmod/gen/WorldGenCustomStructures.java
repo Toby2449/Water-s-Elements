@@ -49,13 +49,13 @@ public class WorldGenCustomStructures implements IWorldGenerator
 		case 1: // The End
 			break;
 		case 0: // Over world
-			generatorStructureKnightArena(KNIGHT_ARENA, world, random, chunkX, chunkZ, 700, 0, 0, 0, BiomeHills.class);
-			generatorStructureOverworld(N_ARENA, world, random, chunkX, chunkZ, 750, Blocks.GRASS, 0, -4, 0, BiomeForest.class);
-			generatorStructureOverworldOcean(W_ARENA, world, random, chunkX, chunkZ, 750, Blocks.GRAVEL, 0, 0, 0, BiomeOcean.class);
+			generatorStructureKnightArena(KNIGHT_ARENA, world, random, chunkX, chunkZ, 350, 0, 0, 0, BiomeHills.class);
+			generatorStructureOverworld(N_ARENA, world, random, chunkX, chunkZ, 900, Blocks.GRASS, 0, -4, 0, BiomeForest.class);
+			generatorStructureOverworldOcean(W_ARENA, world, random, chunkX, chunkZ, 800, Blocks.GRAVEL, 0, 0, 0, BiomeOcean.class);
 			break;
 			
 		case -1: // Nether
-			generatorStructureNether(F_ARENA, world, random, chunkX, chunkZ, 1000, Blocks.LAVA, 0, 5, 0, BiomeHell.class); //  was 2
+			generatorStructureNether(F_ARENA, world, random, chunkX, chunkZ, 850, Blocks.LAVA, 0, 5, 0, BiomeHell.class); //  was 2
 			break;
 			
 		}
@@ -108,7 +108,7 @@ public class WorldGenCustomStructures implements IWorldGenerator
 		{
 			if(z > 100 || z < -100)
 			{
-				if(y >= 100) // So the structure doesn't generate underground
+				if(y >= 95) // So the structure doesn't generate underground
 				{
 					if(world.getWorldType() != WorldType.FLAT)
 					{
